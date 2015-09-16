@@ -1,11 +1,90 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".HomeActivity">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+ <TextView
+        android:id="@+id/txt_loginWelcomeHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+       android:textStyle="bold"
+        android:gravity="center"
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+       android:textSize="@dimen/sixty_px"
+       android:paddingBottom="@dimen/sixty_px"
+        android:text="MY TRIP"
+        android:textColor="@color/black" />
+ 
+       
+        
+<TableLayout
+        android:id="@+id/registerTable"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/thirty_pt"
+        android:layout_marginRight="@dimen/thirty_pt"
+        android:layout_marginTop="90dp"
+        android:orientation="horizontal"
+        android:paddingLeft="0.5dp"
+        android:paddingRight="0.5dp" >
+<TableRow
+            android:id="@+id/textrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp">
 
+            <TextView
+                android:id="@+id/yourtxt"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/eighty_pt"
+                android:layout_weight="1"
+               android:textStyle="bold"
+                android:textSize="@dimen/fourty_pt"
+                 android:text="@string/your_trip"
+                android:paddingLeft="5dp" >
+                
+            </TextView>
+        </TableRow>
+
+      
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_pt"
+            android:background="@color/white"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp" 
+              android:paddingTop="10dp">
+
+            <EditText
+                android:id="@+id/phoneno"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/eighty_pt"
+                android:layout_weight="1"
+                android:background="@color/gray"
+                android:ems="10"
+                android:hint="your phone number"
+                android:inputType="phone"
+                android:paddingLeft="@dimen/ten_pt" />
+        </TableRow>
+    </TableLayout>
+    <Button
+     android:id="@+id/nextbtn"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/registerTable"
+     android:layout_centerHorizontal="true"
+     android:layout_marginTop="@dimen/fifty_pt"
+     android:paddingLeft="@dimen/thirty_pt"
+     android:paddingRight="@dimen/thirty_pt"
+     android:text="@string/next_btn"
+      android:background="@color/appDarkBlue"
+     android:textColor="@color/black"
+     android:textStyle="bold" />
+
+  
+ 
 </RelativeLayout>

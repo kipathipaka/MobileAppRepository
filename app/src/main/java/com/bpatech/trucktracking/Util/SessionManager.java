@@ -1,0 +1,123 @@
+package com.bpatech.trucktracking.Util;
+
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+
+import com.bpatech.trucktracking.DTO.AddTrip;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SessionManager {
+
+	// Shared Preferences reference
+    SharedPreferences pref;
+    
+    // Editor reference for Shared preferences
+    Editor editor;
+    
+    // Context
+    Context _context;
+    
+    // Shared pref mode
+    int PRIVATE_MODE = 0;
+    
+    // Sharedpref file name
+    private static final String PREFER_NAME = "MyTripPref";
+    
+    public static Activity getActivity;
+    
+	private List<String> destination=new ArrayList<String>();
+    
+    // User name (make variable public to access from outside)
+    public static final String KEY_phoneno = "phoneno";
+    
+    // Email address (make variable public to access from outside)
+    public static final String KEY_otpno = "otpno";
+    public static List<AddTrip> addtripdetails;
+    public static List<AddTrip> currenttripdetails = new ArrayList<AddTrip>();
+    
+
+
+
+	
+
+	public SessionManager(Context context){
+        this._context = context;
+        pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
+        editor = pref.edit();
+    }
+    
+   
+	
+    /*public void createSession(String phoneval, int otp){
+        // Storing login value as TRUE
+      
+        // Storing name in pref
+        editor.putString(KEY_phoneno, phoneval);
+        
+        // Storing email in pref
+        editor.putInt(KEY_otpno, otp);
+        
+        // commit changes
+        editor.commit();
+    }  */
+   
+   /* public void removesession(){
+        
+        // Clearing all user data from Shared Preferences
+        editor.clear();
+        editor.commit();
+        
+        // After logout redirect user to Login Activity
+        
+    }*/
+    
+    public void setPhoneno(String phoneval) {
+    	
+		editor.putString(KEY_phoneno, phoneval);
+		editor.commit();
+	}
+    public String getPhoneno() {
+
+		return pref.getString(KEY_phoneno, null);
+	}
+    
+    
+    public void setOTPno(int otp) {
+		editor.putInt(KEY_otpno, otp);
+		editor.commit();
+	}
+    
+    public int getOTPno() {
+
+		return pref.getInt(KEY_otpno,0);
+	}
+
+
+    public static List<AddTrip> getAddtripdetails() {
+		return currenttripdetails;
+	}
+
+
+
+	public static List<AddTrip> getCurrenttripdetails() {
+		return currenttripdetails;
+	}
+
+
+
+	public static void setAddtripdetails(List<AddTrip> addtripdetails) {
+		
+		SessionManager.addtripdetails=addtripdetails;
+		currenttripdetails.addAll(addtripdetails);
+		System.out.println("addtripdetailsaddtripdetails"+currenttripdetails.size());
+	}
+
+
+	
+	
+}

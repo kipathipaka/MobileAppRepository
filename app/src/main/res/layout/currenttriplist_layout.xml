@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+      <LinearLayout 
+        android:id="@+id/headerlayou"
+        android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+      android:background="@drawable/tab_bar_bg_top">
+   <include
+          android:id="@+id/header"
+          layout="@layout/header_layout"/>   
+          
+       </LinearLayout>
+  <ScrollView
+      android:id="@+id/scrolltriplistview"
+      android:layout_width="fill_parent"
+      android:layout_height="500dp"
+      android:layout_below="@id/headerlayou"
+      android:background="@color/white" >
+    
+   <LinearLayout 
+        android:id="@+id/viewlll"
+        android:layout_width="fill_parent"
+    android:layout_height="500dp">
+ 
+<ListView
+    android:id="@+id/listview"
+    android:layout_width="fill_parent"
+    android:layout_height="500dp"
+    android:layout_below="@id/viewlll" />
+
+</LinearLayout>
+
+  </ScrollView>
+<LinearLayout 
+        android:id="@+id/footerlayout"
+        android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_marginBottom="0dp"
+      android:background="@drawable/tab_bar_bg"
+       android:layout_below="@id/scrolltriplistview">
+
+    <include
+        android:id="@+id/footer"
+        layout="@layout/footer_layout" />
+          
+       </LinearLayout>
+
+    </RelativeLayout>

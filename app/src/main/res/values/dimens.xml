@@ -2,4 +2,39 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="fourty_pt">20dp</dimen>
+    <dimen name="thirty_four_pt">17dp</dimen>
+    <dimen name="twenty_four_pt">12dp</dimen>
+    <dimen name="thirty_two_pt">16dp</dimen>
+    <dimen name="eighteen_pt">9dp</dimen>
+    <dimen name="thirty_pt">15dp</dimen>
+    <dimen name="thirty_six_pt">18dp</dimen>
+    <dimen name="one_twenty_px">60dp</dimen>
+    <dimen name="one_thirty_pt">65dp</dimen>
+    <dimen name="fifty_eight_pt">29dp</dimen>
+    <dimen name="fifty_six_pt">28dp</dimen>
+    <dimen name="twenty_five_pt">12.5dp</dimen>
+    <dimen name="seventy_pt">35dp</dimen>
+    <dimen name="fifty_pt">25dp</dimen>
+    <dimen name="twenty_pt">10dp</dimen>
+    <dimen name="seventy_seven_pt">38.5dp</dimen>
+    <dimen name="ninety_pt">45dp</dimen>
+    <dimen name="two_hundred_pt">100dp</dimen>
+    <dimen name="eighty_pt">40dp</dimen>
+    <dimen name="twenty_three_pt">11.5dp</dimen>
+    <dimen name="ten_pt">5dp</dimen>
+    <dimen name="thirty_five_pt">17.5dp</dimen>
+    <dimen name="twenty_two_pt">11dp</dimen>
+    <dimen name="fourty_one_pt">20.5dp</dimen>
+    <dimen name="twenty_seven_pt">13.5dp</dimen>
+    <dimen name="fourty_five_pt">22.5dp</dimen>
+    <dimen name="thirty_eight_pt">19dp</dimen>
+    <dimen name="ninety_nine_pt">49.50dp</dimen>
+    <dimen name="one_twelve_px">56dp</dimen>
+    <dimen name="sixty_px">30dp</dimen>
+    <dimen name="ninety_two_pt">46dp</dimen>
+    <dimen name="fourty_eight_pt">24dp</dimen>
+    <dimen name="twenty_eight_pt">14dp</dimen>
+    <dimen name="onehundred_fifty_pt">75dp</dimen>
 </resources>

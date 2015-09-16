@@ -1,6 +1,31 @@
 <resources>
     <string name="app_name">TruckTracking</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="company_detalis">Company Details</string>
+    <string name="your_trip">Your Trip :</string>
+    <string name="_id_car_logo">\@+id/car_logo</string>
+    <string name="todo">TODO</string>
+    <string name="select">Choose a customer</string>
+    <string name="select1">Choose a customer name</string>
+    <string name="next_btn">Next..</string>
+    <string name="company_name">Company Name :</string>
+    <string name="your_name">Your Name :</string>
+    <string name="otp">OTP :</string>
+    <string name="truck_no">Truck Number:</string>
+    <string name="destination_txt">Destination :</string>
+    <string name="phone_txt">Phoneno :</string>
+    <string name="customer">Customer :</string>
+    <string name="customer_name">Customer Name :</string>
+    <string name="customerno_txt">Customer No :</string>
+    <string name="add_nxt">ADD</string>
+    <string name="add_btn">ADD</string>
+    <string name="starttrip_btn">Start Trip</string>
+    <string name="company">Company:</string>
+    <string name="phoneno_txt">Phone #:</string>
+    <string name="to_txt">To :</string>
+    <string name="truck_txt">Truck #:</string>
+    <string name="addtrip_footer">Add Trips</string>
+    <string name="addphone_footer">Add Phone</string>
+    <string name="invite_footer">Invite</string>
+
 </resources>

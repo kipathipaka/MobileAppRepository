@@ -1,0 +1,168 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+   <LinearLayout 
+        android:id="@+id/headerlayou"
+        android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+      android:background="@drawable/tab_bar_bg_top">
+   <include
+          android:id="@+id/header"
+          layout="@layout/header_layout"/>   
+          
+       </LinearLayout>
+        <ScrollView
+      android:id="@+id/scrolltriplistview"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/headerlayou"
+      android:background="@color/white" >
+<TableLayout
+        android:id="@+id/registerTable"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+          android:layout_below="@+id/headerlayou"
+        android:layout_marginLeft="@dimen/thirty_pt"
+        android:layout_marginRight="@dimen/thirty_pt"
+        android:layout_marginTop="@dimen/fifty_pt"
+        android:orientation="horizontal"
+        android:paddingLeft="0.5dp"
+        android:paddingRight="0.5dp" >
+        
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+          
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp" >
+
+            <TextView
+                android:id="@+id/companyName"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+               android:textStyle="bold"
+                android:textSize="20dp"
+                 android:text="@string/company_name"
+                android:paddingLeft="5dp" >
+            </TextView>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+       
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp" >
+
+            <EditText
+                android:id="@+id/editcompanynamee"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                 android:background="@color/gray"
+                android:ems="10"
+                android:inputType="text"
+                android:paddingLeft="5dp" >
+            </EditText>
+        </TableRow>
+        
+ <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp" 
+             android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/yurname"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+            android:textStyle="bold"
+                android:textSize="20dp"
+               android:text="@string/your_name"
+                android:paddingLeft="5dp" >
+            </TextView>
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_pt"
+             android:background="@color/white"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp" >
+
+            <EditText
+                android:id="@+id/edityourname"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@color/gray"
+                android:ems="10"
+              
+                android:inputType="text"
+                android:paddingLeft="5dp" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp" 
+             android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/OTP"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+            android:textStyle="bold"
+                android:textSize="20dp"
+               android:text="@string/otp"
+                android:paddingLeft="5dp" >
+            </TextView>
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_pt"
+             android:background="@color/white"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp" >
+
+            <EditText
+                android:id="@+id/editotp"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@color/gray"
+                android:ems="10"
+              
+                android:inputType="number"
+                android:paddingLeft="5dp" />
+        </TableRow>
+    </TableLayout>
+    
+</ScrollView>
+ <Button
+        android:id="@+id/detbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scrolltriplistview"
+        android:layout_marginLeft="@dimen/thirty_pt"
+        android:layout_marginRight="@dimen/thirty_pt"
+        android:layout_marginTop="@dimen/fifty_pt"
+         android:background="@color/appDarkBlue"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/next_btn"
+        android:textColor="@color/black" />
+</RelativeLayout>
