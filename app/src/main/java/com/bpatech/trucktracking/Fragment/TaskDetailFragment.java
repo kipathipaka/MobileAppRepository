@@ -6,19 +6,22 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 
 /**
  * Created by Anita on 9/14/2015.
  */
-public class TaskDetailFragment extends Fragment {
+public class TaskDetailFragment extends Fragment   {
     TextView truck, place, phone, txt_contTitle,customer,customer_name,customer_no;
     Button Startbtn,whatsup;
 
@@ -31,7 +34,7 @@ public class TaskDetailFragment extends Fragment {
         txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
         Startbtn = (Button)view.findViewById(R.id.startbtn);
         whatsup=((Button)view.findViewById(R.id.whatsup));
-       // whatsup.setOnClickListener(new WhatsupButtonListener());
+       whatsup.setOnClickListener(new WhatsupButtonListener());
         truck = (TextView) view.findViewById(R.id.truckvalu);
         place = (TextView) view.findViewById(R.id.tovalue);
         phone = (TextView) view.findViewById(R.id.phoneno);
@@ -103,5 +106,30 @@ public class TaskDetailFragment extends Fragment {
 
         }
     }
+
+    private class WhatsupButtonListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            System.out.println("whatsup");
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+
+            sendIntent.setType("text/plain");
+            sendIntent.setPackage("com.whatsapp");
+            if (sendIntent!= null) {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Whatsup text msg");
+                startActivity(Intent.createChooser(sendIntent, "Share with"));
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+
+        }
+        }
+
+
 
 }

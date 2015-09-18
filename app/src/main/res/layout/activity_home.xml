@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white">
+    android:background="@color/pagebackground">
  <TextView
         android:id="@+id/txt_loginWelcomeHeader"
         android:layout_width="match_parent"
@@ -11,7 +11,8 @@
         android:gravity="center"
 
        android:textSize="@dimen/sixty_px"
-       android:paddingBottom="@dimen/sixty_px"
+     android:paddingTop="@dimen/eighty_pt"
+       android:paddingBottom="@dimen/eighty_pt"
         android:text="MY TRIP"
         android:textColor="@color/black" />
  
@@ -25,6 +26,7 @@
         android:layout_marginRight="@dimen/thirty_pt"
         android:layout_marginTop="90dp"
         android:orientation="horizontal"
+    android:paddingTop="@dimen/eighty_pt"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp" >
 <TableRow
@@ -64,7 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/eighty_pt"
                 android:layout_weight="1"
-                android:background="@color/gray"
+                android:background="@color/white"
                 android:ems="10"
                 android:hint="your phone number"
                 android:inputType="phone"

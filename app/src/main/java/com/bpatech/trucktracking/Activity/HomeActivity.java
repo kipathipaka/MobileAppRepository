@@ -7,6 +7,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,15 +21,18 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.SessionManager;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends FragmentActivity {
 	
 MySQLiteHelper db;
 private Button nbtn;
 private EditText phoneno;
 SessionManager session;
 public static final String MyPREFERENCES = "MyPrefs" ;
+	/*private Callbacks mCallbacks;
 
-
+	public interface Callbacks {
+		public void onBackPressedCallback();
+	}*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,6 +92,13 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 		 @Override
 		 public void onBackPressed() {
 		     // TODO Auto-generated method stub
-		     
+			 FragmentManager mgr = getFragmentManager();
+			 if (mgr.getBackStackEntryCount() == 0) {
+				 // No backstack to pop, so calling super
+				 super.onBackPressed();
+			 } else {
+				// mgr.popBackStack();
+			 }
+
 		 }
 }

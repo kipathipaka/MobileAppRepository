@@ -34,18 +34,18 @@
 
              <ImageView
                  android:id="@+id/map_image"
-                 android:layout_width="50dp"
-                 android:layout_height="50dp"
+                 android:layout_width="@dimen/one_twenty_px"
+                 android:layout_height="@dimen/one_twenty_px"
                  android:layout_marginLeft="5dp"
-                 android:layout_marginTop="20dp"
+                 android:layout_marginTop="@dimen/fourty_pt"
                  android:scaleType="fitXY"
                  android:src="@drawable/mapimage" />
 
              <TableLayout
                  android:layout_width="220dp"
                  android:layout_height="wrap_content"
-                 android:layout_marginLeft="20dp"
-                 android:layout_marginTop="10dp">
+                 android:layout_marginLeft="@dimen/fourty_pt"
+                 android:layout_marginTop="@dimen/twenty_pt">
 
                   <TableRow android:id="@+id/to"
                 android:layout_width="0dp"
@@ -299,11 +299,13 @@
              android:layout_marginTop="10dp"
           android:layout_marginLeft="100dp"
              android:orientation="horizontal">
+
               <Button
-                      android:id="@+id/whatsup"
+                  android:id="@+id/whatsup"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:paddingTop="10dp" 
+            android:paddingTop="10dp"
+
              android:background="@drawable/whatsup"/>
              
 

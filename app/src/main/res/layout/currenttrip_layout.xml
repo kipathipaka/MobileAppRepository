@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:focusableInTouchMode="false"
     android:focusable="false"
-     android:background="@color/white">
+     android:background="@color/pagebackground">
  
  
        
@@ -20,7 +20,7 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginTop="0dp"
-             android:background="@color/gray"
+             android:background="@color/white"
              android:orientation="horizontal" >
 
              <ImageView
@@ -145,7 +145,7 @@
              android:layout_height="wrap_content"
              android:layout_marginBottom="20dp"
              android:orientation="horizontal"
-              android:background="@color/gray" >
+              android:background="@color/white" >
                
                  <TextView
                          android:id="@+id/nowmsg"

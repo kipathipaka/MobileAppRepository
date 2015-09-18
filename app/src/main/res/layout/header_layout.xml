@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:ignore="ContentDescription" >
+    tools:ignore="ContentDescription"
+    android:background="@color/gray">
 	 
         <ImageView
             android:id="@+id/car_logo"
@@ -13,7 +14,7 @@
             android:clickable="false"
             android:contentDescription="@string/todo"
             android:paddingTop="@dimen/thirty_pt"
-            android:src="@drawable/car_logo"
+            android:src="@drawable/truck_logo"
             tools:ignore="RtlHardcoded,HardcodedText" />
             
  <TextView

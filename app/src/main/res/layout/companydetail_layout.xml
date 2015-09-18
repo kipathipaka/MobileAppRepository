@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white">
+    android:background="@color/pagebackground">
    <LinearLayout 
         android:id="@+id/headerlayou"
         android:layout_width="fill_parent"
@@ -16,8 +16,7 @@
       android:id="@+id/scrolltriplistview"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/headerlayou"
-      android:background="@color/white" >
+      android:layout_below="@id/headerlayou">
 <TableLayout
         android:id="@+id/registerTable"
         android:layout_width="fill_parent"
@@ -63,7 +62,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                 android:background="@color/gray"
+                 android:background="@color/white"
                 android:ems="10"
                 android:inputType="text"
                 android:paddingLeft="5dp" >
@@ -103,7 +102,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@color/gray"
+                android:background="@color/white"
                 android:ems="10"
               
                 android:inputType="text"
@@ -142,7 +141,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@color/gray"
+                android:background="@color/white"
                 android:ems="10"
               
                 android:inputType="number"

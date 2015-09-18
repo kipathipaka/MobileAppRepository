@@ -5,8 +5,6 @@
 
     <color name="darkskyblue">#3090C7</color>
     <color name="lightblue">#41ADC8</color>
-
-    <color name="newsbackground">#FFFF</color>
     <color name="appDarkBlue">#06A2CB</color>
     <color name="graystroke">#A0A0A0</color>
 
@@ -16,7 +14,7 @@
     <color name="white">#FFFFFF</color>
     <color name="green">#04B404</color>
     <color name="fontColor">#012942</color>
-
-
+    <color name="pagebackground">#E0F8F7</color>
+    <color name="cursor">#FFBEBEBE</color>
 
 </resources>

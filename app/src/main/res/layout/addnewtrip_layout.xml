@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white">
+    android:background="@color/pagebackground">
      <LinearLayout 
         android:id="@+id/headerlayou"
         android:layout_width="fill_parent"
@@ -14,7 +14,7 @@
        </LinearLayout>
         <ScrollView 
     android:layout_width="match_parent"
-    android:layout_height="500dp"
+    android:layout_height="450dp"
     android:layout_below="@id/headerlayou"
     android:id="@+id/addnewscrollview"
      android:layout_marginBottom="0dp"
@@ -23,7 +23,7 @@
 <TableLayout
         android:id="@+id/addnewtripTable"
         android:layout_width="fill_parent"
-        android:layout_height="500dp"
+        android:layout_height="300dp"
          
         android:layout_marginLeft="@dimen/thirty_pt"
         android:layout_marginRight="@dimen/thirty_pt"
@@ -66,9 +66,9 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                 android:background="@color/gray"
+                 android:background="@color/white"
                 android:ems="10"
-                android:inputType="text"
+                android:inputType="number"
                 android:paddingLeft="5dp" >
             </EditText>
         </TableRow>
@@ -106,7 +106,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@color/gray"
+                android:background="@color/white"
                 android:ems="10"
               
                 android:inputType="text"
@@ -117,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/ten_pt"
-             android:background="@color/white"
+
             android:paddingLeft="1dp"
             android:paddingRight="1dp" >
 
@@ -147,7 +147,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@color/gray"
+                android:background="@color/white"
                 android:ems="10"
               
                 android:inputType="phone"
@@ -159,7 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/ten_pt"
-             android:background="@color/white"
+
             android:paddingLeft="1dp"
             android:paddingRight="1dp" >
 
@@ -189,7 +189,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@color/gray"
+                android:background="@color/white"
                 android:ems="10"
 
                 android:inputType="textCapWords"
@@ -202,7 +202,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/ten_pt"
-             android:background="@color/white"
+
             android:paddingLeft="1dp"
             android:paddingRight="1dp" >
 
@@ -232,7 +232,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@color/gray"
+                android:background="@color/white"
                 android:ems="10"
 
                 android:inputType="textCapWords"
@@ -245,7 +245,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/ten_pt"
-             android:background="@color/white"
+
             android:paddingLeft="1dp"
             android:paddingRight="1dp" >
 
@@ -275,7 +275,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:background="@color/gray"
+                android:background="@color/white"
                 android:ems="10"
 
                 android:inputType="number"
