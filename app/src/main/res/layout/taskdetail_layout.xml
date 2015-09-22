@@ -36,7 +36,7 @@
                  android:id="@+id/map_image"
                  android:layout_width="@dimen/one_twenty_px"
                  android:layout_height="@dimen/one_twenty_px"
-                 android:layout_marginLeft="5dp"
+                 android:layout_marginLeft="50dp"
                  android:layout_marginTop="@dimen/fourty_pt"
                  android:scaleType="fitXY"
                  android:src="@drawable/mapimage" />
@@ -276,17 +276,18 @@
                   
                  <LinearLayout
                      android:id="@+id/buttn_ll"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                 android:layout_marginLeft="100dp"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                 android:layout_marginLeft="0dp"
                      android:layout_marginTop="10dp" >
                  <Button
                       android:id="@+id/startbtn"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"
                       android:background="@color/green"
                       android:paddingLeft="25dp"
-                      
+                     android:layout_marginLeft="@dimen/thirty_pt"
+                     android:layout_marginRight="@dimen/thirty_pt"
                       android:paddingRight="25dp"
                       android:text="@string/starttrip_btn"
                       android:textColor="@color/black" />

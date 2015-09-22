@@ -79,7 +79,7 @@ public class TaskDetailFragment extends Fragment   {
                 FragmentManager fragmentmanager = getFragmentManager();
                 FragmentTransaction fragmenttransaction = fragmentmanager
                         .beginTransaction();
-                fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+                fragmenttransaction.replace(R.id.viewers,currenttripfrag);
 
                 fragmenttransaction.addToBackStack(null);
                 fragmenttransaction.commit();
@@ -98,7 +98,7 @@ public class TaskDetailFragment extends Fragment   {
                 FragmentManager fragmentmanager = getFragmentManager();
                 FragmentTransaction fragmenttransaction = fragmentmanager
                         .beginTransaction();
-                fragmenttransaction.replace(R.id.viewers, taskdetailfrag);
+                fragmenttransaction.replace(R.id.viewers, taskdetailfrag,"BackCurrentTrip");
 
                 fragmenttransaction.addToBackStack(null);
                 fragmenttransaction.commit();

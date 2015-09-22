@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,8 +22,10 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.SessionManager;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 
+import java.util.prefs.Preferences;
+
 public class HomeActivity extends FragmentActivity {
-	
+
 MySQLiteHelper db;
 private Button nbtn;
 private EditText phoneno;
@@ -54,50 +57,56 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		
+
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
 
- 
+
+
 	 public void addtripclick(View v) {
 
 			  AddnewTripFragment addtripfragment = new AddnewTripFragment();
 				pageRedirection(addtripfragment);
 
 		    }
-		 
+
 		 public void addphoneclick(View v) {
 
 			 AddphoneFragment addphonefragment = new AddphoneFragment();
+			 //addphonefragment.sett
 			 pageRedirection(addphonefragment);
 		    }
-		
-		 
+
+
 		 public void pageRedirection(Fragment fragment) {
 				FragmentManager fragmentmanager = getFragmentManager();
 				FragmentTransaction fragmenttransaction = fragmentmanager
 						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, fragment);
-				
+				fragmenttransaction.replace(R.id.viewers, fragment,"BackCurrentTrip");
+
 				fragmenttransaction.addToBackStack(null);
 				fragmenttransaction.commit();
 			}
 
 
-		 @Override
+         @Override
 		 public void onBackPressed() {
-		     // TODO Auto-generated method stub
+		    // TODO Auto-generated method stub
 			 FragmentManager mgr = getFragmentManager();
 			 if (mgr.getBackStackEntryCount() == 0) {
 				 // No backstack to pop, so calling super
 				 super.onBackPressed();
 			 } else {
-				// mgr.popBackStack();
+				 Fragment testfragment=mgr.findFragmentById(R.id.viewers);
+				 if(testfragment.getTag()!=null) {
+					 if (testfragment.getTag().equalsIgnoreCase("BackCurrentTrip")) {
+						 mgr.popBackStack();
+					 }
+				 }
 			 }
 
 		 }

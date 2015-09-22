@@ -109,12 +109,6 @@ public class DetailFragment extends Fragment {
 		 Log.d("Insert: ", "Inserting ..");
 	 }
 	 
-	 public boolean onKeyDown(int keyCode, KeyEvent event) {
-	        if ((keyCode == KeyEvent.KEYCODE_BACK) ) {
-	          System.out.println("++++++++++++++=click back button");
-	            return false;
-	        }
-	        return onKeyDown(keyCode, event);
-	    }
+
 
 }

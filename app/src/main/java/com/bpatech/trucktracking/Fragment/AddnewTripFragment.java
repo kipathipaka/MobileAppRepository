@@ -58,7 +58,7 @@ public class AddnewTripFragment extends Fragment {
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
 							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, addfrag);
+					fragmenttransaction.replace(R.id.viewers, addfrag,"BackCurrentTrip");
 
 					fragmenttransaction.addToBackStack(null);
 					fragmenttransaction.commit();
@@ -89,4 +89,13 @@ public class AddnewTripFragment extends Fragment {
 	
 			}
 			}
-}
+
+
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		FragmentManager mgr = getFragmentManager();
+		mgr.popBackStack();
+		}
+
+	}
+

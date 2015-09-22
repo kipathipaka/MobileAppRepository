@@ -39,7 +39,7 @@ public class CurrentTripFragment  extends Fragment {
 		 ListView listView = (ListView)view.findViewById(R.id.listview);
 	 if(SessionManager.getAddtripdetails()!=null && SessionManager.getAddtripdetails().size() > 0)
 	        {
-		  System.out.println("++++++++cuurenttriplist11111+++++++++" + SessionManager.getAddtripdetails().size());
+
 		  ArrayList<AddTrip> currenttripdetails=new ArrayList<AddTrip>();
 		  currenttripdetails.addAll(SessionManager.getAddtripdetails());
 		  CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(),currenttripdetails);
@@ -81,7 +81,7 @@ public class CurrentTripFragment  extends Fragment {
 				 FragmentManager fragmentmanager = getFragmentManager();
 				 FragmentTransaction fragmenttransaction = fragmentmanager
 						 .beginTransaction();
-				 fragmenttransaction.replace(R.id.viewers, taskdetailfrag);
+				 fragmenttransaction.replace(R.id.viewers, taskdetailfrag,"BackCurrentTrip");
 
 				 fragmenttransaction.addToBackStack(null);
 				 fragmenttransaction.commit();
