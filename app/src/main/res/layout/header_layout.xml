@@ -8,13 +8,13 @@
 	 
         <ImageView
             android:id="@+id/car_logo"
-            android:layout_width="@dimen/eighty_pt"
-            android:layout_height="@dimen/eighty_pt"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="10dp"
             android:clickable="false"
             android:contentDescription="@string/todo"
-            android:paddingTop="@dimen/thirty_pt"
-            android:src="@drawable/images6"
+            android:paddingTop="10dp"
+            android:src="@drawable/truck_logo"
             tools:ignore="RtlHardcoded,HardcodedText" />
             
  <TextView

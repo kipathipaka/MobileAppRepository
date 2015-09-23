@@ -6,7 +6,7 @@
     
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/one_twenty_px"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
        	android:background="@drawable/tab_bar_bg"
         android:orientation="horizontal">
@@ -20,19 +20,25 @@
 
             <LinearLayout
                 android:id="@+id/addtrip_ll"
-                android:layout_width="195dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:clickable="true"
-                  android:layout_marginTop="@dimen/twenty_pt"
-                  android:background="@color/darkskyblue"
+                android:layout_weight="0.98"
+                android:paddingLeft="0dp"
                 android:onClick="addtripclick"
                 android:orientation="horizontal"
-                android:weightSum="2">
-
-              
+                android:layout_marginTop="@dimen/twenty_pt"
+                >
+                <ImageView
+                    android:id="@+id/plusfooterlogo"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingTop="0dp"
+                    android:src="@drawable/plusfooter"
+                    />
 
                 <TextView
                     android:id="@+id/addtrip"
@@ -44,7 +50,7 @@
                     android:paddingLeft="6dp"
                     android:paddingRight="0dp"
                     android:layout_marginTop="4dp"
-          			android:layout_marginBottom="@dimen/twenty_pt"
+          			android:layout_marginBottom="10dp"
                     android:text="@string/addtrip_footer"
 
                     android:textColor="@color/white"
@@ -55,7 +61,7 @@
             android:id="@+id/navbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="19dp"
+            android:layout_marginLeft="15dp"
             android:clickable="false"
             android:src="@drawable/navbarline"
              />
@@ -64,16 +70,29 @@
 
             <LinearLayout
                 android:id="@+id/adphone_ll"
-                android:layout_width="190dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.98"
                 android:paddingLeft="0dp"
-                android:paddingRight="10dp"
+
+                android:paddingRight="0dp"
                 	 android:background="@color/darkskyblue"
                 android:onClick="addphoneclick"
                 android:orientation="horizontal"
                   android:layout_marginTop="@dimen/twenty_pt"
-                android:weightSum="2" >
+                 >
+                <ImageView
+                    android:id="@+id/phonefooter"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/todo"
+                    android:paddingTop="0dp"
+                    android:src="@drawable/mobilephonefooter"
+                    />
                        <TextView
                     android:id="@+id/phonecll"
                     android:layout_width="wrap_content"
@@ -82,9 +101,9 @@
                     android:clickable="true"
                     android:onClick="addphoneclick"
                     android:paddingLeft="5dp"
-                    android:paddingRight="7dp"
+                    android:paddingRight="3dp"
                     android:layout_marginTop="4dp"
-          			android:layout_marginBottom="@dimen/twenty_pt"
+          			android:layout_marginBottom="10dp"
                     android:text="@string/addphone_footer"
                     
                     android:textColor="@color/white"
@@ -95,7 +114,7 @@
             android:id="@+id/navbar2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:clickable="false"
             android:src="@drawable/navbarline"
              />
@@ -104,7 +123,7 @@
 
             <LinearLayout
                 android:id="@+id/addinvite_ll"
-                android:layout_width="160dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.00"
                
@@ -113,14 +132,24 @@
                 	 android:background="@color/darkskyblue"
                 android:weightSum="2" >
 
-               
+                <ImageView
+                    android:id="@+id/inviteimage"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/todo"
+                    android:paddingTop="0dp"
+                    android:src="@drawable/sharethisfooter"/>
 
                 <TextView
                     android:id="@+id/Invite_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/twenty_pt"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginTop="@dimen/twenty_pt"
                     android:clickable="true"
                    

@@ -73,22 +73,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public boolean checkPhonenumber(String phoneno) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        boolean exitphonenumber=false;
-        Cursor cursor = db.query(TABLE_USER,new String[] { KEY_ID,KEY_USER_NAME,KEY_OTP_NO,KEY_COMPANY,KEY_PH_NO }, KEY_PH_NO + "=?", new String[] { String.valueOf(phoneno) },  null, null,null,null);
-        //  Cursor cr = db.query(TABLE_USER, null,null,null,null,KEY_PH_NO + " = " +phoneno, phoneno);
-        System.out.println("count cursor"+cursor.getCount());
-        //  Log.w("After count: ",cursor.getCount() );
-        if (cursor.getCount() > 0){
-            Log.d("After check: ", "checked..true");
-            exitphonenumber = true;
-        }else{
-            Log.d("After check: ", "checked.. false");
-            exitphonenumber = false;
-        }
 
-        Log.d("After check: ", "checked..");
-        return exitphonenumber;
+    public int getUserCount() {
+        String countQuery = " SELECT  * FROM  " +  TABLE_USER;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+         int countval=cursor.getCount();
+
+        cursor.close();
+
+        return countval;
     }
+
+
 }

@@ -157,22 +157,31 @@
                 android:inputType="number"
                 android:paddingLeft="5dp" />
         </TableRow>
+    <TableRow
+        android:id="@+id/buttonrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+
+       >
+        <Button
+            android:id="@+id/detbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:text="@string/next_btn"
+            android:background="@color/appDarkBlue"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            />
+
+    </TableRow>
     </TableLayout>
     
 </ScrollView>
- <Button
-        android:id="@+id/detbtn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/scrolltriplistview"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="@dimen/fifty_pt"
-         android:background="@color/appDarkBlue"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_centerHorizontal="true"
-        android:text="@string/next_btn"
-     android:textStyle="bold"
-        android:textColor="@color/white" />
+
 </RelativeLayout>

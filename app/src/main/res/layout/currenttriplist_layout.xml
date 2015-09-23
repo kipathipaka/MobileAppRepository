@@ -12,27 +12,16 @@
           layout="@layout/header_layout"/>   
           
        </LinearLayout>
-  <ScrollView
-      android:id="@+id/scrolltriplistview"
-      android:layout_width="fill_parent"
-      android:layout_height="500dp"
-      android:layout_below="@id/headerlayou"
-      android:background="@color/white" >
-    
-   <LinearLayout 
-        android:id="@+id/viewlll"
-        android:layout_width="fill_parent"
-    android:layout_height="500dp">
- 
+
 <ListView
     android:id="@+id/listview"
     android:layout_width="fill_parent"
-    android:layout_height="500dp"
-    android:layout_below="@id/viewlll" />
+    android:layout_height="wrap_content"
+    android:divider="@drawable/task_detail_line"
+    android:dividerHeight="15dp"
+    android:layout_below="@id/headerlayou"
+    android:layout_marginBottom="10dp"/>
 
-</LinearLayout>
-
-  </ScrollView>
 <LinearLayout 
         android:id="@+id/footerlayout"
         android:layout_width="fill_parent"

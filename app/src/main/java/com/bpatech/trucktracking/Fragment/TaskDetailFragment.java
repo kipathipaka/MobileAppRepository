@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +24,8 @@ import com.bpatech.trucktracking.Util.ServiceConstants;
  */
 public class TaskDetailFragment extends Fragment   {
     TextView truck, place, phone, txt_contTitle,customer,customer_name,customer_no;
-    Button Startbtn,whatsup;
-
+    Button Startbtn;
+ImageButton whatsup;
     boolean startclick;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,8 +33,9 @@ public class TaskDetailFragment extends Fragment   {
         //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
         txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
+        txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
         Startbtn = (Button)view.findViewById(R.id.startbtn);
-        whatsup=((Button)view.findViewById(R.id.whatsup));
+        whatsup=(ImageButton)view.findViewById(R.id.whatsup);
        whatsup.setOnClickListener(new WhatsupButtonListener());
         truck = (TextView) view.findViewById(R.id.truckvalu);
         place = (TextView) view.findViewById(R.id.tovalue);
@@ -54,11 +56,11 @@ public class TaskDetailFragment extends Fragment   {
 
         startclick=taskdetail.getBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE);
         if(startclick==true){
-            txt_contTitle.setText(ServiceConstants.TASK_DETAIL_ENDTITLE);
+
             Startbtn.setText("End Tracking");
             Startbtn.setBackgroundColor(Color.RED);
         }else{
-            txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
+
             Startbtn.setText("Start Tracking");
             Startbtn.setBackgroundColor(Color.GREEN);
         }

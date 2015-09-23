@@ -6,39 +6,86 @@
     android:focusableInTouchMode="false"
     android:focusable="false"
      android:background="@color/white">
- 
- 
-       
-      
+
+
+    <LinearLayout
+        android:id="@+id/currenttriplist_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+
+        android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="90dp"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="0dp"
+
+        android:paddingRight="1dp"
+       >
+        <TableLayout
+            android:id="@+id/profiletable"
+            android:layout_width="80dp"
+            android:layout_height="fill_parent"
+
+            android:layout_marginTop="30dp"
+            android:paddingLeft="0.5dp"
+            android:paddingRight="4dp" >
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="80dp"
+            android:layout_height="fill_parent"
+
+            android:paddingLeft="1dp"
+            android:paddingRight="0.5dp" >
+        <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="fitXY"
+        android:focusableInTouchMode="false"
+        android:focusable="false" />
+
+        </TableRow>
+        </TableLayout>
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/task_detail_line" />
+
+    </LinearLayout>
      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         android:layout_marginTop="10dp" 
+         android:layout_marginTop="0dp"
+
         android:orientation="vertical">
 
          <LinearLayout
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginTop="0dp"
-             android:background="@color/lightblue"
-             android:orientation="horizontal" >
 
+             android:orientation="horizontal" >
              <ImageView
                  android:id="@+id/map_image"
                  android:layout_width="50dp"
                  android:layout_height="50dp"
-                 android:layout_marginLeft="30dp"
-                 android:layout_marginTop="30dp"
+                 android:layout_marginLeft="0dp"
+                 android:layout_marginTop="20dp"
                  android:scaleType="fitXY"
                  android:focusableInTouchMode="false"
                  android:focusable="false"
                  android:src="@drawable/mapimage" />
 
+
              <TableLayout
-                 android:layout_width="220dp"
+                 android:layout_width="150dp"
                  android:layout_height="wrap_content"
                  android:layout_marginLeft="15dp"
-                 android:layout_marginTop="10dp">
+                 android:layout_marginTop="3dp">
 
                   <TableRow android:id="@+id/to"
                 android:layout_width="0dp"
@@ -49,7 +96,7 @@
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_column="1"
-                         android:layout_marginLeft="5dp"
+                         android:layout_marginLeft="3dp"
                          android:layout_marginTop="3dp"
                         
                          android:textSize="15sp"
@@ -77,14 +124,14 @@
                 <TableRow  android:id="@+id/lastname_tableRow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp" >   
+                android:layout_marginTop="3dp" >
 
                      <TextView
                          android:id="@+id/ride"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_column="1"
-                         android:layout_marginLeft="5dp"
+                         android:layout_marginLeft="3dp"
                          android:layout_marginTop="3dp"
                         
                          android:textSize="15sp"
@@ -117,7 +164,7 @@
                          android:layout_width="wrap_content"
                          android:layout_height="30dp"
                          android:layout_column="1"
-                         android:layout_marginLeft="5dp"
+                         android:layout_marginLeft="3dp"
                          android:layout_marginTop="5dp"
                        
                          android:textSize="15sp"
@@ -126,26 +173,34 @@
                    
                  </TableRow>
              </TableLayout>
-                                
-                <Button
+
+            <Button
                   android:id="@+id/openbtn"
-                  android:background="@drawable/arrow_open"
-                 android:layout_width="30dp"
-                 android:layout_height="30dp"
-                 android:layout_marginLeft="5dp"
+                  android:background="@drawable/arrow"
+                 android:layout_width="20dp"
+                 android:layout_height="20dp"
+                 android:layout_marginRight="10dp"
                  android:layout_marginTop="40dp"
                     android:focusableInTouchMode="false"
                     android:focusable="false"/>
-             
+             <!--<ImageButton
+                 android:descendantFocusability="blocksDescendants"
+                 android:id="@+id/openbtn"
+                 android:layout_width="50dp"
+                 android:layout_height="50dp"
+                 android:layout_marginLeft="10dp"
+                 android:layout_marginTop="40dp"
+                 android:src="@drawable/icn_arrow"/>-->
+
                   
          </LinearLayout>
         
                   <LinearLayout
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:layout_marginBottom="10dp"
+             android:layout_marginBottom="3dp"
              android:orientation="horizontal"
-              android:background="@color/lightblue" >
+               >
                
                  <TextView
                          android:id="@+id/nowmsg"
@@ -153,7 +208,7 @@
                          android:layout_height="wrap_content"
                        
                          android:layout_marginLeft="5dp"
-                         android:layout_marginTop="5dp"
+                         android:layout_marginTop="3dp"
                      android:textColor="@color/white"
                          android:textSize="15sp"
                          />
@@ -163,7 +218,7 @@
                          android:layout_height="wrap_content"
                         
                          android:layout_marginLeft="0dp"
-                         android:layout_marginTop="5dp"
+                         android:layout_marginTop="3dp"
                         
                          android:textSize="15sp"
                    android:textColor="@color/white" />
@@ -173,7 +228,7 @@
                          android:layout_height="wrap_content"
                       
                          android:layout_marginLeft="10dp"
-                         android:layout_marginTop="5dp"
+                         android:layout_marginTop="3dp"
                    android:textColor="@color/white"
                          android:textSize="15sp"
                          />
@@ -183,14 +238,14 @@
                          android:layout_height="wrap_content"
                        
                          android:layout_marginLeft="0dp"
-                         android:layout_marginTop="5dp"
+                         android:layout_marginTop="3dp"
                    android:textColor="@color/white"
                          android:textSize="15sp"
                           />
          
          </LinearLayout>
              
-        
+        </LinearLayout>
          
       </LinearLayout>
 

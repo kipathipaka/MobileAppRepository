@@ -4,14 +4,15 @@
     <color name="black">#000000</color>
 
     <color name="darkskyblue">#3090C7</color>
-    <color name="lightblue">#A9D0F5</color>
+    <color name="darkblue">#08088A</color>
     <color name="appDarkBlue">#06A2CB</color>
     <color name="graystroke">#A0A0A0</color>
 
     <color name="header">#C0C0C0</color>
     <color name="red">#e75b1d</color>
-
+<color name="darkred">#B40431</color>
     <color name="white">#FFFFFF</color>
+    <color name="darkgreen">#298A08</color>
     <color name="green">#04B404</color>
     <color name="fontColor">#012942</color>
     <color name="pagebackground">#E0F8F7</color>

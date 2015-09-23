@@ -3,6 +3,7 @@ package com.bpatech.trucktracking.Fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,9 +26,10 @@ import java.util.ArrayList;
 
 public class CurrentTripFragment  extends Fragment {
 	SessionManager session;
-	Button openlink,openlink1;
-	TextView destination,truck,phoneno,txt_contTitle;
-	LinearLayout footer_addphone,footer_addtrip,footer_invite;
+
+	TextView txt_contTitle;
+
+
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
@@ -34,17 +37,19 @@ public class CurrentTripFragment  extends Fragment {
 	        View view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 	        txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
 	        txt_contTitle.setText("Current Trips");
-	       // openlink = (Button)view.findViewById(R.id.openbtn);
+
 
 		 ListView listView = (ListView)view.findViewById(R.id.listview);
 	 if(SessionManager.getAddtripdetails()!=null && SessionManager.getAddtripdetails().size() > 0)
 	        {
 
+
 		  ArrayList<AddTrip> currenttripdetails=new ArrayList<AddTrip>();
 		  currenttripdetails.addAll(SessionManager.getAddtripdetails());
 		  CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(),currenttripdetails);
-		  
 
+
+				listView.setDividerHeight(1);
 		  listView.setAdapter(adapter);
 	        	  
 	        }
