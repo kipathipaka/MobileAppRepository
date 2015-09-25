@@ -14,7 +14,6 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="70dp"
-
             android:background="@color/darkskyblue"
             android:weightSum="4" >
 
@@ -22,7 +21,7 @@
                 android:id="@+id/addtrip_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.98"
+                android:layout_weight="0.50"
                 android:paddingLeft="0dp"
                 android:onClick="addtripclick"
                 android:orientation="horizontal"
@@ -30,11 +29,11 @@
                 >
                 <ImageView
                     android:id="@+id/plusfooterlogo"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:paddingLeft="6dp"
                     android:paddingRight="0dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:paddingTop="0dp"
                     android:src="@drawable/plusfooter"
@@ -49,7 +48,7 @@
                     android:onClick="addtripclick"
                     android:paddingLeft="6dp"
                     android:paddingRight="0dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/addtrip_footer"
 
@@ -61,7 +60,7 @@
                     android:id="@+id/navbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="10dp"
                     android:clickable="false"
                     android:src="@drawable/navbarline"
                     />
@@ -72,7 +71,7 @@
                 android:id="@+id/adphone_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.98"
+                android:layout_weight="0.50"
                 android:paddingLeft="0dp"
 
                 android:paddingRight="0dp"
@@ -83,11 +82,11 @@
                 >
                 <ImageView
                     android:id="@+id/phonefooter"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:contentDescription="@string/todo"
                     android:paddingTop="0dp"
@@ -134,11 +133,11 @@
 
                 <ImageView
                     android:id="@+id/inviteimage"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:paddingLeft="2dp"
                     android:paddingRight="2dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:contentDescription="@string/todo"
                     android:paddingTop="0dp"

@@ -82,7 +82,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list) {
 				ImageView profileimage1=(ImageView)view.findViewById(R.id.profile_image);
 				profileimage1.setImageResource(R.drawable.user);
 			}else{
-				view.setBackgroundColor(Color.BLUE);
+				view.setBackgroundColor(getContext().getResources().getColor(R.color.darkblue));
 				ImageView profileimage2=(ImageView)view.findViewById(R.id.profile_image);
 
 				profileimage2.setImageResource(R.drawable.customer);
