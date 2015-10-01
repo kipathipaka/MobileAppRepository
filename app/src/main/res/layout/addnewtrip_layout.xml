@@ -23,12 +23,12 @@
 <TableLayout
         android:id="@+id/addnewtripTable"
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
+        android:layout_height="fill_parent"
          
         android:layout_marginLeft="@dimen/thirty_pt"
         android:layout_marginRight="@dimen/thirty_pt"
-        android:layout_marginTop="@dimen/fifty_pt"
-    android:layout_marginBottom="@dimen/fifty_pt"
+        android:layout_marginTop="5dp"
+    android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp" >
@@ -43,8 +43,8 @@
 
             <TextView
                 android:id="@+id/Truckno"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
 
 
@@ -67,7 +67,7 @@
             <EditText
                 android:id="@+id/edittruckno"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                  android:background="@color/white"
                 android:ems="10"
@@ -87,8 +87,8 @@
 
             <TextView
                 android:id="@+id/destination"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
 
 
@@ -101,7 +101,7 @@
             android:id="@+id/tableRow4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ten_pt"
+
              android:background="@color/gray"
             android:paddingLeft="1.5dp"
             android:paddingRight="1.5dp"
@@ -111,7 +111,7 @@
             <EditText
                 android:id="@+id/editdestination"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -130,8 +130,8 @@
 
            <TextView
                 android:id="@+id/phoneno"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
 
 
@@ -145,7 +145,7 @@
             android:id="@+id/tableRow6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ten_pt"
+
              android:background="@color/gray"
             android:paddingLeft="1.5dp"
             android:paddingRight="1.5dp"
@@ -155,7 +155,7 @@
          <EditText
                 android:id="@+id/editphoneno"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -175,8 +175,8 @@
 
            <TextView
                 android:id="@+id/customer"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
 
 
@@ -190,7 +190,7 @@
             android:id="@+id/tableRow8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ten_pt"
+
              android:background="@color/gray"
             android:paddingLeft="1.5dp"
             android:paddingRight="1.5dp"
@@ -200,7 +200,7 @@
             <EditText
                 android:id="@+id/editcustomer"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -221,8 +221,8 @@
 
            <TextView
                 android:id="@+id/customername"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
 
 
@@ -236,7 +236,6 @@
             android:id="@+id/tableRow10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ten_pt"
              android:background="@color/gray"
             android:paddingLeft="1.5dp"
             android:paddingRight="1.5dp"
@@ -246,7 +245,7 @@
             <EditText
                 android:id="@+id/editcustomername"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -267,8 +266,8 @@
 
            <TextView
                 android:id="@+id/customerno"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
 
 
@@ -282,8 +281,6 @@
             android:id="@+id/tableRow12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ten_pt"
-
              android:background="@color/gray"
             android:paddingLeft="1.5dp"
             android:paddingRight="1.5dp"
@@ -292,7 +289,7 @@
             <EditText
                 android:id="@+id/editcustomerno"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -306,8 +303,8 @@
         android:id="@+id/addbuttonrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp">
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="0dp">
         <Button
             android:id="@+id/addbtn"
             android:layout_width="match_parent"

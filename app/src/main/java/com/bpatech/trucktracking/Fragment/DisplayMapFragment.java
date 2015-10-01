@@ -1,6 +1,7 @@
 package com.bpatech.trucktracking.Fragment;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ public class DisplayMapFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.map_layout, container, false);
-        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map_view)).getMap();
+        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapview)).getMap();
         if(googleMap!=null)
         {
             double latitude=13.0827;
@@ -44,4 +45,19 @@ public class DisplayMapFragment extends Fragment
         return view;
 
     }
+    public void onDestroyView() {
+        // TODO Auto-generated method stub
+
+        super.onDestroyView();
+
+        Fragment fragment = (getFragmentManager()
+                .findFragmentById(R.id.mapview));
+        if (fragment != null) {
+            FragmentTransaction ft = getActivity().getFragmentManager()
+                    .beginTransaction();
+            ft.remove(fragment);
+            ft.commit();
+        }
+    }
+
 }

@@ -43,8 +43,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
         //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
-        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map_view)).getMap();
-
+        googleMap=((MapFragment)getFragmentManager().findFragmentById(R.id.map_view)).getMap();
+       // googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view)).getMap();
+        //(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mmap);
+        //supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view);
+        //googleMap= supportMapFragment.getMap();
         if(googleMap!=null)
         {
             double latitude=13.0827;
@@ -60,7 +63,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
                     null);
 
         }
+googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+{
+    @Override
+    public void onMapClick(LatLng latLng) {
+        DisplayMapFragment displayMapFragment= new DisplayMapFragment();
+        FragmentManager fragmentmanager = getFragmentManager();
+        FragmentTransaction fragmenttransaction = fragmentmanager
+                .beginTransaction();
+        fragmenttransaction.replace(R.id.viewers, displayMapFragment,"BackCurrentTrip");
 
+        fragmenttransaction.addToBackStack(null);
+        fragmenttransaction.commit();
+
+    }
+});
 
 
 
@@ -90,8 +107,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
         customer_name.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER_NAME));
         customer_no.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER_NO));
 
-        startclick=taskdetail.getBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE);
-        if(startclick==true){
+        //startclick=taskdetail.getBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE);
+        /*if(startclick==true){
             //mapDestroyOnDemand();
             System.out.println("click on it");
             Startbtn.setText("End Tracking");
@@ -101,7 +118,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
             System.out.println("disbale the click button");
             Startbtn.setText("Start Tracking");
             Startbtn.setBackgroundColor(Color.parseColor("#3090C7"));
-        }
+        }*/
 
          Startbtn.setOnClickListener(new StartTrackButtonListener());
         // Toast.makeText(getActivity().getApplicationContext(), place, Toast.LENGTH_LONG).show();
@@ -125,8 +142,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
                 fragmenttransaction.addToBackStack(null);
                 fragmenttransaction.commit();
             }else {
-
-                mapDestroyOnDemand();
+                System.out.println("click on it");
+                Startbtn.setText("End Tracking");
+                Startbtn.setBackgroundColor(Color.RED);
+                startclick=true;
+              /*  mapDestroyOnDemand();
                 //onDestroyView();
                 TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
                 Bundle taskdetails=new Bundle();
@@ -145,7 +165,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
                 fragmenttransaction.replace(R.id.viewers, taskdetailfrag,"BackCurrentTrip");
 
                 fragmenttransaction.addToBackStack(null);
-                fragmenttransaction.commit();
+                fragmenttransaction.commit();*/
             }
 
         }

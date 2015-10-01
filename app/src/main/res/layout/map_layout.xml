@@ -3,16 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white">
-    <LinearLayout
-        android:id="@+id/headerlayou"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/tab_bar_bg_top">
-        <include
-            android:id="@+id/header"
-            layout="@layout/header_layout"/>
 
-    </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -21,7 +12,7 @@
         android:orientation="vertical"
         android:layout_below="@id/headerlayou">
     <fragment
-        android:id="@+id/map_view"
+        android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_height="fill_parent"
@@ -29,5 +20,13 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:scaleType="fitXY"/>
-</LinearLayout>
+
+        <!--<TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Displaying map fragment"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal" />-->
+    </LinearLayout>
 </RelativeLayout>
