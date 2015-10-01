@@ -29,27 +29,7 @@
     android:paddingTop="@dimen/eighty_pt"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp" >
-<TableRow
-            android:id="@+id/textrow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-           
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp">
 
-            <TextView
-                android:id="@+id/yourtxt"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/eighty_pt"
-                android:layout_weight="1"
-
-                android:textColor="@color/black"
-                android:textSize="@dimen/fourty_pt"
-                 android:text="@string/your_trip"
-                android:paddingLeft="5dp" >
-                
-            </TextView>
-        </TableRow>
 
       
         <TableRow

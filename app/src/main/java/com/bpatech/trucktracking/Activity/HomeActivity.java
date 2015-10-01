@@ -1,15 +1,11 @@
 package com.bpatech.trucktracking.Activity;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,11 +14,10 @@ import android.widget.EditText;
 
 import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
+import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.R;
-import com.bpatech.trucktracking.Util.SessionManager;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
-
-import java.util.prefs.Preferences;
+import com.bpatech.trucktracking.Util.SessionManager;
 
 public class HomeActivity extends FragmentActivity {
 
@@ -80,6 +75,10 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 			 //addphonefragment.sett
 			 pageRedirection(addphonefragment);
 		    }
+      public void addinviteclick(View v){
+		  InviteFragment invitefragment=new InviteFragment();
+		  pageRedirection(invitefragment);
+	  }
 
 
 		 public void pageRedirection(Fragment fragment) {

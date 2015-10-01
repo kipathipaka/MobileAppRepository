@@ -5,5 +5,24 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="codefont">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">Arial</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/fourty_pt</item>
 
+    </style>
+    <style name="codefont1">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">Arial</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/thirty_pt</item>
+
+    </style>
+<style name="codefont2">
+    <item name="android:textColor">@color/black</item>
+    <item name="android:fontFamily">Arial</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:textSize">@dimen/thirty_pt</item>
+</style>
 </resources>

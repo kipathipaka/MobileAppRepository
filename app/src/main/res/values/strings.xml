@@ -27,5 +27,6 @@
     <string name="addtrip_footer">Add Trips</string>
     <string name="addphone_footer">Add Phone</string>
     <string name="invite_footer">Invite</string>
+    <string name="send_btn">Send</string>
 
 </resources>

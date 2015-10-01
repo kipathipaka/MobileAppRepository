@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
          android:layout_marginTop="10dp" 
         android:orientation="vertical">
-         <ImageView
+         <!--<ImageView
              android:id="@+id/map_image"
              android:layout_width="fill_parent"
              android:layout_height="@dimen/one_twenty_px"
@@ -32,8 +32,17 @@
              android:layout_marginRight="10dp"
              android:layout_marginTop="10dp"
              android:scaleType="fitXY"
-             android:src="@drawable/mapimage" />
+             android:src="@drawable/mapimage" />-->
 
+       <fragment
+                    android:id="@+id/map_view"
+                    android:layout_width="fill_parent"
+                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:layout_height="150dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+           android:scaleType="fitXY"/>
 
 
         
@@ -63,8 +72,7 @@
                              android:layout_marginLeft="10dp"
                              android:layout_marginTop="0dp"
                              android:text="@string/truck_txt"
-                             android:textSize="15sp"
-                             android:textStyle="bold" />
+                             style="@style/codefont1" />
 
 
 
@@ -75,10 +83,7 @@
                              android:layout_column="2"
                              android:layout_marginLeft="1dp"
                              android:layout_marginTop="0dp"
-                             android:textColor="@color/fontColor"
-
-                             android:textSize="13sp"
-                             android:textStyle="bold" />
+                             style="@style/codefont2" />
 
 
                      </TableRow>
@@ -98,8 +103,7 @@
                              android:layout_marginLeft="10dp"
                              android:layout_marginTop="0dp"
                              android:text="@string/to_txt"
-                             android:textSize="15sp"
-                             android:textStyle="bold" />
+                             style="@style/codefont1" />
 
 
 
@@ -110,10 +114,7 @@
                              android:layout_column="2"
                              android:layout_marginLeft="1dp"
                              android:layout_marginTop="0dp"
-                             android:textColor="@color/fontColor"
-
-                             android:textSize="15sp"
-                             android:textStyle="bold" />
+                            style="@style/codefont2" />
 
                      </TableRow>
                   <TableRow android:id="@+id/phone"
@@ -128,8 +129,7 @@
                          android:layout_marginLeft="10dp"
                          android:layout_marginTop="0dp"
                          android:text="@string/phoneno_txt"
-                         android:textSize="15sp"
-                         android:textStyle="bold" />
+                         style="@style/codefont1" />
 
                      
 
@@ -140,10 +140,7 @@
                          android:layout_column="2"
                          android:layout_marginLeft="1dp"
                          android:layout_marginTop="0dp"
-                         android:textColor="@color/fontColor"
-
-                         android:textSize="13sp"
-                          android:textStyle="bold" />
+                         style="@style/codefont2" />
 
                        
                  </TableRow>
@@ -163,8 +160,7 @@
                          android:layout_marginLeft="10dp"
                          android:layout_marginTop="0dp"
                          android:text="@string/customer"
-                         android:textSize="15sp"
-                         android:textStyle="bold" />
+                         style="@style/codefont1" />
 
                    
 
@@ -176,9 +172,7 @@
                          android:layout_marginLeft="1dp"
                          android:layout_marginTop="0dp"
 
-                         android:textColor="@color/fontColor"
-                         android:textSize="15sp"
-                         android:textStyle="bold" />
+                          style="@style/codefont2"  />
 
                  </TableRow>
 
@@ -196,8 +190,7 @@
                          android:layout_marginLeft="10dp"
                          android:layout_marginTop="0dp"
                          android:text="@string/customer_name"
-                         android:textSize="15sp"
-                         android:textStyle="bold" />
+                         style="@style/codefont1" />
 
                    
 
@@ -209,9 +202,7 @@
                          android:layout_marginLeft="1dp"
                          android:layout_marginTop="0dp"
 
-                         android:textColor="@color/fontColor"
-                         android:textSize="15sp"
-                         android:textStyle="bold" />
+                          style="@style/codefont2"  />
 
                  </TableRow>
                 
@@ -228,8 +219,7 @@
                          android:layout_marginLeft="10dp"
                          android:layout_marginTop="0dp"
                          android:text="@string/customer"
-                         android:textSize="15sp"
-                         android:textStyle="bold" />
+                         style="@style/codefont1" />
 
                    
 
@@ -240,10 +230,7 @@
                          android:layout_column="2"
                          android:layout_marginLeft="1dp"
                          android:layout_marginTop="0dp"
-
-                         android:textColor="@color/fontColor"
-                         android:textSize="15sp"
-                         android:textStyle="bold" />
+                          style="@style/codefont2"  />
 
                  </TableRow>
                 
@@ -268,7 +255,7 @@
                      android:layout_marginRight="@dimen/thirty_pt"
                       android:paddingRight="25dp"
                       android:text="@string/starttrip_btn"
-                      android:textColor="@color/black" />
+                      android:textColor="@color/white" />
              
                
              </LinearLayout>

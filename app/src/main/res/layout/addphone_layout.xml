@@ -42,33 +42,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
                 android:layout_weight="1"
-                android:textColor="@color/black"
-                android:textSize="20dp"
+
                 android:text="Enter the phonenumber
                                 you want to track"
-                android:paddingLeft="5dp" >
+                android:paddingLeft="5dp"
+                style="@style/codefont">
             </TextView>
         </TableRow>
 
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-       
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp" >
 
-             <TextView
-                android:id="@+id/examplephone"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-               android:textColor="@color/gray"
-                android:textSize="20dp"
-                 android:text="e.g +911234567890"
-                android:paddingLeft="5dp" >
-            </TextView>
-        </TableRow>
         
  <TableRow
             android:id="@+id/tableRow3"
@@ -80,14 +62,16 @@
      android:paddingBottom="1.5dp"
      android:paddingTop="1.5dp">
   <EditText
-                android:id="@+id/edityourname"
+                android:id="@+id/edityournum"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
       android:textCursorDrawable="@color/black"
-                android:inputType="text"
+
+                android:hint="e.g:+919543492022"
+                 android:inputType="phone"
                 android:paddingLeft="5dp" />
         </TableRow>
     <TableRow

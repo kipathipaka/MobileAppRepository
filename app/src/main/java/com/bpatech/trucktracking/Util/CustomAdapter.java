@@ -1,7 +1,6 @@
 package com.bpatech.trucktracking.Util;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +75,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list) {
 			if(mList.get(position).getCustomer().toString().equalsIgnoreCase("driver")){
 				view.setBackgroundColor(getContext().getResources().getColor(R.color.darkred));
 				ImageView profileimage=(ImageView)view.findViewById(R.id.profile_image);
-				profileimage.setImageResource(R.drawable.driverimg);
+				profileimage.setImageResource(R.drawable.truck);
 			}else if(mList.get(position).getCustomer().toString().equalsIgnoreCase("user")){
 				view.setBackgroundColor(getContext().getResources().getColor(R.color.darkgreen));
 				ImageView profileimage1=(ImageView)view.findViewById(R.id.profile_image);

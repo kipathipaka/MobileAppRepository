@@ -46,10 +46,11 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-               android:textColor="@color/black"
-                android:textSize="20dp"
+
+
                  android:text="@string/truck_no"
-                android:paddingLeft="5dp" >
+                android:paddingLeft="5dp"
+                style="@style/codefont">
             </TextView>
         </TableRow>
 
@@ -89,10 +90,11 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:textColor="@color/black"
-                android:textSize="20dp"
+
+
                android:text="@string/destination_txt"
-                android:paddingLeft="5dp" >
+                android:paddingLeft="5dp"
+                style="@style/codefont">
             </TextView>
         </TableRow>
         <TableRow
@@ -131,10 +133,11 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-               android:textColor="@color/black"
-                android:textSize="20dp"
+
+
                android:text="@string/phone_txt"
-                android:paddingLeft="5dp" >
+                android:paddingLeft="5dp"
+               style="@style/codefont">
             </TextView>
             
         </TableRow>
@@ -175,10 +178,11 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-               android:textColor="@color/black"
-                android:textSize="20dp"
+
+
                android:text="@string/customer"
-                android:paddingLeft="5dp" >
+                android:paddingLeft="5dp"
+               style="@style/codefont">
             </TextView>
             
         </TableRow>
@@ -220,10 +224,11 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-               android:textColor="@color/black"
-                android:textSize="20dp"
+
+
                android:text="@string/customer_name"
-                android:paddingLeft="5dp" >
+                android:paddingLeft="5dp"
+               style="@style/codefont">
             </TextView>
             
         </TableRow>
@@ -265,10 +270,11 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-               android:textColor="@color/black"
-                android:textSize="20dp"
+
+
                android:text="@string/customerno_txt"
-                android:paddingLeft="5dp" >
+                android:paddingLeft="5dp"
+               style="@style/codefont">
             </TextView>
             
         </TableRow>
