@@ -13,23 +13,22 @@
           layout="@layout/header_layout"/>   
           
        </LinearLayout>
-        <ScrollView 
+        <ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/headerlayou"
     android:id="@+id/addnewscrollview"
-     android:layout_marginBottom="0dp"
-     android:layout_marginTop="5dp" >
+            style="@style/marginlayouts">
         
 <TableLayout
         android:id="@+id/addnewtripTable"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
          
-        android:layout_marginLeft="@dimen/thirty_pt"
-        android:layout_marginRight="@dimen/thirty_pt"
-        android:layout_marginTop="5dp"
-    android:layout_marginBottom="10dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+    android:layout_marginBottom="0dp"
         android:orientation="horizontal"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp" >
@@ -48,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-
+                  android:layout_marginBottom="@dimen/fifteen_pt"
                  android:text="@string/truck_no"
                 android:paddingLeft="5dp"
                 style="@style/codefont">
@@ -68,7 +67,7 @@
             <EditText
                 android:id="@+id/edittruckno"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                  android:background="@color/white"
                 android:hint="e.g:4567"
@@ -85,14 +84,14 @@
             android:layout_height="wrap_content"
             android:paddingLeft="1dp"
             android:paddingRight="1dp" 
-             android:paddingTop="10dp">
+             android:layout_marginTop="@dimen/ten_pt">
 
             <TextView
                 android:id="@+id/destination"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:layout_marginBottom="@dimen/fifteen_pt"
 
                android:text="@string/destination_txt"
                 android:paddingLeft="5dp"
@@ -113,7 +112,7 @@
             <EditText
                 android:id="@+id/editdestination"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -137,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-
+               android:layout_marginBottom="@dimen/fifteen_pt"
                android:text="@string/phone_txt"
                 android:paddingLeft="5dp"
                style="@style/codefont">
@@ -158,7 +157,7 @@
          <EditText
                 android:id="@+id/editphoneno"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -183,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-
+               android:layout_marginBottom="@dimen/fifteen_pt"
                android:text="@string/customer"
                 android:paddingLeft="5dp"
                style="@style/codefont">
@@ -204,7 +203,7 @@
             <EditText
                 android:id="@+id/editcustomer"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -230,7 +229,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-
+               android:layout_marginBottom="@dimen/fifteen_pt"
                android:text="@string/customer_name"
                 android:paddingLeft="5dp"
                style="@style/codefont">
@@ -250,7 +249,7 @@
             <EditText
                 android:id="@+id/editcustomername"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -276,7 +275,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
-
+               android:layout_marginBottom="@dimen/fifteen_pt"
                android:text="@string/customerno_txt"
                 android:paddingLeft="5dp"
                style="@style/codefont">
@@ -295,7 +294,7 @@
             <EditText
                 android:id="@+id/editcustomerno"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -310,20 +309,17 @@
         android:id="@+id/addbuttonrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginBottom="0dp">
+        android:layout_marginTop="@dimen/fourty_pt">
         <Button
             android:id="@+id/addbtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/seventy_pt"
             android:layout_weight="1"
-            android:textSize="20dp"
+
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:text="@string/add_btn"
-            android:background="@color/appDarkBlue"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+           style="@style/textbutton"
             />
 
     </TableRow>
@@ -331,7 +327,7 @@
 
 </TableLayout>
     
-   </ScrollView> 
+   </ScrollView>
     
 
 

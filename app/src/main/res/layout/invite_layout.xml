@@ -19,9 +19,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/headerlayou"
-        android:layout_marginLeft="@dimen/thirty_pt"
-        android:layout_marginRight="@dimen/thirty_pt"
-        android:layout_marginTop="@dimen/fifty_pt"
+        style="@style/marginlayouts"
         android:orientation="horizontal"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp" >
@@ -36,11 +34,12 @@
 
         <TextView
             android:id="@+id/textview"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginBottom="@dimen/fifteen_pt"
             style="@style/codefont"
-            android:text="TO:"
+            android:text="To:"
             android:paddingLeft="5dp" >
         </TextView>
     </TableRow>
@@ -59,7 +58,7 @@
         <EditText
             android:id="@+id/phonenum"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/seventy_pt"
             android:layout_weight="1"
         android:background="@color/white"
             android:ems="10"
@@ -72,15 +71,16 @@
             android:id="@+id/tableRow3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/ten_pt"
             android:paddingLeft="1dp"
             android:paddingRight="1dp" >
 
             <TextView
                 android:id="@+id/textview1"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginBottom="@dimen/fifteen_pt"
                style="@style/codefont"
                 android:text="Message:"
                 android:paddingLeft="5dp" >
@@ -100,7 +100,7 @@
             <EditText
                 android:id="@+id/edittexview1"
                 android:layout_width="0dp"
-                android:layout_height="80dp"
+                android:layout_height="@dimen/onehundred_fifty_pt"
                 android:layout_weight="1"
 
                 android:background="@color/white"
@@ -116,21 +116,17 @@
             android:id="@+id/buttonrow5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="@dimen/fourty_pt">
             <Button
                 android:id="@+id/sndbtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
 
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
                 android:text="@string/send_btn"
-                android:background="@color/appDarkBlue"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="20dp"/>
-
+                style="@style/textbutton"/>
         </TableRow>
 </TableLayout>
 

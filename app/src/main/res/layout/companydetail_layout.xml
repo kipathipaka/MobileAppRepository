@@ -16,15 +16,17 @@
       android:id="@+id/scrolltriplistview"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/headerlayou">
+      android:layout_below="@id/headerlayou"
+            style="@style/marginlayouts"
+            >
 <TableLayout
         android:id="@+id/registerTable"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
           android:layout_below="@+id/headerlayou"
-        android:layout_marginLeft="@dimen/thirty_pt"
-        android:layout_marginRight="@dimen/thirty_pt"
-        android:layout_marginTop="@dimen/fifty_pt"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
         android:orientation="horizontal"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp" >
@@ -33,18 +35,19 @@
             android:id="@+id/tableRow1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-          
+          android:paddingTop="0dp"
             android:paddingLeft="1dp"
             android:paddingRight="1dp" >
 
             <TextView
                 android:id="@+id/companyName"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:layout_marginBottom="@dimen/fifteen_pt"
 
                  android:text="@string/company_name"
+
                 android:paddingLeft="5dp"
                 style="@style/codefont">
             </TextView>
@@ -63,7 +66,7 @@
             <EditText
                 android:id="@+id/editcompanynamee"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                  android:background="@color/white"
                 android:ems="10"
@@ -79,14 +82,14 @@
             android:layout_height="wrap_content"
             android:paddingLeft="1dp"
             android:paddingRight="1dp" 
-             android:paddingTop="20dp">
+             android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/yurname"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:layout_marginBottom="@dimen/fifteen_pt"
                 style="@style/codefont"
                android:text="@string/your_name"
                 android:paddingLeft="5dp" >
@@ -106,7 +109,7 @@
             <EditText
                 android:id="@+id/edityourname"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -120,14 +123,14 @@
             android:layout_height="wrap_content"
             android:paddingLeft="1dp"
             android:paddingRight="1dp" 
-             android:paddingTop="20dp">
+             android:paddingTop="2dp">
 
             <TextView
                 android:id="@+id/OTP"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:layout_marginBottom="@dimen/fifteen_pt"
                 style="@style/codefont"
                android:text="@string/otp"
                 android:paddingLeft="5dp" >
@@ -147,7 +150,7 @@
             <EditText
                 android:id="@+id/editotp"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
@@ -159,22 +162,19 @@
         android:id="@+id/buttonrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/fourty_pt"
 
        >
         <Button
             android:id="@+id/detbtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/seventy_pt"
             android:layout_weight="1"
 
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:text="@string/next_btn"
-            android:background="@color/appDarkBlue"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="20dp"
+           style="@style/textbutton"
             />
 
     </TableRow>
