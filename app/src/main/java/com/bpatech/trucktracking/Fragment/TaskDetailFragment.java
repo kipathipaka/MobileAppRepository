@@ -56,11 +56,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
             Marker marker = googleMap.addMarker(new MarkerOptions().position(
                     LOCATION).title(""));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION,
-                    17));
+           googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION,17));
             // Zoom in, animating the camera.
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000,
-                    null);
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(14),2000,null);
 
         }
 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()

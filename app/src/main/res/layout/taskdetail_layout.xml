@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+
     android:background="@color/white">
 
     <LinearLayout
@@ -218,7 +219,7 @@
                          android:layout_column="1"
                          android:layout_marginLeft="10dp"
                          android:layout_marginTop="0dp"
-                         android:text="@string/customer"
+                         android:text="@string/customerno"
                          style="@style/codefont1" />
 
                    

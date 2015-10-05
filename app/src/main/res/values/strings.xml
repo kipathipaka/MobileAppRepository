@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TruckTracking</string>
+    <string name="app_name">Vehicle Tracking</string>
     <string name="action_settings">Settings</string>
     <string name="company_detalis">Company Details</string>
     <string name="your_trip">Your Trip :</string>
@@ -28,5 +28,6 @@
     <string name="addphone_footer">Add Phone</string>
     <string name="invite_footer">Invite</string>
     <string name="send_btn">Send</string>
+    <string name="customerno">Customer No:</string>
 
 </resources>

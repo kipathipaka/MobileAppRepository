@@ -4,6 +4,7 @@ package com.bpatech.trucktracking.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -109,4 +110,8 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 			 }
 
 		 }
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
 }
