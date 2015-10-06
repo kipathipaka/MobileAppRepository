@@ -13,24 +13,48 @@
           
        </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/currenttriplist_view"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/headerlayou"
+        android:background="@color/darkblue"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/triplistsize_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:textColor="@color/white"
+            style="@style/codefont">
+        </TextView>
+    </LinearLayout>
+    <View
+        android:id="@+id/separator_view"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@id/currenttriplist_view"
+        android:background="@drawable/taskseparator"/>
 <ListView
     android:id="@+id/listview"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:divider="@drawable/task_detail_line"
-    android:dividerHeight="15dp"
-    android:layout_below="@id/headerlayou"
-    android:layout_marginBottom="10dp"/>
+    android:divider="@drawable/taskseparator"
+    android:dividerHeight="10dp"
+    android:layout_below="@id/separator_view"
+    android:layout_marginBottom="4dp"/>
 
 <LinearLayout 
-        android:id="@+id/footerlayout"
-        android:layout_width="fill_parent"
+    android:id="@+id/footerlayout"
+    android:layout_width="fill_parent"
     android:layout_height="50dp"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
     android:layout_marginBottom="0dp"
-      android:background="@drawable/tab_bar_bg"
-       android:layout_below="@id/scrolltriplistview">
+    android:background="@drawable/tab_bar_bg"
+    android:layout_below="@id/scrolltriplistview">
 
     <include
         android:id="@+id/footer"

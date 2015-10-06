@@ -77,7 +77,7 @@
                 android:paddingLeft="5dp" >
             </EditText>
         </TableRow>
-        
+
  <TableRow
             android:id="@+id/tableRow3"
             android:layout_width="match_parent"
@@ -92,7 +92,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginBottom="@dimen/fifteen_pt"
-
                android:text="@string/destination_txt"
                 android:paddingLeft="5dp"
                 style="@style/codefont">
@@ -308,7 +307,10 @@
     <TableRow
         android:id="@+id/addbuttonrow"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/seventy_pt"
+        android:paddingBottom="1.5dp"
+        android:paddingTop="1.5dp"
+        android:background="@color/darkskyblue"
         android:layout_marginTop="@dimen/fourty_pt">
         <Button
             android:id="@+id/addbtn"

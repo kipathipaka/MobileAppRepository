@@ -13,7 +13,7 @@
        android:textSize="@dimen/sixty_px"
      android:paddingTop="@dimen/eighty_pt"
        android:paddingBottom="@dimen/eighty_pt"
-        android:text="MY TRUCK"
+        android:text="@string/app_header"
         android:textColor="@color/black" />
  
        

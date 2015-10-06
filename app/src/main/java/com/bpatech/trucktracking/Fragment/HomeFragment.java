@@ -35,8 +35,9 @@ public class HomeFragment extends Fragment {
 	private Button nbtn;
 	private EditText phoneNo;
 	ImageButton imageButtonopen;
-	TextView destination,truck,phoneno,txt_contTitle;
-	LinearLayout listlayout_ll;
+	TextView destination,truck,phoneno,txt_contTitle,triplistsize_view;;
+	LinearLayout listlayout_ll,triplist_ll;
+
 	SessionManager session;
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,19 +51,22 @@ public class HomeFragment extends Fragment {
 			 view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 			 txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
 			 txt_contTitle.setText("Current Trips");
-			 listlayout_ll=(LinearLayout)view.findViewById(R.id.currenttriplist_ll);
+			triplistsize_view=(TextView)view.findViewById(R.id.triplistsize_view);
+			triplist_ll=(LinearLayout)view.findViewById(R.id.currenttriplist_view);
+			triplist_ll.setVisibility(view.GONE);
 
 			 ListView listView = (ListView) view.findViewById(R.id.listview);
 			 if (SessionManager.getAddtripdetails() != null && SessionManager.getAddtripdetails().size() > 0) {
-				// System.out.println("list"+SessionManager.getAddtripdetails().get(0));
-				 int listsize=SessionManager.getAddtripdetails().size();
+				 String triplisttext="Available ("+ SessionManager.getAddtripdetails().size()+")";
+				 triplistsize_view.setText(triplisttext);
+				 triplist_ll.setVisibility(view.VISIBLE);
 
 				 ArrayList<AddTrip> currenttripdetails = new ArrayList<AddTrip>();
 				 currenttripdetails.addAll(SessionManager.getAddtripdetails());
-				 CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(), currenttripdetails);
+				 CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(), currenttripdetails,savedInstanceState);
 				 listView.setAdapter(adapter);
-				 listView.setDivider(null);
-				 listView.setDividerHeight(0);
+
+				 listView.setDividerHeight(5);
 
 			 }
 
@@ -94,8 +98,6 @@ public class HomeFragment extends Fragment {
 					 bundle.putString(ServiceConstants.ADD_TRIP_CUSTOMER_NO, customer_noval);
 					 bundle.putBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE, false);
 					 taskdetailfrag.setArguments(bundle);
-					 //Toast.makeText(getActivity().getApplicationContext(), item, Toast.LENGTH_LONG).show();
-
 					 FragmentManager fragmentmanager = getFragmentManager();
 					 FragmentTransaction fragmenttransaction = fragmentmanager
 							 .beginTransaction();
@@ -144,7 +146,7 @@ public class HomeFragment extends Fragment {
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
 							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, detailfrag);
+					fragmenttransaction.replace(R.id.viewers, detailfrag,"BackCurrentTrip");
 					
 					fragmenttransaction.addToBackStack(null);
 					fragmenttransaction.commit();

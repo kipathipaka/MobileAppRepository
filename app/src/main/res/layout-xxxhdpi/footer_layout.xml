@@ -76,7 +76,7 @@
                 android:paddingLeft="0dp"
 
                 android:paddingRight="0dp"
-                android:background="@color/darkskyblue"
+
                 android:onClick="addphoneclick"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/twenty_pt"
@@ -129,7 +129,7 @@
                 android:onClick="addinviteclick"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/twenty_pt"
-                android:background="@color/darkskyblue"
+
                 android:weightSum="2" >
 
                 <ImageView
@@ -155,7 +155,7 @@
                     android:onClick="addinviteclick"
                     android:paddingLeft="5dp"
                     android:paddingRight="3dp"
-                    android:background="@color/darkskyblue"
+
                     android:text="@string/invite_footer"
                     android:textColor="@color/white"
                     android:textSize="17sp"

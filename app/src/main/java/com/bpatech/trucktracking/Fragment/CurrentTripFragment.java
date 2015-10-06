@@ -26,8 +26,8 @@ import java.util.ArrayList;
 
 public class CurrentTripFragment  extends Fragment {
 	SessionManager session;
-
-	TextView txt_contTitle;
+LinearLayout triplist_ll;
+	TextView txt_contTitle,triplistsize_view;
 
 
 	 @Override
@@ -37,21 +37,21 @@ public class CurrentTripFragment  extends Fragment {
 	        View view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 	        txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
 	        txt_contTitle.setText("Current Trips");
-
-
+		 triplistsize_view=(TextView)view.findViewById(R.id.triplistsize_view);
+		 triplist_ll=(LinearLayout)view.findViewById(R.id.currenttriplist_view);
+		 triplist_ll.setVisibility(view.GONE);
 		 ListView listView = (ListView)view.findViewById(R.id.listview);
 	 if(SessionManager.getAddtripdetails()!=null && SessionManager.getAddtripdetails().size() > 0)
 	        {
-
-
+    String triplisttext="Available Trips ("+ SessionManager.getAddtripdetails().size()+")";
+				triplistsize_view.setText(triplisttext);
+				triplist_ll.setVisibility(view.VISIBLE);
 		  ArrayList<AddTrip> currenttripdetails=new ArrayList<AddTrip>();
 		  currenttripdetails.addAll(SessionManager.getAddtripdetails());
-		  CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(),currenttripdetails);
-
-
-				listView.setDividerHeight(1);
+		  CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(),currenttripdetails,savedInstanceState);
+				listView.setDividerHeight(5);
 		  listView.setAdapter(adapter);
-	        	  
+
 	        }
 
 		 listView.setOnItemClickListener(new OnItemClickListener() {

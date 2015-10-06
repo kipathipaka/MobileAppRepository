@@ -29,5 +29,6 @@
     <string name="invite_footer">Invite</string>
     <string name="send_btn">Send</string>
     <string name="customerno">Customer No:</string>
+    <string name="app_header">Vehicle Tracking</string>
 
 </resources>

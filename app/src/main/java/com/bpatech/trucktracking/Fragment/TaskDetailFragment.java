@@ -6,6 +6,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,9 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
     * Created by Anita on 9/14/2015.
@@ -43,6 +48,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
         //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
+        Bundle taskdetail = this.getArguments();
         googleMap=((MapFragment)getFragmentManager().findFragmentById(R.id.map_view)).getMap();
        // googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view)).getMap();
         //(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mmap);
@@ -50,7 +56,26 @@ import com.google.android.gms.maps.model.MarkerOptions;
         //googleMap= supportMapFragment.getMap();
         if(googleMap!=null)
         {
-            double latitude=13.0827;
+            String addressname=taskdetail.getString(ServiceConstants.CUURENT_TRIP_PLACE).toString();
+            Geocoder geoCoder = new Geocoder(this.getActivity());
+            List<Address> listAddress;
+            //GeoPoint geoPoint;
+            try {
+                listAddress = geoCoder.getFromLocationName(addressname, 1);
+                if (listAddress == null || listAddress.size()==0) {
+                    Toast.makeText(this.getActivity(), "No Location found", Toast.LENGTH_SHORT).show();
+                    //return null;
+                }
+                Address location = listAddress.get(0);
+                LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(
+                        locationlatlng).title(""));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+                googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+           /* double latitude=13.0827;
             double longitude= 80.2707;
             LatLng LOCATION = new LatLng(latitude,longitude);
 
@@ -59,13 +84,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION,17));
             // Zoom in, animating the camera.
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(14),2000,null);
-
+*/
         }
 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
 {
     @Override
     public void onMapClick(LatLng latLng) {
         DisplayMapFragment displayMapFragment= new DisplayMapFragment();
+        Double latitude=latLng.latitude;
+        Double longitude=latLng.longitude;
+        Bundle bundle=new Bundle();
+        bundle.putDouble("latitude",latitude);
+        bundle.putDouble("longitude",longitude);
+        displayMapFragment.setArguments(bundle);
         FragmentManager fragmentmanager = getFragmentManager();
         FragmentTransaction fragmenttransaction = fragmentmanager
                 .beginTransaction();
@@ -76,8 +107,6 @@ googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
 
     }
 });
-
-
 
 
         txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
@@ -91,11 +120,6 @@ googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
         customer = (TextView) view.findViewById(R.id.customerval);
         customer_name = (TextView) view.findViewById(R.id.customenameval);
         customer_no = (TextView) view.findViewById(R.id.customenoval);
-
-
-
-
-       Bundle taskdetail = this.getArguments();
 
         // String place=taskdetail.getString(ServiceConstants.CUURENT_TRIP_Place);
         place.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_PLACE));

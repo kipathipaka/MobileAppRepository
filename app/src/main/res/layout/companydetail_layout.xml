@@ -161,16 +161,16 @@
     <TableRow
         android:id="@+id/buttonrow"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/fourty_pt"
-
-       >
+        android:layout_height="@dimen/seventy_pt"
+        android:paddingBottom="1.5dp"
+        android:paddingTop="1.5dp"
+        android:background="@color/darkskyblue"
+        android:layout_marginTop="@dimen/fourty_pt">
         <Button
             android:id="@+id/detbtn"
             android:layout_width="0dp"
             android:layout_height="@dimen/seventy_pt"
             android:layout_weight="1"
-
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:text="@string/next_btn"

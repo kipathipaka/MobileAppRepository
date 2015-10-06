@@ -27,11 +27,12 @@ public class DisplayMapFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.map_layout, container, false);
+        Bundle maplist = this.getArguments();
         googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapview)).getMap();
         if(googleMap!=null)
         {
-            double latitude=13.0827;
-            double longitude= 80.2707;
+            double latitude=maplist.getDouble("latitude");
+            double longitude= maplist.getDouble("longitude");
             LatLng LOCATION = new LatLng(latitude,longitude);
 
             Marker marker = googleMap.addMarker(new MarkerOptions().position(

@@ -91,11 +91,11 @@ public class AddnewTripFragment extends Fragment {
 			}
 
 
-	public void onBackPressed() {
+	/*public void onBackPressed() {
 		// TODO Auto-generated method stub
 		FragmentManager mgr = getFragmentManager();
 		mgr.popBackStack();
-		}
+		}*/
 
 	}
 
