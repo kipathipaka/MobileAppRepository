@@ -36,12 +36,12 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:layout_below="@id/currenttriplist_view"
-        android:background="@drawable/taskseparator"/>
+        android:background="@drawable/separator"/>
 <ListView
     android:id="@+id/listview"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:divider="@drawable/taskseparator"
+    android:divider="@drawable/separator"
     android:dividerHeight="10dp"
     android:layout_below="@id/separator_view"
     android:layout_marginBottom="4dp"/>
