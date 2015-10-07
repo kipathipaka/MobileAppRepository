@@ -30,7 +30,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -87,7 +90,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 					map.getUiSettings().setMapToolbarEnabled(false);
 					map.setMyLocationEnabled(true);
 					MapsInitializer.initialize(context);
-					String addressname= mList.get(position).getDestination().toString();
+					String addressname= mList.get(position).getSource().toString();
 					Geocoder geoCoder = new Geocoder(getContext());
 					List<Address> listAddress;
 					//GeoPoint geoPoint;
@@ -142,9 +145,12 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			DestinationText.setText("To :");
 			rideText.setText("Ride :");
 			NowText.setText("Now :");
-			Nowval.setText(mList.get(position).getDestination());
+			Nowval.setText(mList.get(position).getSource());
 			UpdateText.setText("Update :");
-			UpdateVal.setText("10.10 Am");
+	        DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+	        Date date = new Date();
+
+			UpdateVal.setText(dateFormat.format(date).toString());
 			Rideno.setText( mList.get(position).getTruckno() );
 			Destination.setText( mList.get(position).getDestination() );
 			phoneno.setText( mList.get(position).getPhone_no());

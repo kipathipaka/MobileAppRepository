@@ -11,22 +11,18 @@
         android:layout_marginBottom="1dp"
         android:orientation="vertical"
         android:layout_below="@id/headerlayou">
-    <fragment
-        android:id="@+id/mapview"
-        android:layout_width="fill_parent"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
-        android:scaleType="fitXY"/>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitXY"
 
-        <!--<TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Displaying map fragment"
-            android:id="@+id/textView"
-            android:layout_gravity="center_horizontal" />-->
+            />
+
+
+
     </LinearLayout>
 </RelativeLayout>

@@ -19,9 +19,13 @@ import android.widget.Toast;
 
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.ServiceConstants;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -33,28 +37,56 @@ import java.util.List;
     * Created by Anita on 9/14/2015.
             */
     public class TaskDetailFragment extends Fragment   {
-        public GoogleMap googleMap;
+       // public GoogleMap googleMap;
         protected Context context;
         TextView truck, place, phone, txt_contTitle,customer,customer_name,customer_no;
         Button Startbtn;
     boolean isstarttrip=true,isendtrip=false;
     ImageButton whatsup;
     boolean startclick;
-
+    MapView mapView;
+    public GoogleMap googleMap;
     LatLng LOCATION;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)  {
         //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
         Bundle taskdetail = this.getArguments();
-        googleMap=((MapFragment)getFragmentManager().findFragmentById(R.id.map_view)).getMap();
-       // googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view)).getMap();
-        //(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mmap);
-        //supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view);
-        //googleMap= supportMapFragment.getMap();
-        if(googleMap!=null)
+        mapView = (MapView) view.findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
+        googleMap=mapView.getMap();
+        if(googleMap!=null) {
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+            // googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            //googleMap.getUiSettings().setMapToolbarEnabled(false);
+            googleMap.setMyLocationEnabled(true);
+            MapsInitializer.initialize(this.getActivity());
+            String addressname = taskdetail.getString(ServiceConstants.ADD_TRIP_SOURCE).toString();
+            Geocoder geoCoder = new Geocoder(this.getActivity());
+            List<Address> listAddress;
+            //GeoPoint geoPoint;
+            try {
+                listAddress = geoCoder.getFromLocationName(addressname, 1);
+                if (listAddress == null || listAddress.size() == 0) {
+                    Toast.makeText(this.getActivity(), "No Location found", Toast.LENGTH_SHORT).show();
+                    //return null;
+                }
+                Address location = listAddress.get(0);
+                LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(
+                        locationlatlng).title(""));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+                // googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000,null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+       /* if(googleMap!=null)
         {
             String addressname=taskdetail.getString(ServiceConstants.CUURENT_TRIP_PLACE).toString();
             Geocoder geoCoder = new Geocoder(this.getActivity());
@@ -75,18 +107,9 @@ import java.util.List;
             }catch (IOException e) {
                 e.printStackTrace();
             }
-           /* double latitude=13.0827;
-            double longitude= 80.2707;
-            LatLng LOCATION = new LatLng(latitude,longitude);
 
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(
-                    LOCATION).title(""));
-           googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION,17));
-            // Zoom in, animating the camera.
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(14),2000,null);
-*/
-        }
-googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+        }*/
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
 {
     @Override
     public void onMapClick(LatLng latLng) {
@@ -228,7 +251,7 @@ googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
         }
 
 
-
+/*
     @Override
     public void onDestroyView() {
         // TODO Auto-generated method stub
@@ -254,6 +277,27 @@ googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
             ft.remove(fragment);
             ft.commit();
         }
+    }*/
+@Override
+public void onResume() {
+    mapView.onResume();
+    super.onResume();
+}
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
 }

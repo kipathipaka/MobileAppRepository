@@ -64,7 +64,8 @@ LinearLayout triplist_ll;
 				 TextView customer=(TextView)view.findViewById(R.id.customer);
 				 TextView customer_name=(TextView)view.findViewById(R.id.customername);
 				 TextView customer_no=(TextView)view.findViewById(R.id.customerno);
-
+				 TextView source=(TextView)view.findViewById(R.id.nowvalue);
+				 String sourcetxt=source.getText().toString();
 				 String placeval = place.getText().toString();
 				 String Truckval = Truck.getText().toString();
 				 String phoneval = phone.getText().toString();
@@ -74,6 +75,7 @@ LinearLayout triplist_ll;
 				 TaskDetailFragment taskdetailfrag=new TaskDetailFragment();
 				 Bundle bundle=new Bundle();
 				 bundle.putString(ServiceConstants.CUURENT_TRIP_PLACE,placeval);
+				 bundle.putString(ServiceConstants.ADD_TRIP_SOURCE,sourcetxt);
 				 bundle.putString(ServiceConstants.CUURENT_TRIP_TRUCK,Truckval);
 				 bundle.putString(ServiceConstants.CUURENT_TRIP_PHONE, phoneval);
 				 bundle.putString(ServiceConstants.ADD_TRIP_CUSTOMER, customerval);

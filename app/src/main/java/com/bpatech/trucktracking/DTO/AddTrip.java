@@ -8,13 +8,13 @@ public class AddTrip {
 	String customer;
 	String customer_name;
 	String customer_no;
-	
+	String source;
 	public AddTrip()
 	{
 		
 	}
 	public AddTrip(String destination, String truckno, String phone_no,
-				   String customer, String customer_name, String customer_no) {
+				   String customer, String customer_name, String customer_no,String source) {
 
 		this.destination = destination;
 		this.truckno = truckno;
@@ -22,6 +22,8 @@ public class AddTrip {
 		this.customer = customer;
 		this.customer_name = customer_name;
 		this.customer_no = customer_no;
+		this.source = source;
+
 	}
 	public String getDestination() {
 		return destination;
@@ -60,5 +62,11 @@ public class AddTrip {
 		this.customer_no = customer_no;
 	}
 
+	public String getSource() {
+		return source;
+	}
+	public void setSource(String source) {
+		this.source = source;
+	}
 
 }

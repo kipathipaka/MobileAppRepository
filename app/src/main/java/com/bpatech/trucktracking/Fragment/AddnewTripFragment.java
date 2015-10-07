@@ -24,7 +24,7 @@ import java.util.List;
 public class AddnewTripFragment extends Fragment {
 	SessionManager session;
 	Button addbtn;
-	EditText editdestination,editride,editphoneno,customer,customer_name,customer_no;
+	EditText editdestination,editride,editphoneno,customer,customer_name,customer_no,source;
 	TextView txt_contTitle;
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,6 +41,8 @@ public class AddnewTripFragment extends Fragment {
 		 customer=(EditText)view.findViewById(R.id.editcustomer);
 		 customer_name=(EditText)view.findViewById(R.id.editcustomername);
 		 customer_no=(EditText)view.findViewById(R.id.editcustomerno);
+		 customer_no=(EditText)view.findViewById(R.id.editcustomerno);
+		 source=(EditText)view.findViewById(R.id.source_edittext);
 	        addbtn.setOnClickListener(new MyaddButtonListener());
 	        return view;
 	    }
@@ -72,6 +74,7 @@ public class AddnewTripFragment extends Fragment {
 					addtrip.setCustomer(customer.getText().toString());
 					addtrip.setCustomer_name(customer_name.getText().toString());
 					addtrip.setCustomer_no(customer_no.getText().toString());
+					addtrip.setSource(source.getText().toString());
 					currentDetailsList.add(addtrip);
 
 					SessionManager.setAddtripdetails(currentDetailsList);

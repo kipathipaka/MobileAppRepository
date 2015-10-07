@@ -17,4 +17,5 @@ public class ServiceConstants {
     public static final String ADD_TRIP_CUSTOMER= "Customer";
     public static final String ADD_TRIP_CUSTOMER_NAME= "Customer_name";
     public static final String ADD_TRIP_CUSTOMER_NO = "Customer_no";
+    public static final String ADD_TRIP_SOURCE = "source";
 }

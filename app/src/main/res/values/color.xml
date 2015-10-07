@@ -2,7 +2,6 @@
 <resources>
     <color name="gray">#E6E6E6</color>
     <color name="black">#000000</color>
-
     <color name="darkskyblue">#3090C7</color>
     <color name="darkblue">#325E71</color>
     <color name="appDarkBlue">#06A2CB</color>
@@ -10,7 +9,7 @@
     <color name="curentriplist">#A0A0A0</color>
     <color name="header">#C0C0C0</color>
     <color name="red">#e75b1d</color>
-<color name="darkred">#B40431</color>
+     <color name="darkred">#B40431</color>
     <color name="white">#FFFFFF</color>
     <color name="darkgreen">#298A08</color>
     <color name="green">#04B404</color>

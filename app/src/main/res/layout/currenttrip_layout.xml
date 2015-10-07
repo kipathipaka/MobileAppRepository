@@ -26,7 +26,7 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/maplist_view"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:scaleType="fitXY"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
@@ -62,7 +62,7 @@
                  android:layout_marginTop="3dp">
 
                   <TableRow android:id="@+id/to"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                      <TextView
@@ -82,11 +82,9 @@
                          android:id="@+id/place"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
-                         android:layout_column="2"
-                         android:layout_marginLeft="0dp"
+                         android:layout_column="1"
                          android:layout_marginTop="3dp"
                          android:textColor="@color/white"
-                         
                          android:textSize="17sp"
                           />
 
@@ -95,10 +93,10 @@
 
                 
 
-                <TableRow  android:id="@+id/lastname_tableRow"
-                android:layout_width="0dp"
+                <TableRow  android:id="@+id/ride_tbrow"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp" >
+                android:layout_marginTop="1dp" >
 
                      <TextView
                          android:id="@+id/ride"
@@ -106,7 +104,7 @@
                          android:layout_height="wrap_content"
                          android:layout_column="1"
                          android:layout_marginLeft="3dp"
-                         android:layout_marginTop="3dp"
+                         android:layout_marginTop="2dp"
                         
                          android:textSize="17dp"
                          android:textColor="@color/white" />
@@ -117,36 +115,19 @@
                          android:id="@+id/rideno"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
-                         android:layout_column="2"
-                         android:layout_marginLeft="0dp"
-                         android:layout_marginTop="3dp"
+                         android:layout_column="1"
+
+                         android:layout_marginTop="2dp"
                        
                          android:textSize="17sp"
                           android:textColor="@color/white" />
 
                  </TableRow>
-
-                 
-
-                <TableRow  android:id="@+id/relation_tableRow"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                 android:layout_marginTop="3dp" >
-
-                     <TextView
-                         android:id="@+id/phoneno"
-                         android:layout_width="wrap_content"
-                         android:layout_height="30dp"
-                         android:layout_column="1"
-                         android:layout_marginLeft="3dp"
-                         android:layout_marginTop="5dp"
-                       
-                         android:textSize="17sp"
-                         android:textColor="@color/white" />
-
-                   
-                 </TableRow>
              </TableLayout>
+
+
+
+
 
             <Button
                   android:id="@+id/openbtn"
@@ -170,7 +151,27 @@
 
                   
          </LinearLayout>
-        
+         <LinearLayout
+             android:id="@+id/phoneno_ll"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="0dp"
+             android:layout_marginTop="2dp"
+             android:layout_marginLeft="3dp"
+             android:orientation="horizontal"
+             >
+
+             <TextView
+                 android:id="@+id/phoneno"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_column="1"
+                 android:layout_marginLeft="2dp"
+                 android:layout_marginTop="4dp"
+
+                 android:textSize="17sp"
+                 android:textColor="@color/white" />
+         </LinearLayout>
                   <LinearLayout
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
@@ -183,18 +184,18 @@
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                        
-                         android:layout_marginLeft="5dp"
-                         android:layout_marginTop="3dp"
+                         android:layout_marginLeft="3dp"
+                         android:layout_marginTop="2dp"
                      android:textColor="@color/white"
                          android:textSize="16sp"
                          />
                <TextView
                          android:id="@+id/nowvalue"
-                         android:layout_width="wrap_content"
+                         android:layout_width="80dp"
                          android:layout_height="wrap_content"
                         
                          android:layout_marginLeft="0dp"
-                         android:layout_marginTop="3dp"
+                         android:layout_marginTop="2dp"
                         
                          android:textSize="16sp"
                    android:textColor="@color/white" />
@@ -202,19 +203,19 @@
                          android:id="@+id/updatedmsg"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
-                      
-                         android:layout_marginLeft="10dp"
-                         android:layout_marginTop="3dp"
+                   android:layout_marginRight="0dp"
+                         android:layout_marginLeft="3dp"
+                         android:layout_marginTop="2dp"
                    android:textColor="@color/white"
                          android:textSize="16sp"
                          />
                <TextView
                          android:id="@+id/updatevalue"
-                         android:layout_width="wrap_content"
+                         android:layout_width="80dp"
                          android:layout_height="wrap_content"
                        
                          android:layout_marginLeft="0dp"
-                         android:layout_marginTop="3dp"
+                         android:layout_marginTop="2dp"
                    android:textColor="@color/white"
                          android:textSize="16sp"
                           />
