@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ public class HomeFragment extends Fragment {
 	private Button nbtn;
 	private EditText phoneNo;
 	ImageButton imageButtonopen;
+	ImageView carlogo;
 	TextView destination, truck, phoneno, txt_contTitle, triplistsize_view;
 	;
 	LinearLayout listlayout_ll, triplist_ll;
@@ -111,7 +114,10 @@ public class HomeFragment extends Fragment {
 
 		} else {
 			view = inflater.inflate(R.layout.activity_home, container, false);
-
+			txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
+			txt_contTitle.setText("Welcome");
+			carlogo=(ImageView)view.findViewById(R.id.car_logo);
+			carlogo.setVisibility(view.GONE);
 			nbtn = (Button) view.findViewById(R.id.nextbtn);
 			phoneNo = (EditText) view.findViewById(R.id.phoneno);
 			nbtn.setOnClickListener(new MyButtonListener());
@@ -125,20 +131,23 @@ public class HomeFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			System.out.println("enter if main");
-			if (phoneNo.getText().toString().equals("")) {
-				Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
-						Toast.LENGTH_LONG).show();
-				//session = new SessionManager(getActivity().getApplicationContext());
-				//String savephoneno = phoneNo.getText().toString();
-				// boolean exitnumber=Isexitphonenumber(phoneNo);
-				//System.out.println("phoneNo " + phoneNo);
+try {
+	InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+	inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	if (phoneNo.getText().toString().equals("")) {
+		Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
+				Toast.LENGTH_SHORT).show();
+		//session = new SessionManager(getActivity().getApplicationContext());
+		//String savephoneno = phoneNo.getText().toString();
+		// boolean exitnumber=Isexitphonenumber(phoneNo);
+		//System.out.println("phoneNo " + phoneNo);
 				 /* String sms="OTP to Verifying your Mobile Number for My Trip: ";
 				  Random random = new Random();
 					  int otpno = generateValue();
 				  System.out.println("randomInteger"+otpno);*/
-				//try {
+		//try {
 
-				//session.setPhoneno(savephoneno);
+		//session.setPhoneno(savephoneno);
 					/*session.setOTPno(otpno);
 					SmsManager smsManager = SmsManager.getDefault();
 					smsManager.sendTextMessage(savephoneno, null, sms+otpno, null, null);
@@ -153,15 +162,15 @@ public class HomeFragment extends Fragment {
 
 				fragmenttransaction.addToBackStack(null);
 				fragmenttransaction.commit();*/
+/*
+		HomeFragment homefragment = new HomeFragment();
+		FragmentManager fragmentmanager = getFragmentManager();
+		FragmentTransaction fragmenttransaction = fragmentmanager
+				.beginTransaction();
+		fragmenttransaction.replace(R.id.viewers, homefragment, "");
 
-				HomeFragment homefragment = new HomeFragment();
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, homefragment, "");
-
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
+		fragmenttransaction.addToBackStack(null);
+		fragmenttransaction.commit();*/
 
 					
 				  /*} catch (Exception e) {
@@ -171,21 +180,21 @@ public class HomeFragment extends Fragment {
 					e.printStackTrace();
 				  }*/
 
-			} else {
+	} else {
 
-				session = new SessionManager(getActivity().getApplicationContext());
-				String savephoneno = phoneNo.getText().toString();
-				System.out.println("phoneNo " + phoneNo);
-				session.setPhoneno(savephoneno);
-				DetailFragment detailfrag = new DetailFragment();
+		session = new SessionManager(getActivity().getApplicationContext());
+		String savephoneno = phoneNo.getText().toString();
+		System.out.println("phoneNo " + phoneNo);
+		session.setPhoneno(savephoneno);
+		DetailFragment detailfrag = new DetailFragment();
 
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
+		FragmentManager fragmentmanager = getFragmentManager();
+		FragmentTransaction fragmenttransaction = fragmentmanager
+				.beginTransaction();
+		fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
 
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
+		fragmenttransaction.addToBackStack(null);
+		fragmenttransaction.commit();
 				/*HomeFragment homefragment = new HomeFragment();
 				FragmentManager fragmentmanager = getFragmentManager();
 				FragmentTransaction fragmenttransaction = fragmentmanager
@@ -194,7 +203,13 @@ public class HomeFragment extends Fragment {
 
 				fragmenttransaction.addToBackStack(null);
 				fragmenttransaction.commit();*/
-			}
+	}
+} catch(Exception e)
+{
+	Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
+			Toast.LENGTH_SHORT).show();
+	e.printStackTrace();
+}
 		}
 
 		int generateValue() {

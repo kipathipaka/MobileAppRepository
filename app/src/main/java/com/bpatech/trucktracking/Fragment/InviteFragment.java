@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,50 +43,53 @@ public class InviteFragment extends Fragment
     }
     private class MyaddButtonListener implements View.OnClickListener{
         @Override
-        public void onClick(View v)
-        {
-            if(phonenum.getText().toString().trim().equalsIgnoreCase("")||edittexview1.getText().toString().trim().equalsIgnoreCase(""))
-            {
-                Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-                        Toast.LENGTH_LONG).show();
-                InviteFragment invitefragment=new InviteFragment();
-                FragmentManager fragmentmanager = getFragmentManager();
-                FragmentTransaction fragmenttransaction = fragmentmanager
-                        .beginTransaction();
-                fragmenttransaction.replace(R.id.viewers, invitefragment,"BackCurrentTrip");
+        public void onClick(View v) {
+            try {
+                InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-                fragmenttransaction.addToBackStack(null);
-                fragmenttransaction.commit();
-            }
-            else
-            {
-                String number= phonenum.getText().toString();
-                String sms= edittexview1.getText().toString();
+                if (phonenum.getText().toString().trim().equalsIgnoreCase("") || edittexview1.getText().toString().trim().equalsIgnoreCase("")) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
+                            Toast.LENGTH_SHORT).show();
 
-                    try
-                     {
-                     SmsManager smsManager = SmsManager.getDefault();
+                   /* InviteFragment invitefragment = new InviteFragment();
+                    FragmentManager fragmentmanager = getFragmentManager();
+                    FragmentTransaction fragmenttransaction = fragmentmanager
+                            .beginTransaction();
+                    fragmenttransaction.replace(R.id.viewers, invitefragment, "BackCurrentTrip");
+
+                    fragmenttransaction.addToBackStack(null);
+                    fragmenttransaction.commit();*/
+                } else {
+                    String number = phonenum.getText().toString();
+                    String sms = edittexview1.getText().toString();
+
+
+                    SmsManager smsManager = SmsManager.getDefault();
                     // smsManager.sendTextMessage(number, null, sms, null, null);
-                         Log.d("Sms", "sendSMS " + sms);
-                     Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!",
-                             Toast.LENGTH_LONG).show();
-                         CurrentTripFragment currenttripfrag=new CurrentTripFragment();
-                         FragmentManager fragmentmanager = getFragmentManager();
-                         FragmentTransaction fragmenttransaction = fragmentmanager
-                                 .beginTransaction();
-                         fragmenttransaction.replace(R.id.viewers,currenttripfrag);
+                    Log.d("Sms", "sendSMS " + sms);
+                    Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!",
+                            Toast.LENGTH_SHORT).show();
 
-                         fragmenttransaction.addToBackStack(null);
-                         fragmenttransaction.commit();
-                    }
-                    catch(Exception e)
-                    {
-                        Toast.makeText(getActivity().getApplicationContext(), "SMS not Sent please try again later!",
-                                Toast.LENGTH_LONG).show();
-                        e.printStackTrace();
-                    }
+                    CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+                    FragmentManager fragmentmanager = getFragmentManager();
+                    FragmentTransaction fragmenttransaction = fragmentmanager
+                            .beginTransaction();
+                    fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+
+                    fragmenttransaction.addToBackStack(null);
+                    fragmenttransaction.commit();
+
 
             }
+        }
+
+        catch(Exception e)
+        {
+           Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
+                    Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
         }
     }
 }

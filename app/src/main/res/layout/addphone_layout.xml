@@ -70,7 +70,8 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
-      android:textCursorDrawable="@color/black"
+      android:cursorVisible="true"
+      android:textCursorDrawable="@drawable/color_cursor"
 
                 android:hint="e.g:+919543492022"
                  android:inputType="phone"

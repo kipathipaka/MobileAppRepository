@@ -70,7 +70,10 @@
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:ems="10"
-                    android:textCursorDrawable="@color/black"
+                    android:singleLine="true"
+                    android:nextFocusDown="@+id/edityourname"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/color_cursor"
                     android:inputType="text"
                     android:paddingLeft="5dp" >
                 </EditText>
@@ -113,7 +116,8 @@
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:ems="10"
-                    android:textCursorDrawable="@color/black"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/color_cursor"
                     android:inputType="text"
                     android:paddingLeft="5dp" />
             </TableRow>

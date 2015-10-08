@@ -2,6 +2,17 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/headerlayou"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tab_bar_bg_top">
+        <include
+            android:id="@+id/header"
+            layout="@layout/header_layout"/>
+
+    </LinearLayout>
  <TextView
         android:id="@+id/txt_loginWelcomeHeader"
         android:layout_width="match_parent"
@@ -9,10 +20,10 @@
         android:layout_centerHorizontal="true"
        android:textStyle="bold"
         android:gravity="center"
-
+     android:layout_below="@id/headerlayou"
        android:textSize="@dimen/sixty_px"
      android:paddingTop="@dimen/eighty_pt"
-       android:paddingBottom="@dimen/eighty_pt"
+       android:paddingBottom="@dimen/sixty_px"
         android:text="@string/app_header"
         android:textColor="@color/black" />
  
@@ -24,9 +35,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/thirty_pt"
         android:layout_marginRight="@dimen/thirty_pt"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="0dp"
+    android:layout_below="@id/txt_loginWelcomeHeader"
         android:orientation="horizontal"
-    android:paddingTop="@dimen/eighty_pt"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp" >
 
@@ -36,7 +47,7 @@
             android:id="@+id/tableRow2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ten_pt"
+            android:layout_marginTop="0dp"
             android:background="@color/gray"
             android:paddingLeft="1.5dp"
             android:paddingRight="1.5dp"
@@ -51,7 +62,7 @@
                 android:background="@color/white"
                 android:ems="15"
                 android:cursorVisible="true"
-                android:textCursorDrawable="@color/black"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:hint="your phone number"
                 android:inputType="phone"
                 android:paddingLeft="@dimen/ten_pt" />

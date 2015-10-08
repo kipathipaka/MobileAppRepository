@@ -2,11 +2,19 @@ package com.bpatech.trucktracking.Util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +25,8 @@ import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -35,7 +45,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 
 public class CustomAdapter extends ArrayAdapter {
 	MapView mapView;
@@ -80,34 +89,41 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	mapView = (MapView) view.findViewById(R.id.maplist_view);
 	mapView.onCreate(savedInstanceState);
 	mapView.onResume();
-	mapView.getMapAsync(
-			new OnMapReadyCallback() {
-				@Override
-				public void onMapReady(GoogleMap googlemap ) {
-					final GoogleMap map = googlemap;
-					map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-					map.getUiSettings().setMyLocationButtonEnabled(false);
-					map.getUiSettings().setMapToolbarEnabled(false);
-					map.setMyLocationEnabled(true);
-					MapsInitializer.initialize(context);
-					String addressname= mList.get(position).getSource().toString();
-					Geocoder geoCoder = new Geocoder(getContext());
-					List<Address> listAddress;
-					//GeoPoint geoPoint;
-					try {
-						listAddress = geoCoder.getFromLocationName(addressname, 1);
-						if (listAddress == null || listAddress.size()==0) {
-							Toast.makeText(getContext(), "No Location found", Toast.LENGTH_SHORT).show();
-							//return null;
+
+	if (isGoogleMapsInstalled()==true){
+		//checkGooglePlayServicesAvailability();
+		mapView.getMapAsync(
+				new OnMapReadyCallback() {
+					@Override
+					public void onMapReady(GoogleMap googlemap) {
+						final GoogleMap map = googlemap;
+
+						if (map != null) {
+							map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+							map.getUiSettings().setMyLocationButtonEnabled(false);
+							map.getUiSettings().setMapToolbarEnabled(false);
+							map.setMyLocationEnabled(true);
+							MapsInitializer.initialize(context);
+							String addressname = mList.get(position).getSource().toString();
+							Geocoder geoCoder = new Geocoder(getContext());
+							List<Address> listAddress;
+							//GeoPoint geoPoint;
+							try {
+								listAddress = geoCoder.getFromLocationName(addressname, 1);
+								if (listAddress == null || listAddress.size() == 0) {
+									Toast.makeText(getContext(), "No Location found", Toast.LENGTH_SHORT).show();
+									//return null;
+								}
+								Address location = listAddress.get(0);
+								LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+								Marker marker = map.addMarker(new MarkerOptions().position(
+										locationlatlng).title(""));
+								map.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
-						Address location = listAddress.get(0);
-						LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
-						Marker marker = map.addMarker(new MarkerOptions().position(
-								locationlatlng).title(""));
-						map.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
-					}catch (IOException e) {
-						e.printStackTrace();
-					}
+
 					/*map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					map.getUiSettings().setMyLocationButtonEnabled(false);
 					map.getUiSettings().setMapToolbarEnabled(false);
@@ -122,12 +138,28 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 					Marker marker = map.addMarker(new MarkerOptions().position(
 							LOCATION).title(""));
 					map.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION, 10));*/
-					// Zoom in, animating the camera.
-					//map.animateCamera(CameraUpdateFactory.zoomTo(15),2000,null);
+							// Zoom in, animating the camera.
+							//map.animateCamera(CameraUpdateFactory.zoomTo(15),2000,null);
 
+
+					}
 				}
-			}
-	);
+		);
+	}else {
+		System.out.println("+++++++++++map++++++++");
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setMessage("Install Google Maps");
+		builder.setCancelable(false);
+		builder.setPositiveButton("Install", getGoogleMapsListener());
+		AlertDialog dialog = builder.create();
+		dialog.show();
+		/*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		builder.setMessage("Install Google Maps");
+		builder.setCancelable(false);
+		builder.setPositiveButton("Install", getGoogleMapsListener());
+		AlertDialog dialog = builder.create();
+		dialog.show()*/;
+	}
 
 			TextView DestinationText=(TextView) view.findViewById(R.id.tovalue);
 			TextView rideText=(TextView) view.findViewById(R.id.ride);
@@ -177,5 +209,35 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 
 	        return view;
 	    }
+	public boolean isGoogleMapsInstalled()
+	{
 
+			int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext());
+		System.out.println("+++++++++++map++++++++"+result+"ConnectionResult.SUCCESS"+ConnectionResult.SUCCESS);
+			if(result != ConnectionResult.SUCCESS) {
+				return false;
+			}else{
+				return true;
+			}
+
+			//ApplicationInfo info = getContext().getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0);
+
+
+
+	}
+	public DialogInterface.OnClickListener getGoogleMapsListener()
+	{
+		return new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+				getContext().startActivity(intent);
+
+				//Finish the activity so they can't circumvent the check
+		//finish();
+			}
+		};
+	}
 }

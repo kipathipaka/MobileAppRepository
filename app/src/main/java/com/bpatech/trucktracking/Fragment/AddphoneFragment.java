@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,38 +40,43 @@ public class AddphoneFragment extends Fragment {
 		@Override
 		public void onClick(View v)
 		{
-			if(edityournum.getText().toString().trim().equalsIgnoreCase(""))
-			{
-				Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-						Toast.LENGTH_LONG).show();
-				AddphoneFragment addfragment= new AddphoneFragment();
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, addfragment,"BackCurrentTrip");
+try {
+	InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+	inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	if (edityournum.getText().toString().trim().equalsIgnoreCase("")) {
+		Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
+				Toast.LENGTH_SHORT).show();
+		/*AddphoneFragment addfragment = new AddphoneFragment();
+		FragmentManager fragmentmanager = getFragmentManager();
+		FragmentTransaction fragmenttransaction = fragmentmanager
+				.beginTransaction();
+		fragmenttransaction.replace(R.id.viewers, addfragment, "BackCurrentTrip");
 
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
-			}
-			else
-			{
+		fragmenttransaction.addToBackStack(null);
+		fragmenttransaction.commit();*/
+	} else {
 
-				String phonenumber= edityournum.getText().toString();
-				String smsmessage="message sent to the required user";
-				SmsManager smsManager= SmsManager.getDefault();
-				//smsManager.sendTextMessage(phonenumber, null, smsmessage, null, null);
-				Log.d("Sms", "sendSMS " + smsmessage);
-				Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!",
-						Toast.LENGTH_LONG).show();
-				CurrentTripFragment currenttripfrag=new CurrentTripFragment();
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers,currenttripfrag);
+		String phonenumber = edityournum.getText().toString();
+		String smsmessage = "message sent to the required user";
+		SmsManager smsManager = SmsManager.getDefault();
+		//smsManager.sendTextMessage(phonenumber, null, smsmessage, null, null);
+		Log.d("Sms", "sendSMS " + smsmessage);
+		Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!",
+				Toast.LENGTH_SHORT).show();
+		CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+		FragmentManager fragmentmanager = getFragmentManager();
+		FragmentTransaction fragmenttransaction = fragmentmanager
+				.beginTransaction();
+		fragmenttransaction.replace(R.id.viewers, currenttripfrag);
 
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
-			}
+		fragmenttransaction.addToBackStack(null);
+		fragmenttransaction.commit();
+	}
+}catch (Exception e){
+	Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
+			Toast.LENGTH_SHORT).show();
+	e.printStackTrace();
+}
 		}
 	}
 }

@@ -10,7 +10,7 @@
             android:id="@+id/car_logo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:clickable="false"
             android:contentDescription="@string/todo"
             android:paddingTop="10dp"
@@ -19,17 +19,17 @@
             
  <TextView
             android:id="@+id/txt_contTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
+         android:gravity="center"
             android:layout_marginTop="15dp"
             android:layout_toRightOf="@+id/car_logo"
-           
+     android:layout_marginRight="25dp"
             android:text="@string/company_detalis"
             android:textColor="@color/white"
             android:textSize="22dp"
             android:textStyle="bold"
-                android:layout_centerHorizontal="true"
+
              tools:ignore="RtlHardcoded"/>
  
 

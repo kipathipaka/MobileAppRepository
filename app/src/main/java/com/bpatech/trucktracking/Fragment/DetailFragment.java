@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,8 +23,8 @@ import com.bpatech.trucktracking.Util.SessionManager;
 
 public class DetailFragment extends Fragment {
 	MySQLiteHelper db;
-	private Button debtn;
-	private EditText companyname,username;
+	public Button debtn;
+	public EditText companyname,username;
 	SessionManager session;
 	CurrentTripFragment currentfragment = new CurrentTripFragment();
 	@Override
@@ -43,44 +44,45 @@ public class DetailFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
+			try {
+				InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+				inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+				if (companyname.getText().toString().trim().equalsIgnoreCase("") || username.getText().toString().trim().equalsIgnoreCase("")) {
+					//System.out.println("++++++++++++++"+otpno.getText().toString());
+					Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
+							Toast.LENGTH_SHORT).show();
+					/*DetailFragment detailfrag = new DetailFragment();
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers, detailfrag,"BackCurrentTrip");
 
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();*/
+				} else {
 
-			if(companyname.getText().toString().trim().equalsIgnoreCase("")||username.getText().toString().trim().equalsIgnoreCase("")){
-				//System.out.println("++++++++++++++"+otpno.getText().toString());
-				Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
-						Toast.LENGTH_LONG).show();
-				DetailFragment detailfrag=new DetailFragment();
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, detailfrag,"BackCurrentTrip");
+					User user = new User();
+					session = new SessionManager(getActivity().getApplicationContext());
+					//int	otpnumber= Integer.parseInt(otpno.getText().toString());
 
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
-			}else{
+					//int sessionstored_otp=session.getOTPno();
+					//if(otpnumber==sessionstored_otp){
+					//user.setOtp_no(sessionstored_otp);
+					//user.setPhone_no(sharedpreferences.getString("phoneno", null).toString());
+					user.setPhone_no(session.getPhoneno());
+					user.setCompanyName(companyname.getText().toString());
+					user.setUserName(username.getText().toString());
+					InsertUser(user);
+					//session.removesession();
+					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers, currenttripfrag);
 
-				User user=new User();
-				session=new SessionManager(getActivity().getApplicationContext());
-				//int	otpnumber= Integer.parseInt(otpno.getText().toString());
-
-				//int sessionstored_otp=session.getOTPno();
-				//if(otpnumber==sessionstored_otp){
-				//user.setOtp_no(sessionstored_otp);
-				//user.setPhone_no(sharedpreferences.getString("phoneno", null).toString());
-				user.setPhone_no(session.getPhoneno());
-				user.setCompanyName(companyname.getText().toString());
-				user.setUserName(username.getText().toString());
-				InsertUser(user);
-				//session.removesession();
-				CurrentTripFragment currenttripfrag=new CurrentTripFragment();
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
-			}
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
+				}
 				 
 			/*else {
 				Toast.makeText(getActivity().getApplicationContext(), "please enter the value!",
@@ -94,10 +96,14 @@ public class DetailFragment extends Fragment {
 				fragmenttransaction.addToBackStack(null);
 				fragmenttransaction.commit();
 			}*/
+
+
+			} catch (Exception e) {
+				Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
+						Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			}
 		}
-
-
-
 	}
 
 
@@ -107,7 +113,6 @@ public class DetailFragment extends Fragment {
 		db.addUser(user);
 		Log.d("Insert: ", "Inserting ..");
 	}
-
 
 
 }

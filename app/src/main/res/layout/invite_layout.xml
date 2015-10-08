@@ -62,7 +62,10 @@
             android:layout_weight="1"
         android:background="@color/white"
             android:ems="10"
-            android:textCursorDrawable="@color/black"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/edittexview1"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="phone"
             android:paddingLeft="5dp" >
         </EditText>
@@ -107,7 +110,8 @@
                 android:ems="10"
                 android:text="The Url is www.google.com"
 
-                android:textCursorDrawable="@color/black"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:inputType="text"
                 android:paddingLeft="5dp" >
             </EditText>
