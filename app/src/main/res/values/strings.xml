@@ -11,24 +11,25 @@
     <string name="company_name">Company Name :</string>
     <string name="your_name">Your Name :</string>
     <string name="otp">OTP :</string>
-    <string name="truck_no">Truck Number:</string>
+    <string name="truck_no">Truck Number :</string>
     <string name="destination_txt">Destination :</string>
-    <string name="phone_txt">Phoneno :</string>
-    <string name="customer">Customer :</string>
+    <string name="phone_txt">Phone Number :</string>
+    <string name="customer">Customer Company :</string>
     <string name="customer_name">Customer Name :</string>
-    <string name="customerno_txt">Customer No :</string>
+    <string name="customerno_txt">Customer Phone Number :</string>
     <string name="add_nxt">ADD</string>
     <string name="add_btn">ADD</string>
     <string name="starttrip_btn">Start Tracking</string>
     <string name="company">Company:</string>
-    <string name="phoneno_txt">Phone #:</string>
+    <string name="phoneno_txt">Phone Number:</string>
     <string name="to_txt">To :</string>
-    <string name="truck_txt">Truck #:</string>
+    <string name="truck_txt">Truck Number:</string>
     <string name="addtrip_footer">Add Trips</string>
     <string name="addphone_footer">Add Phone</string>
     <string name="invite_footer">Invite</string>
     <string name="send_btn">Send</string>
-    <string name="customerno">Customer No:</string>
+    <string name="customerno">Customer Phone Number:</string>
     <string name="app_header">Vehicle Tracking</string>
+    <string name="phoneno">Phone Number:</string>
 
 </resources>

@@ -32,7 +32,53 @@
         android:orientation="horizontal"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp" >
-        
+    <TableRow
+        android:id="@+id/tableRow7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/ten_pt"
+
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp" >
+
+        <TextView
+            android:id="@+id/phoneno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:layout_marginBottom="@dimen/fifteen_pt"
+            android:text="@string/phone_txt"
+            android:paddingLeft="5dp"
+            style="@style/codefont">
+        </TextView>
+
+    </TableRow>
+    <TableRow
+        android:id="@+id/tableRow8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/gray"
+        android:paddingLeft="1.5dp"
+        android:paddingRight="1.5dp"
+        android:paddingBottom="1.5dp"
+        android:paddingTop="1.5dp" >
+
+        <EditText
+            android:id="@+id/editphoneno"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/seventy_pt"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="e.g:+919543492022"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:inputType="phone"
+            android:paddingLeft="5dp" />
+
+    </TableRow>
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="match_parent"
@@ -81,7 +127,7 @@
 
 
         </TableRow>
-    <TableRow
+    <!--<TableRow
         android:id="@+id/tableRow3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,8 +145,8 @@
             android:paddingLeft="5dp"
             style="@style/codefont">
         </TextView>
-    </TableRow>
-    <TableRow
+    </TableRow>-->
+   <!-- <TableRow
         android:id="@+id/tableRow4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -122,7 +168,7 @@
             android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="textCapWords"
             android:paddingLeft="5dp" />
-
+-->
        <!-- <EditText
             android:id="@+id/sourceedittext"
             android:layout_width="0dp"
@@ -138,7 +184,7 @@
             android:paddingLeft="5dp" />-->
 
 
-    </TableRow>
+    <!--</TableRow>-->
  <TableRow
             android:id="@+id/tableRow5"
             android:layout_width="match_parent"
@@ -182,53 +228,8 @@
                 android:inputType="textCapWords"
                 android:paddingLeft="5dp" />
         </TableRow>
-        <TableRow
-            android:id="@+id/tableRow7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ten_pt"
 
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp" >
 
-           <TextView
-                android:id="@+id/phoneno"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-
-               android:layout_marginBottom="@dimen/fifteen_pt"
-               android:text="@string/phone_txt"
-                android:paddingLeft="5dp"
-               style="@style/codefont">
-            </TextView>
-            
-        </TableRow>
-        <TableRow
-            android:id="@+id/tableRow8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-             android:background="@color/gray"
-            android:paddingLeft="1.5dp"
-            android:paddingRight="1.5dp"
-            android:paddingBottom="1.5dp"
-            android:paddingTop="1.5dp" >
-
-         <EditText
-                android:id="@+id/editphoneno"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/seventy_pt"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:ems="10"
-             android:hint="e.g:+919543492022"
-             android:cursorVisible="true"
-             android:textCursorDrawable="@drawable/color_cursor"
-                android:inputType="phone"
-                android:paddingLeft="5dp" />
-
-        </TableRow>
         <TableRow
             android:id="@+id/tableRow9"
             android:layout_width="match_parent"
@@ -380,8 +381,8 @@
         android:layout_marginTop="@dimen/fourty_pt">
         <Button
             android:id="@+id/addbtn"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/seventy_pt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
 
             android:layout_marginLeft="0dp"

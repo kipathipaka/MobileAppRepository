@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white">
@@ -14,15 +13,17 @@
             layout="@layout/header_layout"/>
 
     </LinearLayout>
+
     <TableLayout
         android:id="@+id/registerTable"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/headerlayou"
         style="@style/marginlayouts"
+
         android:orientation="horizontal"
         android:paddingLeft="0.5dp"
-        android:paddingRight="0.5dp" >
+        android:paddingRight="0.5dp"
+        android:layout_centerVertical="true">
 
     <TableRow
         android:id="@+id/tableRow1"
@@ -126,12 +127,13 @@
             android:layout_marginTop="@dimen/fourty_pt">
             <Button
                 android:id="@+id/sndbtn"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/seventy_pt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/send_btn"
                 style="@style/textbutton"/>
         </TableRow>
 </TableLayout>
+
 
 </RelativeLayout>

@@ -13,80 +13,98 @@
             layout="@layout/header_layout"/>
 
     </LinearLayout>
- <TextView
-        android:id="@+id/txt_loginWelcomeHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-       android:textStyle="bold"
-        android:gravity="center"
-     android:layout_below="@id/headerlayou"
-       android:textSize="@dimen/sixty_px"
-     android:paddingTop="@dimen/eighty_pt"
-       android:paddingBottom="@dimen/sixty_px"
-        android:text="@string/app_header"
-        android:textColor="@color/black" />
- 
-       
-        
-<TableLayout
-        android:id="@+id/registerTable"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/thirty_pt"
-        android:layout_marginRight="@dimen/thirty_pt"
-        android:layout_marginTop="0dp"
-    android:layout_below="@id/txt_loginWelcomeHeader"
-        android:orientation="horizontal"
+
+
+    <TableLayout
+            android:id="@+id/registerTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+
         android:paddingLeft="0.5dp"
-        android:paddingRight="0.5dp" >
-
-
-      
+            android:paddingRight="0.5dp"
+        android:layout_centerVertical="true"
+        style="@style/marginlayouts">
         <TableRow
-            android:id="@+id/tableRow2"
+            android:id="@+id/tableRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:background="@color/gray"
+
             android:paddingLeft="1.5dp"
             android:paddingRight="1.5dp"
             android:paddingBottom="1.5dp"
             android:paddingTop="1.5dp">
-
-            <EditText
-                android:id="@+id/phoneno"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/seventy_pt"
+            <TextView
+                android:id="@+id/PhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/white"
-                android:ems="15"
-                android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/color_cursor"
-                android:hint="your phone number"
-                android:inputType="phone"
-                android:paddingLeft="@dimen/ten_pt" />
+                android:layout_marginBottom="@dimen/fifteen_pt"
+
+                android:text="@string/phoneno"
+              android:background="@color/white"
+                android:paddingLeft="5dp"
+                style="@style/codefont"/>
         </TableRow>
-    <TableRow
-        android:id="@+id/tableRow3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/fourty_pt">
+        <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:background="@color/gray"
+                android:paddingLeft="1.5dp"
+                android:paddingRight="1.5dp"
+                android:paddingBottom="1.5dp"
+                android:paddingTop="1.5dp">
 
-        <Button
-            android:id="@+id/nextbtn"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/seventy_pt"
-            android:layout_weight="1"
+                <EditText
+                    android:id="@+id/phoneno"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/seventy_pt"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:ems="15"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:hint="e.g:+919543492022"
+                    android:inputType="phone"
+                    android:paddingLeft="@dimen/ten_pt" />
+            </TableRow>
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fourty_pt">
 
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:text="@string/next_btn"
-            style="@style/textbutton"
-            />
-    </TableRow>
-    </TableLayout>
+            <Button
+                android:id="@+id/nextbtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
 
-  
- 
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:text="@string/next_btn"
+                style="@style/textbutton"
+                />
+        </TableRow>
+        </TableLayout>
+
+    <TextView
+           android:id="@+id/txt_loginWelcomeHeader"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+        android:textStyle="bold"
+           android:gravity="center"
+
+          android:textSize="@dimen/sixty_px"
+        android:paddingTop="@dimen/eighty_pt"
+          android:paddingBottom="@dimen/sixty_px"
+           android:text="@string/app_header"
+           android:textColor="@color/black"
+        android:layout_above="@+id/registerTable"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

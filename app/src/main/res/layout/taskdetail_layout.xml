@@ -67,7 +67,7 @@
                              android:layout_column="1"
                              android:layout_marginLeft="10dp"
                              android:layout_marginTop="0dp"
-                             android:text="@string/truck_txt"
+                             android:text="@string/truck_no"
                              style="@style/codefont1" />
 
 
@@ -124,7 +124,7 @@
                          android:layout_column="1"
                          android:layout_marginLeft="10dp"
                          android:layout_marginTop="0dp"
-                         android:text="@string/phoneno_txt"
+                         android:text="@string/phone_txt"
                          style="@style/codefont1" />
 
                      
@@ -214,7 +214,7 @@
                          android:layout_column="1"
                          android:layout_marginLeft="10dp"
                          android:layout_marginTop="0dp"
-                         android:text="@string/customerno"
+                         android:text="@string/customerno_txt"
                          style="@style/codefont1" />
 
                    

@@ -25,7 +25,8 @@ import java.util.List;
 public class AddnewTripFragment extends Fragment {
 	SessionManager session;
 	Button addbtn;
-	EditText editdestination,editride,editphoneno,customer,customer_name,customer_no,source;
+	String source="chennai";
+	EditText editdestination,editride,editphoneno,customer,customer_name,customer_no;
 	TextView txt_contTitle;
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,7 +40,7 @@ public class AddnewTripFragment extends Fragment {
 	        editdestination=(EditText)view.findViewById(R.id.editdestination);
 	        editride=(EditText)view.findViewById(R.id.edittruckno);
 	        editphoneno=(EditText)view.findViewById(R.id.editphoneno);
-		 source=(EditText)view.findViewById(R.id.source_edittext);
+		 //source=(EditText)view.findViewById(R.id.source_edittext);
 		 customer=(EditText)view.findViewById(R.id.editcustomer);
 		 customer_name=(EditText)view.findViewById(R.id.editcustomername);
 		 customer_no=(EditText)view.findViewById(R.id.editcustomerno);
@@ -79,7 +80,8 @@ public class AddnewTripFragment extends Fragment {
 					 addtrip.setCustomer(customer.getText().toString());
 					 addtrip.setCustomer_name(customer_name.getText().toString());
 					 addtrip.setCustomer_no(customer_no.getText().toString());
-					 addtrip.setSource(source.getText().toString());
+					// addtrip.setSource(source.getText().toString());
+					 addtrip.setSource(source);
 					 currentDetailsList.add(addtrip);
 
 					 SessionManager.setAddtripdetails(currentDetailsList);
