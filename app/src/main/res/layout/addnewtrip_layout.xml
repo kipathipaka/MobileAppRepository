@@ -58,14 +58,13 @@
         android:id="@+id/tableRow8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:background="@color/gray"
         android:paddingLeft="1.5dp"
         android:paddingRight="1.5dp"
         android:paddingBottom="1.5dp"
         android:paddingTop="1.5dp" >
 
-        <EditText
+       <!-- <EditText
             android:id="@+id/editphoneno"
             android:layout_width="0dp"
             android:layout_height="@dimen/seventy_pt"
@@ -77,6 +76,19 @@
             android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="phone"
             android:paddingLeft="5dp" />
+-->
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="@dimen/eighty_pt"
+            android:id="@+id/phonnospinner"
+            android:prompt="@string/select"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:spinnerMode="dropdown"
+            android:textSize="17sp"
+            android:textColor="@color/gray"
+            android:clickable="true" />
 
     </TableRow>
         <TableRow
@@ -121,7 +133,7 @@
                 android:nextFocusDown="@+id/source_edittext"
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/color_cursor"
-                android:inputType="number"
+                android:inputType="text"
                 android:paddingLeft="5dp"
                 />
 
@@ -363,7 +375,7 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
-                android:hint="e.g:23416"
+                android:hint="e.g:+919543492022"
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/color_cursor"
                 android:inputType="number"

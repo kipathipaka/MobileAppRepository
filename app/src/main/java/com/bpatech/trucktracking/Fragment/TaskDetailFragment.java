@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,10 +42,11 @@ import java.util.List;
             */
     public class TaskDetailFragment extends Fragment   {
        // public GoogleMap googleMap;
-        protected Context context;
-        TextView truck, place, phone, txt_contTitle,customer,customer_name,customer_no;
-        Button Startbtn;
+       protected Context context;
+    TextView truck, place, phone, txt_contTitle,customer,customer_name,customer_no,lastlocation,updatetime;
+    Button Startbtn;
     boolean isstarttrip=true,isendtrip=false;
+    TableRow locationrow,lasttimerow;
     ImageButton whatsup;
     boolean startclick;
     MapView mapView;
@@ -143,7 +148,12 @@ import java.util.List;
         customer = (TextView) view.findViewById(R.id.customerval);
         customer_name = (TextView) view.findViewById(R.id.customenameval);
         customer_no = (TextView) view.findViewById(R.id.customenoval);
-
+        lastlocation=(TextView) view.findViewById(R.id.lastlocationvalue);
+        updatetime=(TextView) view.findViewById(R.id.updateval);
+        lasttimerow=(TableRow)view.findViewById(R.id.updatetextRow);
+        locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
+        locationrow.setVisibility(view.GONE);
+        lasttimerow.setVisibility(view.GONE);
         // String place=taskdetail.getString(ServiceConstants.CUURENT_TRIP_Place);
         place.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_PLACE));
         truck.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_TRUCK));
@@ -177,7 +187,6 @@ import java.util.List;
 
             if(startclick==true){
                // mapDestroyOnDemand();
-
                 CurrentTripFragment currenttripfrag=new CurrentTripFragment();
                 FragmentManager fragmentmanager = getFragmentManager();
                 FragmentTransaction fragmenttransaction = fragmentmanager
@@ -190,6 +199,13 @@ import java.util.List;
                 System.out.println("click on it");
                 Startbtn.setText("End Tracking");
                 Startbtn.setBackgroundColor(Color.RED);
+                lastlocation.setText("Chennai");
+                DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+                Date date = new Date();
+
+                updatetime.setText(dateFormat.format(date).toString());
+                locationrow.setVisibility(View.VISIBLE);
+                lasttimerow.setVisibility(View.VISIBLE);
                 startclick=true;
               /*  mapDestroyOnDemand();
                 //onDestroyView();

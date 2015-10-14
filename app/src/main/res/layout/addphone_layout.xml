@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginBottom="@dimen/fifteen_pt"
-                    android:text="Enter the phonenumber
+                    android:text="Enter the phone number
                                     you want to track"
                     android:paddingLeft="5dp"
                     style="@style/codefont">

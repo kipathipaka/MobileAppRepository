@@ -29,7 +29,6 @@ public class CurrentTripFragment  extends Fragment {
 LinearLayout triplist_ll;
 	TextView txt_contTitle,triplistsize_view;
 
-
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {

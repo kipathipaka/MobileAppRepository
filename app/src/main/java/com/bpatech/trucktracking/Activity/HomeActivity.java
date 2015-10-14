@@ -103,8 +103,11 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 			 } else {
 				 Fragment testfragment=mgr.findFragmentById(R.id.viewers);
 				 if(testfragment.getTag()!=null) {
+					 System.out.println("+++++testfragment.getTag()++++++"+testfragment.getTag());
 					 if (testfragment.getTag().equalsIgnoreCase("BackCurrentTrip")) {
 						 mgr.popBackStack();
+					 }else{
+						 super.onBackPressed();
 					 }
 				 }
 			 }

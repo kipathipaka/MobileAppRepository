@@ -162,7 +162,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	}
 
 			TextView DestinationText=(TextView) view.findViewById(R.id.tovalue);
-			TextView rideText=(TextView) view.findViewById(R.id.ride);
+			//TextView rideText=(TextView) view.findViewById(R.id.ride);
 			TextView NowText=(TextView) view.findViewById(R.id.nowmsg);
 			TextView Nowval=(TextView) view.findViewById(R.id.nowvalue);
 			TextView UpdateText=(TextView) view.findViewById(R.id.updatedmsg);
@@ -175,7 +175,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			TextView customer_name = (TextView) view.findViewById(R.id.customername);
 			TextView customer_no = (TextView) view.findViewById(R.id.customerno);
 			DestinationText.setText("To :");
-			rideText.setText("Ride :");
+			//rideText.setText("#");
 			NowText.setText("Now :");
 			Nowval.setText(mList.get(position).getSource());
 			UpdateText.setText("Update :");
@@ -183,7 +183,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	        Date date = new Date();
 
 			UpdateVal.setText(dateFormat.format(date).toString());
-			Rideno.setText( mList.get(position).getTruckno() );
+			Rideno.setText("#"+mList.get(position).getTruckno() );
 			Destination.setText( mList.get(position).getDestination() );
 			phoneno.setText( mList.get(position).getPhone_no());
 			customer.setText( mList.get(position).getCustomer());

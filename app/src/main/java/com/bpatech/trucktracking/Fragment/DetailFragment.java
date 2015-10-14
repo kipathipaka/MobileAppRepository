@@ -78,7 +78,7 @@ public class DetailFragment extends Fragment {
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
 							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+					fragmenttransaction.replace(R.id.viewers,currenttripfrag,"null");
 
 					fragmenttransaction.addToBackStack(null);
 					fragmenttransaction.commit();
