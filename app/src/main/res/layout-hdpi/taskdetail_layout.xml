@@ -49,13 +49,80 @@
               android:layout_marginLeft="0dp"
              android:layout_marginTop="10dp"
              android:orientation="vertical" >
-               
-                 <TableLayout
+                      <TableLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginLeft="0dp"
+                          android:layout_marginTop="10dp">
+                      <TableRow android:id="@+id/last_locationrow"
+                               android:layout_width="0dp"
+                               android:layout_marginTop="6dp"
+                               android:layout_height="wrap_content"
+                               android:layout_marginRight="10dp">
+
+                               <TextView
+                                   android:id="@+id/lastlocation"
+                                   android:layout_width="wrap_content"
+                                   android:layout_height="30dp"
+                                   android:layout_column="1"
+                                   android:layout_marginLeft="10dp"
+                                   android:layout_marginTop="0dp"
+                                   android:text="@string/lastlocation"
+                                   style="@style/codefont1" />
+
+
+
+                               <TextView
+                                   android:id="@+id/lastlocationvalue"
+                                   android:layout_width="100dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_column="2"
+                                   android:layout_marginLeft="80dp"
+                                   android:layout_marginTop="0dp"
+                                   android:layout_marginRight="10dp"
+                                   style="@style/codefont2" />
+
+
+                           </TableRow>
+
+
+                           <TableRow android:id="@+id/updatetextRow"
+                               android:layout_width="0dp"
+                               android:layout_marginTop="10dp"
+                               android:layout_height="wrap_content">
+
+                               <TextView
+                                   android:id="@+id/updatetextview"
+                                   android:layout_width="wrap_content"
+                                   android:layout_height="30dp"
+                                   android:layout_column="1"
+                                   android:layout_marginLeft="10dp"
+                                   android:layout_marginTop="0dp"
+                                   android:text="@string/lastupdate"
+                                   style="@style/codefont1" />
+
+
+
+                               <TextView
+                                   android:id="@+id/updateval"
+                                   android:layout_width="100dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_column="2"
+                                   android:layout_marginLeft="80dp"
+                                   android:layout_marginTop="0dp"
+                                   android:layout_marginRight="10dp"
+                                   style="@style/codefont2" />
+
+
+                           </TableRow>
+                      </TableLayout>
+
+                      <TableLayout
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:layout_marginLeft="0dp"
                  android:layout_marginTop="10dp">
-                     <TableRow android:id="@+id/last_locationrow"
+                     <!--<TableRow android:id="@+id/last_locationrow"
                          android:layout_width="0dp"
                          android:layout_marginTop="6dp"
                          android:layout_height="wrap_content"
@@ -106,16 +173,16 @@
 
                          <TextView
                              android:id="@+id/updateval"
-                             android:layout_width="160dp"
+                             android:layout_width="match_parent"
                              android:layout_height="wrap_content"
                              android:layout_column="2"
                              android:layout_marginLeft="1dp"
-                             android:layout_marginRight="10dp"
                              android:layout_marginTop="0dp"
+                             android:layout_marginRight="10dp"
                              style="@style/codefont2" />
 
 
-                     </TableRow>
+                     </TableRow>-->
 
 
                      <TableRow android:id="@+id/to"
@@ -137,12 +204,12 @@
 
                          <TextView
                              android:id="@+id/truckvalu"
-                             android:layout_width="160dp"
+                             android:layout_width="100dp"
                              android:layout_height="wrap_content"
                              android:layout_column="2"
-                             android:layout_marginRight="10dp"
                              android:layout_marginLeft="1dp"
                              android:layout_marginTop="0dp"
+                             android:layout_marginRight="10dp"
                              style="@style/codefont2" />
 
 
@@ -169,7 +236,7 @@
 
                          <TextView
                              android:id="@+id/tovalue"
-                             android:layout_width="160dp"
+                             android:layout_width="100dp"
                              android:layout_height="wrap_content"
                              android:layout_column="2"
                              android:layout_marginLeft="1dp"
@@ -196,15 +263,14 @@
 
                      <TextView
                          android:id="@+id/phoneno"
-                         android:layout_width="160dp"
+                         android:layout_width="100dp"
                          android:layout_height="wrap_content"
                          android:layout_column="2"
                          android:layout_marginLeft="1dp"
                          android:layout_marginRight="10dp"
-                         android:layout_marginTop="0dp"
-
                          android:linksClickable="true"
                          android:autoLink="phone"
+                         android:layout_marginTop="0dp"
                          style="@style/codefont2" />
 
                        
@@ -231,13 +297,12 @@
 
                       <TextView
                          android:id="@+id/customerval"
-                         android:layout_width="160dp"
+                         android:layout_width="100dp"
                          android:layout_height="wrap_content"
                          android:layout_column="2"
                          android:layout_marginLeft="1dp"
-                          android:layout_marginRight="10dp"
                          android:layout_marginTop="0dp"
-
+                          android:layout_marginRight="10dp"
                           style="@style/codefont2"  />
 
                  </TableRow>
@@ -262,13 +327,12 @@
 
                       <TextView
                          android:id="@+id/customenameval"
-                         android:layout_width="160dp"
+                         android:layout_width="100dp"
                          android:layout_height="wrap_content"
                          android:layout_column="2"
-                          android:layout_marginRight="10dp"
                          android:layout_marginLeft="1dp"
                          android:layout_marginTop="0dp"
-
+                          android:layout_marginRight="10dp"
                           style="@style/codefont2"  />
 
                  </TableRow>
@@ -292,11 +356,10 @@
 
                      <TextView
                          android:id="@+id/customenoval"
-                         android:layout_width="160dp"
+                         android:layout_width="100dp"
                          android:layout_height="wrap_content"
                          android:layout_column="2"
                          android:layout_marginLeft="1dp"
-                         android:layout_marginRight="10dp"
                          android:layout_marginTop="0dp"
                          style="@style/codefont2"  />
 

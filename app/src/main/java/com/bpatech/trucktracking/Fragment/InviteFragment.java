@@ -60,7 +60,7 @@ public class InviteFragment extends Fragment
 
                     fragmenttransaction.addToBackStack(null);
                     fragmenttransaction.commit();*/
-                } else {
+                } else if(phonenum.getText().toString().length()==10) {
                     String number = phonenum.getText().toString();
                     String sms = edittexview1.getText().toString();
 
@@ -82,6 +82,11 @@ public class InviteFragment extends Fragment
 
 
             }
+                else
+                {
+                    Toast.makeText(getActivity().getApplicationContext(), "Enter the valid phone number",
+                            Toast.LENGTH_SHORT).show();
+                }
         }
 
         catch(Exception e)

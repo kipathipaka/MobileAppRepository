@@ -65,6 +65,8 @@
             android:ems="10"
             android:singleLine="true"
             android:nextFocusDown="@+id/edittexview1"
+            android:maxLength="10"
+            android:hint="e.g:9543492022"
             android:cursorVisible="true"
             android:textCursorDrawable="@drawable/color_cursor"
             android:inputType="phone"

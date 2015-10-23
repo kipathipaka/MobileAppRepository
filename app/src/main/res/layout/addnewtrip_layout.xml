@@ -375,7 +375,7 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:ems="10"
-                android:hint="e.g:+919543492022"
+                android:hint="e.g:9543492022"
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/color_cursor"
                 android:inputType="number"
