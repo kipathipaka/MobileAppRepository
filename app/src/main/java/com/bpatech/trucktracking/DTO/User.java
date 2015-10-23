@@ -6,7 +6,6 @@ package com.bpatech.trucktracking.DTO;
 public class User {
 
     int user_id;
-    int otp_no;
     String companyName;
     String userName;
     String phone_no;
@@ -20,7 +19,6 @@ public class User {
         super();
         this.user_id = user_id;
         this.phone_no = phone_no;
-        this.otp_no = otp_no;
         this.companyName = companyName;
         this.userName = userName;
     }
@@ -58,12 +56,5 @@ public class User {
         this.phone_no = phone_no;
     }
 
-    public int getOtp_no() {
-        return otp_no;
-    }
-
-    public void setOtp_no(int otp_no) {
-        this.otp_no = otp_no;
-    }
 
 }

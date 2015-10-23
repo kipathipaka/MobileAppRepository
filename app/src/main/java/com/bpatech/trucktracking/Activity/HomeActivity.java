@@ -106,9 +106,9 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 					 System.out.println("+++++testfragment.getTag()++++++"+testfragment.getTag());
 					 if (testfragment.getTag().equalsIgnoreCase("BackCurrentTrip")) {
 						 mgr.popBackStack();
-					 }else{
-						 super.onBackPressed();
 					 }
+				 }else{
+					 super.onBackPressed();
 				 }
 			 }
 
@@ -117,4 +117,6 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
+
+
 }

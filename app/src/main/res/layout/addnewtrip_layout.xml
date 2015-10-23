@@ -252,7 +252,7 @@
             android:paddingRight="1dp" >
 
            <TextView
-                android:id="@+id/customer"
+                android:id="@+id/customercompany"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -276,7 +276,7 @@
             android:paddingTop="1.5dp">
 
             <EditText
-                android:id="@+id/editcustomer"
+                android:id="@+id/editcustomercompany"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
@@ -347,7 +347,7 @@
             android:paddingRight="1dp" >
 
            <TextView
-                android:id="@+id/customerno"
+                android:id="@+id/customerphoneno"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -369,7 +369,7 @@
             android:paddingBottom="1.5dp"
             android:paddingTop="1.5dp">
             <EditText
-                android:id="@+id/editcustomerno"
+                android:id="@+id/editcustomerphoneno"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/seventy_pt"
                 android:layout_weight="1"
@@ -379,6 +379,7 @@
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/color_cursor"
                 android:inputType="number"
+                android:maxLength="10"
                 android:paddingLeft="5dp"
                 android:paddingBottom="5dp"/>
 
@@ -409,7 +410,12 @@
 </TableLayout>
     
    </ScrollView>
-    
 
+    <ProgressBar
+        android:id="@+id/addprogresbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

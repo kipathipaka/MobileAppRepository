@@ -33,5 +33,8 @@
     <string name="phoneno">Phone Number:</string>
     <string name="lastupdate">Update Time :</string>
     <string name="lastlocation">Last Location :</string>
+    <string name="network_head_mes">Connectivity Error</string>
+    <string name="network_fail_mes">We were unable to reach the server,please try again soon.</string>
+    <string name="internet_fail_msg">No Internet Connection. Please Check NetConnection</string>
 
 </resources>

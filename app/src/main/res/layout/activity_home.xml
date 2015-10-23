@@ -69,6 +69,7 @@
                     android:textCursorDrawable="@drawable/color_cursor"
                     android:hint="e.g:+919543492022"
                     android:inputType="phone"
+                    android:maxLength="10"
                     android:paddingLeft="@dimen/ten_pt" />
             </TableRow>
         <TableRow

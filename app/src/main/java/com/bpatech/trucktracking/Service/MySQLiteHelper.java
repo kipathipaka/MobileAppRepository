@@ -13,6 +13,9 @@ import android.util.Log;
 
 import com.bpatech.trucktracking.DTO.User;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Database Name
@@ -35,7 +38,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS  " + TABLE_USER + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, " +  KEY_USER_NAME + " TEXT,"
-                +  KEY_OTP_NO + " INTEGER, " +  KEY_COMPANY + " TEXT, "+  KEY_PH_NO + " TEXT" +")";
+                + KEY_COMPANY + " TEXT, "+  KEY_PH_NO + " TEXT" +")";
         db.execSQL(CREATE_CONTACTS_TABLE);
         Log.d("After tabele: ", "created ..");
         // TODO Auto-generated method stub
@@ -60,13 +63,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         // user Name
         values.put(KEY_USER_NAME, user.getUserName());
-        values.put(KEY_OTP_NO, user.getOtp_no());
         values.put(KEY_COMPANY, user.getCompanyName());
         values.put(KEY_PH_NO, user.getPhone_no());
 
 
         // Contact Phone
-
         // Inserting Row
         db.insert(TABLE_USER, null, values);
         Log.d("After Insert: ", "Inserted ..");
@@ -85,5 +86,42 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return countval;
     }
 
+    public ArrayList<User> getOwnerphoneno() {
+        ArrayList<User> owener_list = new ArrayList<User>();
+        String countQuery = " SELECT  * FROM  " +  TABLE_USER;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                User user=new User();
+                //System.out.println("+++++listphone++++" + cursor.getString(2));
+                user.setUser_id(cursor.getInt(0));
+                user.setUserName(cursor.getString(1));
+                user.setCompanyName(cursor.getString(2));
+                user.setPhone_no(cursor.getString(3));
+                owener_list.add(user);
+            } while (cursor.moveToNext());
+        }
+        return owener_list;
+    }
 
+
+    public boolean checkPhonenumber(String phoneno) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        boolean exitphonenumber=false;
+        Cursor cursor = db.query(TABLE_USER, new String[]{KEY_ID, KEY_USER_NAME,KEY_COMPANY, KEY_PH_NO}, KEY_PH_NO + "=?", new String[]{String.valueOf(phoneno)}, null, null, null, null);
+        //  Cursor cr = db.query(TABLE_USER, null,null,null,null,KEY_PH_NO + " = " +phoneno, phoneno);
+        System.out.println("count cursor"+cursor.getCount());
+        //  Log.w("After count: ",cursor.getCount() );
+        if (cursor.getCount() > 0){
+            Log.d("After check: ", "checked..true");
+            exitphonenumber = true;
+        }else{
+            Log.d("After check: ", "checked.. false");
+            exitphonenumber = false;
+        }
+
+        Log.d("After check: ", "checked..");
+        return exitphonenumber;
+    }
 }

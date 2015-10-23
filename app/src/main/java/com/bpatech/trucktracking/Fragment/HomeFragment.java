@@ -3,6 +3,7 @@ package com.bpatech.trucktracking.Fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +17,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
+import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.CustomAdapter;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+
+import org.apache.http.HttpResponse;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,12 +40,16 @@ public class HomeFragment extends Fragment {
 	MySQLiteHelper db;
 	private Button nbtn;
 	private EditText phoneNo;
+	Request request;
+	String responseStrng;
+	public ArrayList<AddTrip> currenttriplist;
+	public ArrayList<AddTrip> currenttripdetails;
 	ImageButton imageButtonopen;
 	ImageView carlogo;
+	ProgressBar progressBar;
 	TextView destination, truck, phoneno, txt_contTitle, triplistsize_view;
-	;
 	LinearLayout listlayout_ll, triplist_ll;
-
+	ListView listView;
 	SessionManager session;
 
 	@Override
@@ -56,16 +67,27 @@ public class HomeFragment extends Fragment {
 			triplistsize_view = (TextView) view.findViewById(R.id.triplistsize_view);
 			triplist_ll = (LinearLayout) view.findViewById(R.id.currenttriplist_view);
 			triplist_ll.setVisibility(view.GONE);
-
-			ListView listView = (ListView) view.findViewById(R.id.listview);
-			if (SessionManager.getAddtripdetails() != null && SessionManager.getAddtripdetails().size() > 0) {
-				String triplisttext = "Available (" + SessionManager.getAddtripdetails().size() + ")";
+			progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar);
+			progressBar.setProgress(10);
+			progressBar.setMax(100);
+			progressBar.setVisibility(View.INVISIBLE);
+			currenttripdetails=new ArrayList<AddTrip>();
+			request= new Request(getActivity());
+			session = new SessionManager(getActivity().getApplicationContext());
+	listView = (ListView) view.findViewById(R.id.listview);
+try{
+	new GetMytripDetail().execute("", "", "");
+}catch(Exception e){
+	e.printStackTrace();
+}
+			if(session.getAddtripdetails()!=null && session.getAddtripdetails().size() > 0){
+				String triplisttext = "Available (" + session.getAddtripdetails().size() + ")";
 				triplistsize_view.setText(triplisttext);
 				triplist_ll.setVisibility(view.VISIBLE);
 
-				ArrayList<AddTrip> currenttripdetails = new ArrayList<AddTrip>();
-				currenttripdetails.addAll(SessionManager.getAddtripdetails());
-				CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(), currenttripdetails, savedInstanceState);
+				ArrayList<AddTrip> currenttripdetailslist = new ArrayList<AddTrip>();
+				currenttripdetailslist.addAll(session.getAddtripdetails());
+				CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(), currenttripdetailslist, savedInstanceState);
 				listView.setAdapter(adapter);
 
 				listView.setDividerHeight(5);
@@ -83,7 +105,8 @@ public class HomeFragment extends Fragment {
 					TextView customer = (TextView) view.findViewById(R.id.customer);
 					TextView customer_name = (TextView) view.findViewById(R.id.customername);
 					TextView customer_no = (TextView) view.findViewById(R.id.customerno);
-
+					TextView source=(TextView)view.findViewById(R.id.nowvalue);
+					String sourcetxt=source.getText().toString();
 					String placeval = place.getText().toString();
 					String Truckval = Truck.getText().toString();
 					String phoneval = phone.getText().toString();
@@ -92,6 +115,7 @@ public class HomeFragment extends Fragment {
 					String customer_noval = customer_no.getText().toString();
 					TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
 					Bundle bundle = new Bundle();
+					bundle.putString(ServiceConstants.ADD_TRIP_SOURCE,sourcetxt);
 					bundle.putString(ServiceConstants.CUURENT_TRIP_PLACE, placeval);
 					bundle.putString(ServiceConstants.CUURENT_TRIP_TRUCK, Truckval);
 					bundle.putString(ServiceConstants.CUURENT_TRIP_PHONE, phoneval);
@@ -137,50 +161,8 @@ try {
 	if (phoneNo.getText().toString().equals("")) {
 		Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
 				Toast.LENGTH_SHORT).show();
-		//session = new SessionManager(getActivity().getApplicationContext());
-		//String savephoneno = phoneNo.getText().toString();
-		// boolean exitnumber=Isexitphonenumber(phoneNo);
-		//System.out.println("phoneNo " + phoneNo);
-				 /* String sms="OTP to Verifying your Mobile Number for My Trip: ";
-				  Random random = new Random();
-					  int otpno = generateValue();
-				  System.out.println("randomInteger"+otpno);*/
-		//try {
 
-		//session.setPhoneno(savephoneno);
-					/*session.setOTPno(otpno);
-					SmsManager smsManager = SmsManager.getDefault();
-					smsManager.sendTextMessage(savephoneno, null, sms+otpno, null, null);
-					Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!",
-							Toast.LENGTH_LONG).show();*/
-
-				/*DetailFragment detailfrag = new DetailFragment();
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
-
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();*/
-/*
-		HomeFragment homefragment = new HomeFragment();
-		FragmentManager fragmentmanager = getFragmentManager();
-		FragmentTransaction fragmenttransaction = fragmentmanager
-				.beginTransaction();
-		fragmenttransaction.replace(R.id.viewers, homefragment, "");
-
-		fragmenttransaction.addToBackStack(null);
-		fragmenttransaction.commit();*/
-
-					
-				  /*} catch (Exception e) {
-					Toast.makeText(getActivity().getApplicationContext(),
-							"SMS faild, please try again later!",
-							Toast.LENGTH_LONG).show();
-					e.printStackTrace();
-				  }*/
-
-	} else {
+	}  else if(phoneNo.getText().toString().length()==10){
 
 		session = new SessionManager(getActivity().getApplicationContext());
 		String savephoneno = phoneNo.getText().toString();
@@ -195,14 +177,12 @@ try {
 
 		fragmenttransaction.addToBackStack(null);
 		fragmenttransaction.commit();
-				/*HomeFragment homefragment = new HomeFragment();
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, homefragment, "");
 
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();*/
+	}
+	else
+	{
+		Toast.makeText(getActivity().getApplicationContext(), "enter the valid phone number!",
+				Toast.LENGTH_SHORT).show();
 	}
 } catch(Exception e)
 {
@@ -218,6 +198,43 @@ try {
 			return otpno;
 		}
 	}
+	private class GetMytripDetail extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+			progressBar.setVisibility(View.INVISIBLE);
+		}
+
+		protected String doInBackground(String... params) {
+
+			try {
+				progressBar.setVisibility(View.VISIBLE);
+				System.out.println("++++phone no++++++++" + session.getPhoneno());
+				String Gettrip_url=ServiceConstants.GET_TRIP+session.getPhoneno();
+				System.out.println("++++statuscode++++++++"+Gettrip_url);
+				HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
+				responseStrng = ""+response.getStatusLine().getStatusCode();
+				System.out.println("++++statuscode++++++++"+response.getStatusLine().getStatusCode());
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONArray responsejSONArray = request.responseArrayParsing(response);
+					System.out.println("+++++++++++responsejSONArray+++++++++++" + responsejSONArray.toString());
+					GetMytripListParsing mytripListParsing= new GetMytripListParsing();
+					currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
+					System.out.println("+++++++++++size111+++++++++++" + currenttripdetails.size());
+					session.setAddtripdetails(currenttripdetails);
+				}
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
+
+	}
+
 }
 
 

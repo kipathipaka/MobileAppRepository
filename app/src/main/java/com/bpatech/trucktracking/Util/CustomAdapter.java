@@ -53,16 +53,14 @@ public class CustomAdapter extends ArrayAdapter {
 	 private Context mContext;
 	    private ArrayList<AddTrip> mList;
 	Bundle savedInstanceState;
-
-
 	private int[] colors = new int[] { 0x300000FF,0x30FF0000  };
 	    
 @SuppressWarnings("unchecked")
 public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	
-	        super(context, R.layout.currenttrip_layout, list);
-	        mContext = context;
-	        mList = list;
+	super(context, R.layout.currenttrip_layout, list);
+	mContext = context;
+	mList = list;
 	savedInstanceState=b;
 	    }
 
@@ -72,8 +70,6 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	 
 	        View view;
 			final Context context = parent.getContext();
-
-
 	        if (convertView == null) {
 	        	   System.out.println("convertView IFFFF");
 	            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -185,10 +181,10 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			UpdateVal.setText(dateFormat.format(date).toString());
 			Rideno.setText("#"+mList.get(position).getTruckno() );
 			Destination.setText( mList.get(position).getDestination() );
-			phoneno.setText( mList.get(position).getPhone_no());
-			customer.setText( mList.get(position).getCustomer());
+			phoneno.setText( mList.get(position).getDriver_phone_no());
+			customer.setText( mList.get(position).getCustomer_company());
 			customer_name.setText( mList.get(position).getCustomer_name());
-			customer_no.setText(mList.get(position).getCustomer_no());
+			customer_no.setText(mList.get(position).getCustomer_phoneno());
 			view.setBackgroundColor(getContext().getResources().getColor(R.color.darkskyblue));
 			//listlayout_ll.setBackgroundColor(Color.BLUE);
 			/*if(mList.get(position).getCustomer().toString().equalsIgnoreCase("driver")){

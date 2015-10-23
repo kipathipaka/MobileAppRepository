@@ -1,9 +1,8 @@
 package com.bpatech.trucktracking.Fragment;
-
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,29 +12,48 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
+import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class DetailFragment extends Fragment {
 	MySQLiteHelper db;
 	public Button debtn;
+	AddUserObjectParsing obj;
+	Request request;
 	public EditText companyname,username;
+	User user;
+	ProgressBar progressBar;
 	SessionManager session;
-	CurrentTripFragment currentfragment = new CurrentTripFragment();
+	HttpResponse response;
+	String responseStrng = null;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-
 		View view = inflater.inflate(R.layout.companydetail_layout, container, false);
 		debtn=(Button)view.findViewById(R.id.detbtn);
-		//otpno=(EditText)view.findViewById(R.id.editotp);
 		companyname=(EditText)view.findViewById(R.id.editcompanynamee);
 		username=(EditText)view.findViewById(R.id.edityourname);
+		progressBar=(ProgressBar)view.findViewById(R.id.progressBar1);
+		progressBar.setProgress(10);
+		progressBar.setMax(100);
+		progressBar.setVisibility(View.INVISIBLE);
+		obj = new AddUserObjectParsing();
+		request = new Request(getActivity());
+		user = new User();
 		debtn.setOnClickListener(new MyNextButtonListener());
 		return view;
 	}
@@ -45,64 +63,38 @@ public class DetailFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			try {
+				progressBar.setVisibility(View.VISIBLE);
 				InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
 				inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				if (companyname.getText().toString().trim().equalsIgnoreCase("") || username.getText().toString().trim().equalsIgnoreCase("")) {
-					//System.out.println("++++++++++++++"+otpno.getText().toString());
 					Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
 							Toast.LENGTH_SHORT).show();
-					/*DetailFragment detailfrag = new DetailFragment();
-					FragmentManager fragmentmanager = getFragmentManager();
-					FragmentTransaction fragmenttransaction = fragmentmanager
-							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, detailfrag,"BackCurrentTrip");
-
-					fragmenttransaction.addToBackStack(null);
-					fragmenttransaction.commit();*/
+					progressBar.setVisibility(View.INVISIBLE);
 				} else {
 
-					User user = new User();
 					session = new SessionManager(getActivity().getApplicationContext());
-					//int	otpnumber= Integer.parseInt(otpno.getText().toString());
-
-					//int sessionstored_otp=session.getOTPno();
-					//if(otpnumber==sessionstored_otp){
-					//user.setOtp_no(sessionstored_otp);
-					//user.setPhone_no(sharedpreferences.getString("phoneno", null).toString());
 					user.setPhone_no(session.getPhoneno());
 					user.setCompanyName(companyname.getText().toString());
 					user.setUserName(username.getText().toString());
 					InsertUser(user);
+					new AddUserDetail().execute("", "", "");
 					//session.removesession();
-					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+					/*CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
 							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers,currenttripfrag,"null");
+					fragmenttransaction.replace(R.id.viewers, currenttripfrag, "null");
 
 					fragmenttransaction.addToBackStack(null);
-					fragmenttransaction.commit();
+					fragmenttransaction.commit();*/
 				}
-				 
-			/*else {
-				Toast.makeText(getActivity().getApplicationContext(), "please enter the value!",
-						Toast.LENGTH_LONG).show();
-				DetailFragment detailfrag=new DetailFragment();
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers,detailfrag,"BackCurrentTrip");
-				
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
-			}*/
 
 
 			} catch (Exception e) {
-				Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-						Toast.LENGTH_SHORT).show();
+
 				e.printStackTrace();
 			}
+
 		}
 	}
 
@@ -114,5 +106,108 @@ public class DetailFragment extends Fragment {
 		Log.d("Insert: ", "Inserting ..");
 	}
 
+	private class AddUserDetail extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+			progressBar.setVisibility(View.INVISIBLE);
+		}
 
+		protected String doInBackground(String... params) {
+
+			try {
+
+				List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
+				createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), "Y", "Y", user.getUserName()));
+				String Getuser_url=ServiceConstants.GET_USER+ session.getPhoneno();
+				response = request.requestGetType(Getuser_url, ServiceConstants.BASE_URL);
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONObject responsejson = request.responseParsing(response);
+					System.out.println("++++responsejson++++++++" + responsejson);
+					String Updateuser_url=ServiceConstants.UPDATE_USER+ session.getPhoneno();
+					List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
+					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y",user.getUserName()));
+					if(responsejson!=null) {
+						/*response = request.requestPutType(ServiceConstants.UPDATE_USER,updateuserlist, ServiceConstants.BASE_URL);
+						responseStrng = ""+response.getStatusLine().getStatusCode();
+						System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
+						JSONObject responseejson = request.responseParsing(response);
+						if (response.getStatusLine().getStatusCode() == 200) {
+							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers,currenttripfrag,"null");
+
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
+
+						}*/
+						response = request.requestDeleteType(Getuser_url,ServiceConstants.BASE_URL);
+						if (response.getStatusLine().getStatusCode() == 200) {
+							response = request.requestPostType(
+									ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
+							responseStrng = ""+response.getStatusLine().getStatusCode();
+							System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
+							JSONObject responseejson = request.responseParsing(response);
+							if (response.getStatusLine().getStatusCode() == 200) {
+								CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+								FragmentManager fragmentmanager = getFragmentManager();
+								FragmentTransaction fragmenttransaction = fragmentmanager
+										.beginTransaction();
+								fragmenttransaction.replace(R.id.viewers,currenttripfrag,"null");
+
+								fragmenttransaction.addToBackStack(null);
+								fragmenttransaction.commit();
+
+							}
+						}
+					}else{
+						response = request.requestPostType(
+								ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
+						responseStrng = ""+response.getStatusLine().getStatusCode();
+						System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
+						JSONObject responseejson = request.responseParsing(response);
+						if (response.getStatusLine().getStatusCode() == 200) {
+							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers,currenttripfrag,"null");
+
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
+
+						}
+					}
+				}else{
+					response = request.requestPostType(
+							ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
+					responseStrng = ""+response.getStatusLine().getStatusCode();
+					System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
+					JSONObject responseejson = request.responseParsing(response);
+					if (response.getStatusLine().getStatusCode() == 200) {
+						CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+						FragmentManager fragmentmanager = getFragmentManager();
+						FragmentTransaction fragmenttransaction = fragmentmanager
+								.beginTransaction();
+						fragmenttransaction.replace(R.id.viewers,currenttripfrag,"null");
+
+						fragmenttransaction.addToBackStack(null);
+						fragmenttransaction.commit();
+
+					}
+				}
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
+
+	}
 }

@@ -74,9 +74,9 @@
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:ems="10"
-          android:cursorVisible="true"
-          android:textCursorDrawable="@drawable/color_cursor"
-
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:maxLength="10"
                     android:hint="e.g:+919543492022"
                      android:inputType="phone"
                     android:paddingLeft="5dp" />
@@ -88,8 +88,7 @@
             android:paddingBottom="1.5dp"
             android:paddingTop="1.5dp"
             android:background="@color/darkskyblue"
-            android:layout_marginTop="@dimen/fourty_pt"
-            >
+            android:layout_marginTop="@dimen/fourty_pt">
             <Button
                 android:id="@+id/addbtn"
                 android:layout_width="match_parent"
@@ -104,6 +103,11 @@
         </TableRow>
 
     </TableLayout>
-
+    <ProgressBar
+        android:id="@+id/addphoneprogresbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

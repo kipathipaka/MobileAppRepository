@@ -39,7 +39,7 @@ public class SessionManager {
     public static final String KEY_otpno = "otpno";
     public static List<AddTrip> addtripdetails;
     public static List<AddTrip> currenttripdetails = new ArrayList<AddTrip>();
-    
+    public static String currentLoggedPage;
 
 
 
@@ -117,7 +117,16 @@ public class SessionManager {
 		System.out.println("addtripdetailsaddtripdetails"+currenttripdetails.size());
 	}
 
+    public boolean isLoggedIn() {
+        return pref.getBoolean(ServiceConstants.IS_LOGIN, false);
+    }
 
-	
+    public static String getCurrentLoggedPage() {
+        return currentLoggedPage;
+    }
+
+    public static void setCurrentLoggedPage(String currentLoggedPage) {
+        SessionManager.currentLoggedPage = currentLoggedPage;
+    }
 	
 }

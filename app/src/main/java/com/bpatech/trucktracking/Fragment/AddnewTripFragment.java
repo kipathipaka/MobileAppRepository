@@ -1,9 +1,9 @@
 package com.bpatech.trucktracking.Fragment;
 
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,42 +13,71 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.AddTrip;
+import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Service.AddUserObjectParsing;
+import com.bpatech.trucktracking.Service.GetDriverListParsing;
+import com.bpatech.trucktracking.Service.MySQLiteHelper;
+import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AddnewTripFragment extends Fragment {
+	MySQLiteHelper db;
 	SessionManager session;
 	private Spinner phonespinner;
 	Button addbtn;
+	Request request;
+	ProgressBar progressBar;
+	String responseStrng,responsevalue;
+	String owner_phone_number;
+	HttpResponse response;
+	AddUserObjectParsing obj;
 	String source="chennai";
-	EditText editdestination,editride,customer,customer_name,customer_no;
+	List driverphonenolist;
+	AddTrip addtrip;
+	EditText editdestination,editride,customer_company,customer_name,customer_phoneno;
 	TextView txt_contTitle;
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
 	        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 	        View view = inflater.inflate(R.layout.addnewtrip_layout, container, false);
-	        
+		 db = new MySQLiteHelper(getActivity().getApplicationContext());
+		 request= new Request(getActivity());
+
+		 progressBar=(ProgressBar)view.findViewById(R.id.addprogresbar);
+		 progressBar.setProgress(10);
+		 progressBar.setMax(100);
+		 progressBar.setVisibility(View.INVISIBLE);
 	        txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
 	        txt_contTitle.setText("Add Trips");
 	        addbtn=(Button)view.findViewById(R.id.addbtn);
 	        editdestination=(EditText)view.findViewById(R.id.editdestination);
 	        editride=(EditText)view.findViewById(R.id.edittruckno);
-	       // editphoneno=(EditText)view.findViewById(R.id.editphoneno);
-		 //source=(EditText)view.findViewById(R.id.source_edittext);
-		 customer=(EditText)view.findViewById(R.id.editcustomer);
+		 driverphonenolist=new ArrayList();
+		addtrip = new AddTrip();
+		 customer_company=(EditText)view.findViewById(R.id.editcustomercompany);
 		 customer_name=(EditText)view.findViewById(R.id.editcustomername);
-		 customer_no=(EditText)view.findViewById(R.id.editcustomerno);
-		 customer_no=(EditText)view.findViewById(R.id.editcustomerno);
+		 customer_phoneno=(EditText)view.findViewById(R.id.editcustomerphoneno);
 		 phonespinner= (Spinner)view.findViewById(R.id.phonnospinner);
+		 obj = new AddUserObjectParsing();
+		 session = new SessionManager(getActivity().getApplicationContext());
 		 addItemsOnSpinner2();
 	        addbtn.setOnClickListener(new MyaddButtonListener());
 	        return view;
@@ -59,66 +88,151 @@ public class AddnewTripFragment extends Fragment {
 
 		 @Override
 		 public void onClick(View v) {
+			  progressBar.setVisibility(View.VISIBLE);
 			 try {
+
 				 InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
 				 inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-				 if (editdestination.getText().toString().trim().equalsIgnoreCase("") || editride.getText().toString().trim().equalsIgnoreCase("") ) {
+				 if (editdestination.getText().toString().trim().equalsIgnoreCase("") || editride.getText().toString().trim().equalsIgnoreCase("")||
+						 String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Choose Phone number")
+						 || String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Add Phone number")
+						 || customer_company.getText().toString().trim().equalsIgnoreCase("") ||
+						 customer_name.getText().toString().trim().equalsIgnoreCase("") ||customer_phoneno.getText().toString().trim().equalsIgnoreCase("") ) {
 					 Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
 							 Toast.LENGTH_SHORT).show();
-					/* AddnewTripFragment addfrag = new AddnewTripFragment();
-					 FragmentManager fragmentmanager = getFragmentManager();
-					 FragmentTransaction fragmenttransaction = fragmentmanager
-							 .beginTransaction();
-					 fragmenttransaction.replace(R.id.viewers, addfrag, "BackCurrentTrip");
+					 progressBar.setVisibility(View.INVISIBLE);
 
-					 fragmenttransaction.addToBackStack(null);
-					 fragmenttransaction.commit();*/
-
-				 } else {
-					 AddTrip addtrip = new AddTrip();
-					 List<AddTrip> currentDetailsList = new ArrayList<AddTrip>();
+				 } else if(String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim())){
+					 Toast.makeText(getActivity().getApplicationContext(), "Entered Customer phone number and driver phone are same.. Please Check ",
+							 Toast.LENGTH_SHORT).show();
+					 progressBar.setVisibility(View.INVISIBLE);
+				 }
+				 else if(customer_phoneno.getText().toString().length()==10){
 					 addtrip.setDestination(editdestination.getText().toString());
 					 addtrip.setTruckno(editride.getText().toString());
-					 addtrip.setPhone_no(String.valueOf(phonespinner.getSelectedItem()));
-					 addtrip.setCustomer(customer.getText().toString());
+					 addtrip.setDriver_phone_no(String.valueOf(phonespinner.getSelectedItem()));
+					 addtrip.setCustomer_company(customer_company.getText().toString());
 					 addtrip.setCustomer_name(customer_name.getText().toString());
-					 addtrip.setCustomer_no(customer_no.getText().toString());
-					// addtrip.setSource(source.getText().toString());
+					 addtrip.setCustomer_phoneno(customer_phoneno.getText().toString());
 					 addtrip.setSource(source);
-					 currentDetailsList.add(addtrip);
-
-					 SessionManager.setAddtripdetails(currentDetailsList);
-					 CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-					 FragmentManager fragmentmanager = getFragmentManager();
-					 FragmentTransaction fragmenttransaction = fragmentmanager
-							 .beginTransaction();
-					 fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-
-					 fragmenttransaction.addToBackStack(null);
-					 fragmenttransaction.commit();
-
+					 new AddTripDetail().execute("", "", "");
+				 }
+				 else
+				 {
+					 Toast.makeText(getActivity().getApplicationContext(), "enter the valid phone number!",
+							 Toast.LENGTH_SHORT).show();
+					 progressBar.setVisibility(View.INVISIBLE);
 				 }
 			 } catch (Exception e) {
 				 Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
 						 Toast.LENGTH_SHORT).show();
+				 progressBar.setVisibility(View.INVISIBLE);
 				 e.printStackTrace();
 			 }
 		 }
 	 }
 	public void addItemsOnSpinner2() {
+		progressBar.setVisibility(View.VISIBLE);
+		ArrayList<User> ownerlist = new ArrayList<User>();
+		ownerlist.addAll(db.getOwnerphoneno());
+		if (ownerlist != null && ownerlist.size() > 0) {
+			owner_phone_number = ownerlist.get(0).getPhone_no();
 
-		List list = new ArrayList();
-		list.add("Choose Phone number");
+			new GetdriverPhone().execute("", "", "");
 
-		list.add("+919962437832");
 
-		list.add("+919943502341");
+		}
+	}
+	private class AddTripDetail extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+			progressBar.setVisibility(View.INVISIBLE);
+		}
 
-		list.add("+917786345217");
-		list.add("+919432940987");
-		ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item, list);
-		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		phonespinner.setAdapter(dataAdapter);
+		protected String doInBackground(String... params) {
+
+			try {
+				List<AddTrip> currentDetailsList = new ArrayList<AddTrip>();
+				System.out.println("++++phoneno++++++++"+session.getPhoneno());
+				List<NameValuePair> addtriplist = new ArrayList<NameValuePair>();
+				addtriplist.addAll(obj.AddtripObject(addtrip.getTruckno(),addtrip.getDestination(),session.getPhoneno(),
+						addtrip.getCustomer_company(),addtrip.getCustomer_name(),addtrip.getCustomer_phoneno(),addtrip.getDriver_phone_no()));
+				System.out.println("++++driverphonelist++++++++"+addtriplist.size());
+				HttpResponse response = request.requestPostType(
+						ServiceConstants.ADD_TRIP,addtriplist,ServiceConstants.BASE_URL);
+				responsevalue=""+response.getStatusLine().getStatusCode();
+				System.out.println("++++statuscode++++++++"+response.getStatusLine().getStatusCode());
+				JSONObject responsejson = request.responseParsing(response);
+				System.out.println("++++responsejson++++++++" + responsejson);
+				if (response.getStatusLine().getStatusCode() == 200) {
+				   currentDetailsList.add(addtrip);
+					//SessionManager.setAddtripdetails(currentDetailsList);
+
+					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers,currenttripfrag);
+
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
+				}
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responsevalue;
+
+		}
+
+	}
+	private class GetdriverPhone extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+			if (driverphonenolist.size() > 1) {
+				ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, driverphonenolist);
+				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				phonespinner.setAdapter(dataAdapter);
+			} else {
+
+				List list = new ArrayList();
+				list.add("Add Phone number");
+				ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item, list);
+				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				phonespinner.setAdapter(dataAdapter);
+
+			}
+			progressBar.setVisibility(View.INVISIBLE);
+		}
+
+		protected String doInBackground(String... params) {
+
+			try {
+				List<NameValuePair> driverphonelist = new ArrayList<NameValuePair>();
+				driverphonelist.addAll(obj.getDriverPhone(owner_phone_number));
+				String get_driver_url=ServiceConstants.GET_DRIVER+owner_phone_number;
+				HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);
+				responseStrng = ""+response.getStatusLine().getStatusCode();
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONArray responsejSONArray = request.responseArrayParsing(response);
+					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
+					driverphonenolist.add("Choose Phone number");
+					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
+				}
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
 
 	}
 
