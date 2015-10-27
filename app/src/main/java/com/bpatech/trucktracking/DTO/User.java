@@ -14,7 +14,7 @@ public class User {
     }
 
 
-    public User(int user_id, String phone_no, int otp_no, String companyName,
+    public User(int user_id, String phone_no, String companyName,
                 String userName) {
         super();
         this.user_id = user_id;
@@ -33,6 +33,7 @@ public class User {
     }
 
     public int getUser_id() {
+
         return user_id;
     }
 

@@ -5,20 +5,34 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
 import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Service.AddUserObjectParsing;
+import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
+import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends FragmentActivity {
 
@@ -38,7 +52,6 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 		setContentView(R.layout.home_fragment);
 		nbtn=(Button)findViewById(R.id.nextbtn);
 		phoneno=(EditText)findViewById(R.id.phoneno);
-
 	}
 
 	@Override
@@ -117,6 +130,5 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
-
 
 }

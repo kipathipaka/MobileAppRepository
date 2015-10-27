@@ -35,7 +35,7 @@ import java.util.List;
 
 public class CurrentTripFragment  extends Fragment {
 	SessionManager session;
-LinearLayout triplist_ll;
+LinearLayout triplist_ll,footer_addtrip_ll;
 	TextView txt_contTitle,triplistsize_view;
 	Request request;
 	String responseStrng;
@@ -48,26 +48,43 @@ LinearLayout triplist_ll;
 	                             Bundle savedInstanceState) {
 
 	        View view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
-	        txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
-	        txt_contTitle.setText("Current Trips");
-		 triplistsize_view=(TextView)view.findViewById(R.id.triplistsize_view);
-		 triplist_ll=(LinearLayout)view.findViewById(R.id.currenttriplist_view);
-		 triplist_ll.setVisibility(view.GONE);
+		 session = new SessionManager(getActivity().getApplicationContext());
+		 currenttripdetails=new ArrayList<AddTrip>();
+		 request= new Request(getActivity().getApplicationContext());
 		 progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar);
 		 progressBar.setProgress(10);
 		 progressBar.setMax(100);
-		 progressBar.setVisibility(View.INVISIBLE);
-		 currenttripdetails=new ArrayList<AddTrip>();
-		 request= new Request(getActivity());
-		 session = new SessionManager(getActivity().getApplicationContext());
-		  listView = (ListView)view.findViewById(R.id.listview);
-
-		 try{
+		 progressBar.setVisibility(View.VISIBLE);
+		/* try{
 			 new GetMytripDetail().execute("", "", "");
 		 }catch(Exception e){
 			 e.printStackTrace();
+		 }*/
+		 txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
+		 txt_contTitle.setText("Current Trips");
+		 triplistsize_view=(TextView)view.findViewById(R.id.triplistsize_view);
+		 triplist_ll = (LinearLayout) view.findViewById(R.id.currenttriplist_view);
+		 //footer_addtrip_ll=(LinearLayout)view.findViewById(R.id.addtrip_ll);
+		 triplist_ll.setVisibility(view.GONE);
+		  listView = (ListView)view.findViewById(R.id.listview);
+		 View footerLayout =view.findViewById(R.id.footer);
+
+		 footer_addtrip_ll=(LinearLayout)footerLayout.findViewById(R.id.addtrip_ll);
+		 if(session.getDriverlist()!=null && session.getDriverlist().size() > 0){
+			 footer_addtrip_ll.setEnabled(true);
+			 for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
+				 View child = footer_addtrip_ll.getChildAt(i);
+				 child.setEnabled(true);
+			 }
+		 }else{
+			 //footer_addtrip_ll.setBackground(getActivity().getResources().getDrawable(R.drawable.footerbutton_inactive));
+			 footer_addtrip_ll.setEnabled(false);
+			 for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
+				 View child = footer_addtrip_ll.getChildAt(i);
+				 child.setEnabled(false);
+			 }
+
 		 }
-		 System.out.println("+++++currenttriplist++++++list+++++++++++++"+session.getAddtripdetails().size());
 		 if(session.getAddtripdetails()!=null && session.getAddtripdetails().size() > 0){
 			 String triplisttext = "Available (" + SessionManager.getAddtripdetails().size() + ")";
 			 triplistsize_view.setText(triplisttext);
@@ -117,6 +134,7 @@ LinearLayout triplist_ll;
 				 TextView customer=(TextView)view.findViewById(R.id.customer);
 				 TextView customer_name=(TextView)view.findViewById(R.id.customername);
 				 TextView customer_no=(TextView)view.findViewById(R.id.customerno);
+				 TextView vehicle_id=(TextView)view.findViewById(R.id.vechiletrip_no);
 				 TextView source=(TextView)view.findViewById(R.id.nowvalue);
 				 String sourcetxt=source.getText().toString();
 				 String placeval = place.getText().toString();
@@ -125,6 +143,8 @@ LinearLayout triplist_ll;
 				 String customerval = customer.getText().toString();
 				 String customer_nameval = customer_name.getText().toString();
 				 String customer_noval = customer_no.getText().toString();
+				 String vechile_trip_id = vehicle_id.getText().toString();
+
 				 TaskDetailFragment taskdetailfrag=new TaskDetailFragment();
 				 Bundle bundle=new Bundle();
 				 bundle.putString(ServiceConstants.CUURENT_TRIP_PLACE,placeval);
@@ -133,6 +153,7 @@ LinearLayout triplist_ll;
 				 bundle.putString(ServiceConstants.CUURENT_TRIP_PHONE, phoneval);
 				 bundle.putString(ServiceConstants.ADD_TRIP_CUSTOMER, customerval);
 				 bundle.putString(ServiceConstants.ADD_TRIP_CUSTOMER_NAME, customer_nameval);
+				 bundle.putString(ServiceConstants.VECHILE_TRIP_ID, vechile_trip_id);
 				 bundle.putString(ServiceConstants.ADD_TRIP_CUSTOMER_NO, customer_noval);
 				 bundle.putBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE, false);
 				 taskdetailfrag.setArguments(bundle);
@@ -149,7 +170,7 @@ LinearLayout triplist_ll;
 			 }
 		 });
 
-
+		 progressBar.setVisibility(View.INVISIBLE);
 		 return view;
 	        
 	        
@@ -157,45 +178,5 @@ LinearLayout triplist_ll;
 
 
 
-	private class GetMytripDetail extends
-			AsyncTask<String, Void, String> {
-		@Override
-		protected void onPostExecute(String result) {
-			progressBar.setVisibility(View.INVISIBLE);
-		}
 
-		protected String doInBackground(String... params) {
-
-			try {
-				progressBar.setVisibility(View.VISIBLE);
-				System.out.println("++++phone no++++++++" + session.getPhoneno());
-				String Gettrip_url=ServiceConstants.GET_TRIP+session.getPhoneno();
-				System.out.println("++++statuscode++++++++"+Gettrip_url);
-				HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
-
-				responseStrng = ""+response.getStatusLine().getStatusCode();
-				System.out.println("++++statuscode++++++++"+response.getStatusLine().getStatusCode());
-				if (response.getStatusLine().getStatusCode() == 200) {
-					JSONArray responsejSONArray = request.responseArrayParsing(response);
-					System.out.println("+++++++++++responsejSONArray+++++++++++" + responsejSONArray.toString());
-					GetMytripListParsing mytripListParsing= new GetMytripListParsing();
-					currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
-					System.out.println("+++++++++++size111+++++++++++" + currenttripdetails.size());
-					session.setAddtripdetails(currenttripdetails);
-
-				}
-			} catch (Exception e) {
-
-				e.printStackTrace();
-
-			}
-
-			return responseStrng;
-
-		}
-
-	}
-
-
-	 
 }

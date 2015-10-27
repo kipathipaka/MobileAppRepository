@@ -1,7 +1,7 @@
 package com.bpatech.trucktracking.DTO;
 
 public class AddTrip {
-	
+	int vehicle_trip_id;
 	String destination;
 	String truckno;
 	String driver_phone_no;
@@ -13,9 +13,9 @@ public class AddTrip {
 	{
 		
 	}
-	public AddTrip(String destination, String truckno, String driver_phone_no,
+	public AddTrip(int vehicle_trip_id,String destination, String truckno, String driver_phone_no,
 				   String customer_company, String customer_name, String customer_phoneno,String source) {
-
+		this.vehicle_trip_id = vehicle_trip_id;
 		this.destination = destination;
 		this.truckno = truckno;
 		this.driver_phone_no = driver_phone_no;
@@ -69,6 +69,14 @@ public class AddTrip {
 	}
 	public void setSource(String source) {
 		this.source = source;
+	}
+	public int getVehicle_trip_id() {
+
+		return vehicle_trip_id;
+	}
+
+	public void setVehicle_trip_id(int vehicle_trip_id) {
+		this.vehicle_trip_id = vehicle_trip_id;
 	}
 
 }

@@ -23,6 +23,7 @@ import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
+import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ServiceConstants;
@@ -50,6 +51,7 @@ public class AddnewTripFragment extends Fragment {
 	AddUserObjectParsing obj;
 	String source="chennai";
 	List driverphonenolist;
+	ArrayList<AddTrip> currenttripdetails;
 	AddTrip addtrip;
 	EditText editdestination,editride,customer_company,customer_name,customer_phoneno;
 	TextView txt_contTitle;
@@ -57,10 +59,10 @@ public class AddnewTripFragment extends Fragment {
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
 	        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-	        View view = inflater.inflate(R.layout.addnewtrip_layout, container, false);
+		 View view = inflater.inflate(R.layout.addnewtrip_layout, container, false);
 		 db = new MySQLiteHelper(getActivity().getApplicationContext());
 		 request= new Request(getActivity());
-
+		 currenttripdetails=new ArrayList<AddTrip>();
 		 progressBar=(ProgressBar)view.findViewById(R.id.addprogresbar);
 		 progressBar.setProgress(10);
 		 progressBar.setMax(100);
@@ -76,10 +78,11 @@ public class AddnewTripFragment extends Fragment {
 		 customer_name=(EditText)view.findViewById(R.id.editcustomername);
 		 customer_phoneno=(EditText)view.findViewById(R.id.editcustomerphoneno);
 		 phonespinner= (Spinner)view.findViewById(R.id.phonnospinner);
-		 obj = new AddUserObjectParsing();
 		 session = new SessionManager(getActivity().getApplicationContext());
+		 obj = new AddUserObjectParsing();
 		 addItemsOnSpinner2();
 	        addbtn.setOnClickListener(new MyaddButtonListener());
+
 	        return view;
 	    }
 	 
@@ -137,17 +140,32 @@ public class AddnewTripFragment extends Fragment {
 		ownerlist.addAll(db.getOwnerphoneno());
 		if (ownerlist != null && ownerlist.size() > 0) {
 			owner_phone_number = ownerlist.get(0).getPhone_no();
+			if (session.getDriverlist().size() > 0) {
+				driverphonenolist.add("Choose Phone number");
+				driverphonenolist.addAll(session.getDriverlist());
+				ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, driverphonenolist);
+				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				phonespinner.setAdapter(dataAdapter);
+			} else {
 
-			new GetdriverPhone().execute("", "", "");
+				List list = new ArrayList();
+				list.add("Add Phone number");
+				ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item, list);
+				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				phonespinner.setAdapter(dataAdapter);
+
+			}
+			//new GetdriverPhone().execute("", "", "");
 
 
 		}
+		progressBar.setVisibility(View.INVISIBLE);
 	}
 	private class AddTripDetail extends
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
-			progressBar.setVisibility(View.INVISIBLE);
+			//progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
@@ -166,17 +184,11 @@ public class AddnewTripFragment extends Fragment {
 				JSONObject responsejson = request.responseParsing(response);
 				System.out.println("++++responsejson++++++++" + responsejson);
 				if (response.getStatusLine().getStatusCode() == 200) {
-				   currentDetailsList.add(addtrip);
+				  // currentDetailsList.add(addtrip);
 					//SessionManager.setAddtripdetails(currentDetailsList);
+					new GetMytripDetail().execute("", "", "");
 
-					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-					FragmentManager fragmentmanager = getFragmentManager();
-					FragmentTransaction fragmenttransaction = fragmentmanager
-							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers,currenttripfrag);
 
-					fragmenttransaction.addToBackStack(null);
-					fragmenttransaction.commit();
 				}
 			} catch (Exception e) {
 
@@ -235,12 +247,50 @@ public class AddnewTripFragment extends Fragment {
 		}
 
 	}
+	private class GetMytripDetail extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+			progressBar.setVisibility(View.INVISIBLE);
+		}
 
-	/*public void onBackPressed() {
-		// TODO Auto-generated method stub
-		FragmentManager mgr = getFragmentManager();
-		mgr.popBackStack();
-		}*/
+		protected String doInBackground(String... params) {
 
+			try {
+				System.out.println("++++phone no++++++++" + session.getPhoneno());
+				String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
+				System.out.println("++++statuscode++++++++" + Gettrip_url);
+				HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
+
+				responseStrng = "" + response.getStatusLine().getStatusCode();
+				System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONArray responsejSONArray = request.responseArrayParsing(response);
+					System.out.println("+++++++++++responsejSONArray+++++++++++" + responsejSONArray.toString());
+					GetMytripListParsing mytripListParsing = new GetMytripListParsing();
+					currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
+					System.out.println("+++++++++++size111+++++++++++" + currenttripdetails.size());
+					session.setAddtripdetails(currenttripdetails);
+					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
+
+				}
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
+
+	}
 	}
 

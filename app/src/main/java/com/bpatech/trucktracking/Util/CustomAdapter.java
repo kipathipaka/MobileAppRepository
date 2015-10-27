@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +50,7 @@ import java.util.List;
 public class CustomAdapter extends ArrayAdapter {
 	MapView mapView;
 	//GoogleMap map;
-
+	ProgressBar progressBar;
 	 private Context mContext;
 	    private ArrayList<AddTrip> mList;
 	Bundle savedInstanceState;
@@ -71,17 +72,23 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	        View view;
 			final Context context = parent.getContext();
 	        if (convertView == null) {
-	        	   System.out.println("convertView IFFFF");
+	        	 //  System.out.println("convertView IFFFF");
 	            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	           view = inflater.inflate(R.layout.currenttrip_layout, null);
-	           
+				progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar1);
+				progressBar.setProgress(20);
+				progressBar.setMax(100);
+				progressBar.setVisibility(View.VISIBLE);
 	        }
 	        else {
 	            view = convertView;
-	            System.out.println("convertView else");
+				progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar1);
+				progressBar.setProgress(20);
+				progressBar.setMax(100);
+				progressBar.setVisibility(View.VISIBLE);
 	        }
 	        int listsize= mList.size();
-			System.out.println("size" + listsize);
+		//	System.out.println("size" + listsize);
 	mapView = (MapView) view.findViewById(R.id.maplist_view);
 	mapView.onCreate(savedInstanceState);
 	mapView.onResume();
@@ -142,7 +149,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 				}
 		);
 	}else {
-		System.out.println("+++++++++++map++++++++");
+		//System.out.println("+++++++++++map++++++++");
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage("Install Google Maps");
 		builder.setCancelable(false);
@@ -167,7 +174,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			TextView Destination = (TextView) view.findViewById(R.id.place);
 			TextView phoneno = (TextView) view.findViewById(R.id.phoneno);
 			TextView customer = (TextView) view.findViewById(R.id.customer);
-
+	        TextView vechile_trip_id = (TextView) view.findViewById(R.id.vechiletrip_no);
 			TextView customer_name = (TextView) view.findViewById(R.id.customername);
 			TextView customer_no = (TextView) view.findViewById(R.id.customerno);
 			DestinationText.setText("To :");
@@ -185,6 +192,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			customer.setText( mList.get(position).getCustomer_company());
 			customer_name.setText( mList.get(position).getCustomer_name());
 			customer_no.setText(mList.get(position).getCustomer_phoneno());
+	vechile_trip_id.setText(String.valueOf(mList.get(position).getVehicle_trip_id()));
 			view.setBackgroundColor(getContext().getResources().getColor(R.color.darkskyblue));
 			//listlayout_ll.setBackgroundColor(Color.BLUE);
 			/*if(mList.get(position).getCustomer().toString().equalsIgnoreCase("driver")){
@@ -201,8 +209,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 
 				profileimage2.setImageResource(R.drawable.customer);
 			}*/
-
-
+	progressBar.setVisibility(View.INVISIBLE);
 	        return view;
 	    }
 	public boolean isGoogleMapsInstalled()

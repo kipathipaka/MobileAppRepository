@@ -197,7 +197,7 @@ public class Request {
 
                 response = client.execute(request);
             } else {
-                //noInternetConnection();
+                noInternetConnection();
             }
 
         } catch (Exception e) {

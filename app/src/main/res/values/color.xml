@@ -16,5 +16,6 @@
     <color name="fontColor">#012942</color>
     <color name="pagebackground">#E0F8F7</color>
     <color name="cursor">#4ECCE3</color>
-
+    <color name="disablecoloe">#5D8AA8</color>
+    5D8AA8
 </resources>

@@ -341,4 +341,20 @@
         android:visibility="invisible"
         android:textSize="15sp"
         android:textStyle="bold" />
+    <TextView
+        android:id="@+id/vechiletrip_no"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="5dp"
+        android:visibility="invisible"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        />
+    <ProgressBar
+        android:id="@+id/listprogresbar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -20,12 +20,14 @@ import android.widget.Toast;
 
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
+import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -112,7 +114,7 @@ try {
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
-			progressBar.setVisibility(View.INVISIBLE);
+			//progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
@@ -129,6 +131,42 @@ try {
 				JSONObject responsejson = request.responseParsing(response);
 				System.out.println("++++responsejson++++++++" + responsejson);
 				if (response.getStatusLine().getStatusCode() == 200) {
+
+					new GetdriverPhonelist().execute("", "", "");
+				}
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
+
+	}
+	private class GetdriverPhonelist extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+
+			progressBar.setVisibility(View.INVISIBLE);
+		}
+
+		protected String doInBackground(String... params) {
+
+			try {
+				List<String> driverphonenolist = new ArrayList<String>();
+				//driverphonenolist.addAll(obj.getDriverPhone(session.getPhoneno()));
+				String get_driver_url= ServiceConstants.GET_DRIVER+session.getPhoneno();
+				HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);
+				responseStrng = ""+response.getStatusLine().getStatusCode();
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONArray responsejSONArray = request.responseArrayParsing(response);
+					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
+					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
+					session.setDriverlist(driverphonenolist);
+					System.out.println("+++++++++++getDriverlist+++++++++++" + session.getDriverlist().size());
 					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
@@ -137,8 +175,8 @@ try {
 
 					fragmenttransaction.addToBackStack(null);
 					fragmenttransaction.commit();
-
 				}
+
 			} catch (Exception e) {
 
 				e.printStackTrace();

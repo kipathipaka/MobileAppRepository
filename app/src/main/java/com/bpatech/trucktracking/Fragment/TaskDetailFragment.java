@@ -8,17 +8,21 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Service.GetMytripListParsing;
+import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,9 +35,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,13 +54,17 @@ import java.util.List;
     public class TaskDetailFragment extends Fragment   {
        // public GoogleMap googleMap;
        protected Context context;
-    TextView truck, place, phone, txt_contTitle,customer,customer_name,customer_no,lastlocation,updatetime;
+    TextView truck, place, phone, txt_contTitle,customer,customer_name,customer_no, lastlocation,updatetime,vechile_trip_id;
     Button Startbtn;
     boolean isstarttrip=true,isendtrip=false;
     TableRow locationrow,lasttimerow;
     ImageButton whatsup;
     boolean startclick;
+    String vechile_trip_no;
     MapView mapView;
+    Request request;
+    String responseStrng;
+    ProgressBar progressBar;
     public GoogleMap googleMap;
     LatLng LOCATION;
     @Override
@@ -59,6 +74,11 @@ import java.util.List;
 
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
         Bundle taskdetail = this.getArguments();
+        request= new Request(getActivity().getApplicationContext());
+        progressBar=(ProgressBar)view.findViewById(R.id.taskdetailprogresbar);
+        progressBar.setProgress(10);
+        progressBar.setMax(100);
+        progressBar.setVisibility(View.INVISIBLE);
         mapView = (MapView) view.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         googleMap=mapView.getMap();
@@ -161,7 +181,7 @@ import java.util.List;
         customer.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER));
         customer_name.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER_NAME));
         customer_no.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER_NO));
-
+vechile_trip_no=taskdetail.getString(ServiceConstants.VECHILE_TRIP_ID);
         //startclick=taskdetail.getBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE);
         /*if(startclick==true){
             //mapDestroyOnDemand();
@@ -184,9 +204,11 @@ import java.util.List;
 
         @Override
         public void onClick(View v) {
-
-            if(startclick==true){
+           progressBar.setVisibility(View.VISIBLE);
+           // new UpdateTaskdetail().execute("", "", "");
+           if(startclick==true){
                // mapDestroyOnDemand();
+               progressBar.setVisibility(View.INVISIBLE);
                 CurrentTripFragment currenttripfrag=new CurrentTripFragment();
                 FragmentManager fragmentmanager = getFragmentManager();
                 FragmentTransaction fragmenttransaction = fragmentmanager
@@ -196,17 +218,21 @@ import java.util.List;
                 fragmenttransaction.addToBackStack(null);
                 fragmenttransaction.commit();
             }else {
-                System.out.println("click on it");
-                Startbtn.setText("End Tracking");
-                Startbtn.setBackgroundColor(Color.RED);
-                lastlocation.setText("Chennai");
-                DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-                Date date = new Date();
 
-                updatetime.setText(dateFormat.format(date).toString());
-                locationrow.setVisibility(View.VISIBLE);
-                lasttimerow.setVisibility(View.VISIBLE);
-                startclick=true;
+               System.out.println("click on it");
+               Startbtn.setText("End Tracking");
+               Startbtn.setBackgroundColor(Color.RED);
+               lastlocation.setText("Chennai");
+               DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+               Date date = new Date();
+               //vechile_trip_id=Integer.parseInt(vechile_trip_no);
+               updatetime.setText(dateFormat.format(date).toString());
+               locationrow.setVisibility(View.VISIBLE);
+               lasttimerow.setVisibility(View.VISIBLE);
+               startclick = true;
+                progressBar.setVisibility(View.INVISIBLE);
+
+
               /*  mapDestroyOnDemand();
                 //onDestroyView();
                 TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
@@ -227,7 +253,7 @@ import java.util.List;
 
                 fragmenttransaction.addToBackStack(null);
                 fragmenttransaction.commit();*/
-            }
+           }
 
         }
     }
@@ -315,5 +341,66 @@ public void onResume() {
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    private class UpdateTaskdetail extends
+            AsyncTask<String, Void, String> {
+        @Override
+        protected void onPostExecute(String result) {
+
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        protected String doInBackground(String... params) {
+
+            try {
+
+                List<NameValuePair> upadatetripdetail = new ArrayList<NameValuePair>();
+                upadatetripdetail.add(new BasicNameValuePair("vehicle_trip_header_id", vechile_trip_no));
+                if(startclick==true){
+                    HttpResponse response = request.requestPutType(ServiceConstants.END_TRIP, upadatetripdetail, ServiceConstants.BASE_URL);
+                    responseStrng = "" + response.getStatusLine().getStatusCode();
+                    System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
+                    JSONObject responseejson = request.responseParsing(response);
+                    if (response.getStatusLine().getStatusCode() == 200) {
+                        CurrentTripFragment currenttripfrag=new CurrentTripFragment();
+                        FragmentManager fragmentmanager = getFragmentManager();
+                        FragmentTransaction fragmenttransaction = fragmentmanager
+                                .beginTransaction();
+                        fragmenttransaction.replace(R.id.viewers,currenttripfrag);
+
+                        fragmenttransaction.addToBackStack(null);
+                        fragmenttransaction.commit();
+                    }
+
+                }else {
+
+                    HttpResponse response = request.requestPutType(ServiceConstants.START_TRIP, upadatetripdetail, ServiceConstants.BASE_URL);
+                    responseStrng = "" + response.getStatusLine().getStatusCode();
+                    System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
+                    JSONObject responseejson = request.responseParsing(response);
+                    if (response.getStatusLine().getStatusCode() == 200) {
+                        Startbtn.setText("End Tracking");
+                        Startbtn.setBackgroundColor(Color.RED);
+                        lastlocation.setText("Chennai");
+                        DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+                        Date date = new Date();
+                        //vechile_trip_id=Integer.parseInt(vechile_trip_no);
+                        updatetime.setText(dateFormat.format(date).toString());
+                        locationrow.setVisibility(View.VISIBLE);
+                        lasttimerow.setVisibility(View.VISIBLE);
+                        startclick = true;
+
+                    }
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+            return responseStrng;
+
+        }
     }
 }

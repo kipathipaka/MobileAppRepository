@@ -20,8 +20,9 @@ public class GetMytripListParsing {
             System.out.println("+++++++++++commentsArray.length()+++++++++++"+commentsArray.length());
             for (int i = 0; i < commentsArray.length(); i++) {
                 System.out.println("+++++++++++mytriplist+++++++++++");
-           mytrip=new AddTrip();
+                 mytrip=new AddTrip();
                 JSONObject firstmytriparry = commentsArray.getJSONObject(i);
+                mytrip.setVehicle_trip_id(firstmytriparry.getInt("vehicle_trip_header_id"));
                 mytrip.setDestination(firstmytriparry.getString("destination_station"));
                 JSONObject vehiclearray = firstmytriparry
                         .getJSONObject("vehicle");

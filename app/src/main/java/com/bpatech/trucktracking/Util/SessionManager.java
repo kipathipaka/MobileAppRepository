@@ -30,7 +30,7 @@ public class SessionManager {
     
     public static Activity getActivity;
     
-	private List<String> destination=new ArrayList<String>();
+
     
     // User name (make variable public to access from outside)
     public static final String KEY_phoneno = "phoneno";
@@ -39,6 +39,7 @@ public class SessionManager {
     public static final String KEY_otpno = "otpno";
     public static List<AddTrip> addtripdetails;
     public static List<AddTrip> currenttripdetails = new ArrayList<AddTrip>();
+    public static List<String> driverlist;
     public static String currentLoggedPage;
 
 
@@ -99,21 +100,21 @@ public class SessionManager {
 
 
     public static List<AddTrip> getAddtripdetails() {
-		return currenttripdetails;
+		return addtripdetails;
 	}
 
 
 
-	public static List<AddTrip> getCurrenttripdetails() {
+	/*public static List<AddTrip> getCurrenttripdetails() {
 		return currenttripdetails;
-	}
+	}*/
 
 
 
 	public static void setAddtripdetails(List<AddTrip> addtripdetails) {
 		
 		SessionManager.addtripdetails=addtripdetails;
-		currenttripdetails.addAll(addtripdetails);
+		//currenttripdetails.addAll(addtripdetails);
 		System.out.println("addtripdetailsaddtripdetails"+currenttripdetails.size());
 	}
 
@@ -128,5 +129,12 @@ public class SessionManager {
     public static void setCurrentLoggedPage(String currentLoggedPage) {
         SessionManager.currentLoggedPage = currentLoggedPage;
     }
-	
+    public static void setDriverlist(List<String> driverlist) {
+
+        SessionManager.driverlist=driverlist;
+    }
+    public static List<String> getDriverlist() {
+        return driverlist;
+    }
+
 }

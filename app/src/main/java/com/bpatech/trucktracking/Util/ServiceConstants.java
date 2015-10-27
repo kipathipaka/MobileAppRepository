@@ -14,6 +14,8 @@ public class ServiceConstants {
     public static final String GET_DRIVER="/api/drivers/";
     public static final String GET_USER="/api/user/";
     public static final String GET_TRIP="/api/trip/mytrips/";
+    public static final String START_TRIP="/api/trip/startTrip";
+    public static final String END_TRIP="/api/trip/endTrip";
     public static final String UPDATE_USER="/api/user/updateUser";
     public static final String PREVIOUS_PAGE = "previousPage";
 
@@ -26,6 +28,7 @@ public class ServiceConstants {
     public static final String TASK_DETAIL_ENDPAGE = "Startclick";
     public static final String ADD_TRIP_CUSTOMER= "Customer";
     public static final String ADD_TRIP_CUSTOMER_NAME= "Customer_name";
+    public static final String VECHILE_TRIP_ID= "vechile_trip_id";
     public static final String ADD_TRIP_CUSTOMER_NO = "Customer_no";
     public static final String ADD_TRIP_SOURCE = "source";
 }
