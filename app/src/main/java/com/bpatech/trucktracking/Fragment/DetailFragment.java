@@ -22,6 +22,7 @@ import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
@@ -48,6 +49,7 @@ public class DetailFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.companydetail_layout, container, false);
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		debtn=(Button)view.findViewById(R.id.detbtn);
 		companyname=(EditText)view.findViewById(R.id.editcompanynamee);
 		username=(EditText)view.findViewById(R.id.edityourname);
@@ -56,7 +58,7 @@ public class DetailFragment extends Fragment {
 		progressBar.setMax(100);
 		progressBar.setVisibility(View.INVISIBLE);
 		obj = new AddUserObjectParsing();
-		request = new Request(getActivity().getApplicationContext());
+		request = new Request(getActivity());
 		user = new User();
 		session = new SessionManager(getActivity().getApplicationContext());
 		debtn.setOnClickListener(new MyNextButtonListener());
@@ -83,15 +85,6 @@ public class DetailFragment extends Fragment {
 					user.setUserName(username.getText().toString());
 					InsertUser(user);
 					new AddUserDetail().execute("", "", "");
-					//session.removesession();
-					/*CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-					FragmentManager fragmentmanager = getFragmentManager();
-					FragmentTransaction fragmenttransaction = fragmentmanager
-							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, currenttripfrag, "null");
-
-					fragmenttransaction.addToBackStack(null);
-					fragmenttransaction.commit();*/
 				}
 
 
@@ -115,6 +108,7 @@ public class DetailFragment extends Fragment {
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
+
 			//progressBar.setVisibility(View.INVISIBLE);
 		}
 
@@ -132,39 +126,17 @@ public class DetailFragment extends Fragment {
 					List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y",user.getUserName()));
 					if(responsejson!=null) {
-						response = request.requestPutType(ServiceConstants.UPDATE_USER,updateuserlist, ServiceConstants.BASE_URL);
+						response = request.requestPutType(ServiceConstants.UPDATE_USER,updateuserlist,ServiceConstants.BASE_URL);
 						responseStrng = ""+response.getStatusLine().getStatusCode();
-						JSONObject responseejson = request.responseParsing(response);
 						if (response.getStatusLine().getStatusCode() == 200) {
 							new GetMytripDetail().execute("", "", "");
 
 						}
-						/*response = request.requestDeleteType(Getuser_url,ServiceConstants.BASE_URL);
-						if (response.getStatusLine().getStatusCode() == 200) {
-							response = request.requestPostType(
-									ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
-							responseStrng = ""+response.getStatusLine().getStatusCode();
-							System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
-							JSONObject responseejson = request.responseParsing(response);
-							if (response.getStatusLine().getStatusCode() == 200) {
-								new GetMytripDetail().execute("", "", "");
-								CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-								FragmentManager fragmentmanager = getFragmentManager();
-								FragmentTransaction fragmenttransaction = fragmentmanager
-										.beginTransaction();
-								fragmenttransaction.replace(R.id.viewers,currenttripfrag,"null");
-
-								fragmenttransaction.addToBackStack(null);
-								fragmenttransaction.commit();
-
-							}*/
 
 					}else{
 						response = request.requestPostType(
 								ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
 						responseStrng = ""+response.getStatusLine().getStatusCode();
-						System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
-						JSONObject responseejson = request.responseParsing(response);
 						if (response.getStatusLine().getStatusCode() == 200) {
 							new GetMytripDetail().execute("", "", "");
 
@@ -175,8 +147,6 @@ public class DetailFragment extends Fragment {
 					response = request.requestPostType(
 							ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
 					responseStrng = ""+response.getStatusLine().getStatusCode();
-					System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
-					JSONObject responseejson = request.responseParsing(response);
 					if (response.getStatusLine().getStatusCode() == 200) {
 						new GetMytripDetail().execute("", "", "");
 
@@ -198,26 +168,23 @@ public class DetailFragment extends Fragment {
 	private class GetMytripDetail extends
 			AsyncTask<String, Void, String> {
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(String result)
+		{
+
 			progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
 
 			try {
-				//progressBar.setVisibility(View.VISIBLE);
 				String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
 				HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
-
 				responseStrng = "" + response.getStatusLine().getStatusCode();
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONArray responsejSONArray = request.responseArrayParsing(response);
-					//System.out.println("+++++++++++responsejSONArray+++++++++++" + responsejSONArray.toString());
 					GetMytripListParsing mytripListParsing = new GetMytripListParsing();
 					currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
-					//System.out.println("+++++++++++size++++++++++" + currenttripdetails.size());
 					session.setAddtripdetails(currenttripdetails);
-					//System.out.println("+++++++++++session.getAddtripdetails().size()++++++++++" + session.getAddtripdetails().size());
 					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager

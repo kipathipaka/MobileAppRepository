@@ -44,7 +44,7 @@
     android:divider="@drawable/separator"
     android:dividerHeight="10dp"
     android:layout_below="@id/separator_view"
-    android:layout_marginBottom="4dp"/>
+    android:layout_marginBottom="45dp"/>
 
 <LinearLayout
     android:id="@+id/footerlayout"
@@ -52,13 +52,14 @@
     android:layout_height="50dp"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
-    android:layout_marginBottom="0dp"
+    android:layout_marginTop="50dp"
     android:background="@drawable/tab_bar_bg"
     android:layout_below="@id/scrolltriplistview">
 
     <include
         android:id="@+id/footer"
-        layout="@layout/footer_layout" />
+        layout="@layout/footer_layout"
+        />
 
        </LinearLayout>
     <ProgressBar

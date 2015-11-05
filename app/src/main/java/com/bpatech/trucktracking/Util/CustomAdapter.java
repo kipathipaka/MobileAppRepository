@@ -44,8 +44,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class CustomAdapter extends ArrayAdapter {
 	MapView mapView;
@@ -72,7 +74,6 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	        View view;
 			final Context context = parent.getContext();
 	        if (convertView == null) {
-	        	 //  System.out.println("convertView IFFFF");
 	            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	           view = inflater.inflate(R.layout.currenttrip_layout, null);
 				progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar1);
@@ -94,6 +95,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	mapView.onResume();
 
 	if (isGoogleMapsInstalled()==true){
+		progressBar.setVisibility(View.VISIBLE);
 		//checkGooglePlayServicesAvailability();
 		mapView.getMapAsync(
 				new OnMapReadyCallback() {
@@ -107,22 +109,24 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 							map.getUiSettings().setMapToolbarEnabled(false);
 							map.setMyLocationEnabled(true);
 							MapsInitializer.initialize(context);
-							String addressname = mList.get(position).getSource().toString();
+							String addressname = mList.get(position).getLocation().toString();
 							Geocoder geoCoder = new Geocoder(getContext());
+							try{
 							List<Address> listAddress;
-							//GeoPoint geoPoint;
-							try {
+
 								listAddress = geoCoder.getFromLocationName(addressname, 1);
 								if (listAddress == null || listAddress.size() == 0) {
 									Toast.makeText(getContext(), "No Location found", Toast.LENGTH_SHORT).show();
 									//return null;
+								}else{
+									Address location = listAddress.get(0);
+									LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+									Marker marker = map.addMarker(new MarkerOptions().position(
+											locationlatlng).title(""));
+									map.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
 								}
-								Address location = listAddress.get(0);
-								LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
-								Marker marker = map.addMarker(new MarkerOptions().position(
-										locationlatlng).title(""));
-								map.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
-							} catch (IOException e) {
+
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}
@@ -148,6 +152,8 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 					}
 				}
 		);
+
+		progressBar.setVisibility(View.INVISIBLE);
 	}else {
 		//System.out.println("+++++++++++map++++++++");
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -180,12 +186,26 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			DestinationText.setText("To :");
 			//rideText.setText("#");
 			NowText.setText("Now :");
-			Nowval.setText(mList.get(position).getSource());
-			UpdateText.setText("Update :");
-	        DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-	        Date date = new Date();
 
-			UpdateVal.setText(dateFormat.format(date).toString());
+		Nowval.setText(mList.get(position).getLocation().toString());
+
+
+			UpdateText.setText("Update :");
+
+		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+	dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+		Date date = new Date(Long.parseLong("1445817600000"));
+		UpdateVal.setText(dateFormat.format(date).toString());
+	/*if(mList.get(position).getLast_sync_time().toString().equalsIgnoreCase("null")) {
+		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+		Date date = new Date();
+		//vechile_trip_id=Integer.parseInt(vechile_trip_no);
+		UpdateVal.setText(dateFormat.format(date).toString());
+	}else {
+		DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
+		Date date = new Date(Long.parseLong(mList.get(position).getLast_sync_time().toString()));
+		UpdateVal.setText(dateFormat1.format(date).toString());
+	}*/
 			Rideno.setText("#"+mList.get(position).getTruckno() );
 			Destination.setText( mList.get(position).getDestination() );
 			phoneno.setText( mList.get(position).getDriver_phone_no());
@@ -194,29 +214,13 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			customer_no.setText(mList.get(position).getCustomer_phoneno());
 	vechile_trip_id.setText(String.valueOf(mList.get(position).getVehicle_trip_id()));
 			view.setBackgroundColor(getContext().getResources().getColor(R.color.darkskyblue));
-			//listlayout_ll.setBackgroundColor(Color.BLUE);
-			/*if(mList.get(position).getCustomer().toString().equalsIgnoreCase("driver")){
-				view.setBackgroundColor(getContext().getResources().getColor(R.color.darkred));
-				ImageView profileimage=(ImageView)view.findViewById(R.id.profile_image);
-				profileimage.setImageResource(R.drawable.truck);
-			}else if(mList.get(position).getCustomer().toString().equalsIgnoreCase("user")){
-				view.setBackgroundColor(getContext().getResources().getColor(R.color.darkgreen));
-				ImageView profileimage1=(ImageView)view.findViewById(R.id.profile_image);
-				profileimage1.setImageResource(R.drawable.user);
-			}else{
-				view.setBackgroundColor(getContext().getResources().getColor(R.color.darkblue));
-				ImageView profileimage2=(ImageView)view.findViewById(R.id.profile_image);
 
-				profileimage2.setImageResource(R.drawable.customer);
-			}*/
-	progressBar.setVisibility(View.INVISIBLE);
 	        return view;
 	    }
 	public boolean isGoogleMapsInstalled()
 	{
 
 			int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext());
-		System.out.println("+++++++++++map++++++++"+result+"ConnectionResult.SUCCESS"+ConnectionResult.SUCCESS);
 			if(result != ConnectionResult.SUCCESS) {
 				return false;
 			}else{

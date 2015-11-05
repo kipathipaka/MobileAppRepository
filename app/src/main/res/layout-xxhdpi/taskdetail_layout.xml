@@ -421,20 +421,20 @@
             android:paddingTop="20dp"
                   android:layout_marginTop="10dp"
                   android:background="@drawable/whatsapp"/>
-             
 
-                  <ImageView
-                      android:id="@+id/inbox"
-                      android:layout_width="55dp"
-                      android:layout_height="55dp"
-                      android:layout_marginLeft="5dp"
-                      android:layout_marginBottom="10dp"
-                      android:clickable="false"
-                      android:paddingTop="0dp"
-                      android:src="@drawable/smsimage" />
 
-          
-              </LinearLayout>
+              <ImageButton
+                  android:id="@+id/inbox"
+                  android:layout_width="55dp"
+                  android:layout_height="55dp"
+                  android:layout_marginLeft="5dp"
+                  android:layout_marginBottom="10dp"
+                  android:clickable="false"
+                  android:paddingTop="0dp"
+                  android:background="@drawable/smsimage" />
+
+
+          </LinearLayout>
 
       </LinearLayout>
 

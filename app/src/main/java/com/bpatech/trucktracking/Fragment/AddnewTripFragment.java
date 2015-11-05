@@ -26,6 +26,7 @@ import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
@@ -35,7 +36,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class AddnewTripFragment extends Fragment {
@@ -58,8 +58,8 @@ public class AddnewTripFragment extends Fragment {
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
-	        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		 View view = inflater.inflate(R.layout.addnewtrip_layout, container, false);
+		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		 db = new MySQLiteHelper(getActivity().getApplicationContext());
 		 request= new Request(getActivity());
 		 currenttripdetails=new ArrayList<AddTrip>();
@@ -155,7 +155,7 @@ public class AddnewTripFragment extends Fragment {
 				phonespinner.setAdapter(dataAdapter);
 
 			}
-			//new GetdriverPhone().execute("", "", "");
+
 
 
 		}
@@ -165,27 +165,19 @@ public class AddnewTripFragment extends Fragment {
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
-			//progressBar.setVisibility(View.INVISIBLE);
+			progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
 
 			try {
-				List<AddTrip> currentDetailsList = new ArrayList<AddTrip>();
-				System.out.println("++++phoneno++++++++"+session.getPhoneno());
 				List<NameValuePair> addtriplist = new ArrayList<NameValuePair>();
 				addtriplist.addAll(obj.AddtripObject(addtrip.getTruckno(),addtrip.getDestination(),session.getPhoneno(),
 						addtrip.getCustomer_company(),addtrip.getCustomer_name(),addtrip.getCustomer_phoneno(),addtrip.getDriver_phone_no()));
-				System.out.println("++++driverphonelist++++++++"+addtriplist.size());
 				HttpResponse response = request.requestPostType(
 						ServiceConstants.ADD_TRIP,addtriplist,ServiceConstants.BASE_URL);
 				responsevalue=""+response.getStatusLine().getStatusCode();
-				System.out.println("++++statuscode++++++++"+response.getStatusLine().getStatusCode());
-				JSONObject responsejson = request.responseParsing(response);
-				System.out.println("++++responsejson++++++++" + responsejson);
 				if (response.getStatusLine().getStatusCode() == 200) {
-				  // currentDetailsList.add(addtrip);
-					//SessionManager.setAddtripdetails(currentDetailsList);
 					new GetMytripDetail().execute("", "", "");
 
 
@@ -201,52 +193,7 @@ public class AddnewTripFragment extends Fragment {
 		}
 
 	}
-	private class GetdriverPhone extends
-			AsyncTask<String, Void, String> {
-		@Override
-		protected void onPostExecute(String result) {
-			if (driverphonenolist.size() > 1) {
-				ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, driverphonenolist);
-				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				phonespinner.setAdapter(dataAdapter);
-			} else {
 
-				List list = new ArrayList();
-				list.add("Add Phone number");
-				ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item, list);
-				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				phonespinner.setAdapter(dataAdapter);
-
-			}
-			progressBar.setVisibility(View.INVISIBLE);
-		}
-
-		protected String doInBackground(String... params) {
-
-			try {
-				List<NameValuePair> driverphonelist = new ArrayList<NameValuePair>();
-				driverphonelist.addAll(obj.getDriverPhone(owner_phone_number));
-				String get_driver_url=ServiceConstants.GET_DRIVER+owner_phone_number;
-				HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);
-				responseStrng = ""+response.getStatusLine().getStatusCode();
-				if (response.getStatusLine().getStatusCode() == 200) {
-					JSONArray responsejSONArray = request.responseArrayParsing(response);
-					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
-					driverphonenolist.add("Choose Phone number");
-					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
-				}
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-
-			}
-
-			return responseStrng;
-
-		}
-
-	}
 	private class GetMytripDetail extends
 			AsyncTask<String, Void, String> {
 		@Override
@@ -257,19 +204,14 @@ public class AddnewTripFragment extends Fragment {
 		protected String doInBackground(String... params) {
 
 			try {
-				System.out.println("++++phone no++++++++" + session.getPhoneno());
-				String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
-				System.out.println("++++statuscode++++++++" + Gettrip_url);
-				HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
 
+				String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
+				HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
 				responseStrng = "" + response.getStatusLine().getStatusCode();
-				System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONArray responsejSONArray = request.responseArrayParsing(response);
-					System.out.println("+++++++++++responsejSONArray+++++++++++" + responsejSONArray.toString());
 					GetMytripListParsing mytripListParsing = new GetMytripListParsing();
 					currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
-					System.out.println("+++++++++++size111+++++++++++" + currenttripdetails.size());
 					session.setAddtripdetails(currenttripdetails);
 					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 					FragmentManager fragmentmanager = getFragmentManager();

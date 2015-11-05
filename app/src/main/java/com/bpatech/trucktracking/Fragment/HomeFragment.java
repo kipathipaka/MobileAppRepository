@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,11 +29,11 @@ import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.CustomAdapter;
+import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class HomeFragment extends Fragment {
 	public ArrayList<AddTrip> currenttripdetails;
 	ImageButton imageButtonopen;
 	ImageView carlogo;
-	ProgressBar progressBar;
+	ProgressBar progressBar,progressBar1;
 	TextView destination, truck, phoneno, txt_contTitle, triplistsize_view;
 	LinearLayout listlayout_ll, triplist_ll,footer_addtrip_ll;
 	ListView listView;
@@ -60,30 +59,31 @@ public class HomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		View view;
 
+		View view;
+		view = inflater.inflate(R.layout.currenttrip_progressbar_layout, container, false);
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		progressBar1=(ProgressBar)view.findViewById(R.id.currentlistprogresbar);
+		progressBar1.setProgress(10);
+		progressBar1.setMax(10);
+		progressBar1.setVisibility(View.VISIBLE);
 		db = new MySQLiteHelper(getActivity().getApplicationContext());
 		//boolean value=db.checkPhonenumber(phoneno);
 		int phonecount = db.getUserCount();
 		obj = new AddUserObjectParsing();
-		request= new Request(getActivity().getApplicationContext());
+		request= new Request(getActivity());
 
 		if (phonecount > 0) {
+			//progressBar1.setVisibility(View.INVISIBLE);
+
 			view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
+			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 			progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar);
 			progressBar.setProgress(10);
-			progressBar.setMax(100);
-			progressBar.setVisibility(View.VISIBLE);
+			progressBar.setMax(10);
+			progressBar.setVisibility(View.INVISIBLE);
 			session = new SessionManager(getActivity().getApplicationContext());
 			currenttripdetails=new ArrayList<AddTrip>();
-			/*try {
-				new GetMytripDetail().execute("", "", "");
-				//new GetdriverPhonelist().execute("", "", "");
-				Thread.sleep(5000);
-				//progressBar.setVisibility(View.VISIBLE);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
 			txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
 			txt_contTitle.setText("Current Trips");
 			triplistsize_view = (TextView) view.findViewById(R.id.triplistsize_view);
@@ -92,21 +92,12 @@ public class HomeFragment extends Fragment {
 			listView = (ListView) view.findViewById(R.id.listview);
 			View footerLayout =view.findViewById(R.id.footer);
 			footer_addtrip_ll=(LinearLayout)footerLayout.findViewById(R.id.addtrip_ll);
-			//System.out.println("+++++++++++session.getDriverlist().size()+++++++++++" + session.getDriverlist().size());
-			if(session.getDriverlist()!=null && session.getDriverlist().size() > 0){
-				footer_addtrip_ll.setEnabled(true);
-				for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
-					View child = footer_addtrip_ll.getChildAt(i);
-					child.setEnabled(true);
-				}
-			}else{
-				footer_addtrip_ll.setEnabled(false);
-				//footer_addtrip_ll.setBackground(getActivity().getResources().getDrawable(R.drawable.footerbutton_inactive));
-				for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
-					View child = footer_addtrip_ll.getChildAt(i);
-					child.setEnabled(false);
-				}
-
+			try {
+				new CheckdriverPhonelist().execute("", "", "");
+				Thread.sleep(5000);
+				//progressBar.setVisibility(View.VISIBLE);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 
 			if(session.getAddtripdetails()!=null && session.getAddtripdetails().size() > 0){
@@ -121,20 +112,21 @@ public class HomeFragment extends Fragment {
 				listView.setDividerHeight(5);
 
 			}
-			progressBar.setVisibility(View.INVISIBLE);
+
 			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position,
 										long id) {
+					progressBar.setVisibility(View.VISIBLE);
 					TextView place = (TextView) view.findViewById(R.id.place);
 					TextView Truck = (TextView) view.findViewById(R.id.rideno);
 					TextView phone = (TextView) view.findViewById(R.id.phoneno);
 					TextView customer = (TextView) view.findViewById(R.id.customer);
 					TextView customer_name = (TextView) view.findViewById(R.id.customername);
 					TextView customer_no = (TextView) view.findViewById(R.id.customerno);
-					TextView source=(TextView)view.findViewById(R.id.nowvalue);
-					TextView vehicle_id=(TextView)view.findViewById(R.id.vechiletrip_no);
-					String sourcetxt=source.getText().toString();
+					TextView source = (TextView) view.findViewById(R.id.nowvalue);
+					TextView vehicle_id = (TextView) view.findViewById(R.id.vechiletrip_no);
+					String sourcetxt = source.getText().toString();
 					String placeval = place.getText().toString();
 					String Truckval = Truck.getText().toString();
 					String phoneval = phone.getText().toString();
@@ -144,7 +136,7 @@ public class HomeFragment extends Fragment {
 					String vechile_trip_id = vehicle_id.getText().toString();
 					TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
 					Bundle bundle = new Bundle();
-					bundle.putString(ServiceConstants.ADD_TRIP_SOURCE,sourcetxt);
+					bundle.putString(ServiceConstants.ADD_TRIP_SOURCE, sourcetxt);
 					bundle.putString(ServiceConstants.CUURENT_TRIP_PLACE, placeval);
 					bundle.putString(ServiceConstants.CUURENT_TRIP_TRUCK, Truckval);
 					bundle.putString(ServiceConstants.CUURENT_TRIP_PHONE, phoneval);
@@ -154,6 +146,7 @@ public class HomeFragment extends Fragment {
 					bundle.putString(ServiceConstants.ADD_TRIP_CUSTOMER_NO, customer_noval);
 					bundle.putBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE, false);
 					taskdetailfrag.setArguments(bundle);
+					progressBar.setVisibility(View.INVISIBLE);
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
 							.beginTransaction();
@@ -167,7 +160,9 @@ public class HomeFragment extends Fragment {
 
 
 		} else {
+			//progressBar1.setVisibility(View.INVISIBLE);
 			view = inflater.inflate(R.layout.activity_home, container, false);
+			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 			progressBar=(ProgressBar)view.findViewById(R.id.loginprogressbar);
 			progressBar.setProgress(10);
 			progressBar.setMax(100);
@@ -228,29 +223,24 @@ try {
 			return otpno;
 		}
 	}
-	private class GetMytripDetail extends
+	private class GettripDetail extends
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
-
+			progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
 
 			try {
 				progressBar.setVisibility(View.VISIBLE);
-				System.out.println("++++phone no++++++++" + session.getPhoneno());
 				String Gettrip_url=ServiceConstants.GET_TRIP+session.getPhoneno();
-				System.out.println("++++statuscode++++++++"+Gettrip_url);
 				HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
 				responseStrng = ""+response.getStatusLine().getStatusCode();
-				System.out.println("++++statuscode++++++++"+response.getStatusLine().getStatusCode());
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONArray responsejSONArray = request.responseArrayParsing(response);
-					System.out.println("+++++++++++responsejSONArray+++++++++++" + responsejSONArray.toString());
 					GetMytripListParsing mytripListParsing= new GetMytripListParsing();
 					currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
-					System.out.println("+++++++++++size111+++++++++++" + currenttripdetails.size());
 					session.setAddtripdetails(currenttripdetails);
 				}
 			} catch (Exception e) {
@@ -270,6 +260,64 @@ try {
 		@Override
 		protected void onPostExecute(String result) {
 
+			//progressBar.setVisibility(View.INVISIBLE);
+		}
+
+		protected String doInBackground(String... params) {
+
+			try {
+				List<String> driverphonenolist = new ArrayList<String>();
+				//driverphonenolist.addAll(obj.getDriverPhone(session.getPhoneno()));
+				String get_driver_url= ServiceConstants.GET_DRIVER+session.getPhoneno();
+				HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);
+				responseStrng = ""+response.getStatusLine().getStatusCode();
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONArray responsejSONArray = request.responseArrayParsing(response);
+					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
+					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
+					session.setDriverlist(driverphonenolist);
+					DetailFragment detailfrag = new DetailFragment();
+
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
+
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
+
+				}
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
+
+	}
+	private class CheckdriverPhonelist extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+			if(session.getDriverlist()!=null && session.getDriverlist().size() > 0){
+				footer_addtrip_ll.setEnabled(true);
+				for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
+					View child = footer_addtrip_ll.getChildAt(i);
+					child.setEnabled(true);
+				}
+			}else{
+				footer_addtrip_ll.setEnabled(false);
+				//footer_addtrip_ll.setBackground(getActivity().getResources().getDrawable(R.drawable.footerbutton_inactive));
+				for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
+					View child = footer_addtrip_ll.getChildAt(i);
+					child.setEnabled(false);
+				}
+
+			}
 			progressBar.setVisibility(View.INVISIBLE);
 		}
 
@@ -286,16 +334,7 @@ try {
 					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
 					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
 					session.setDriverlist(driverphonenolist);
-					System.out.println("+++++++++++getDriverlist+++++++++++" + session.getDriverlist().size());
-					DetailFragment detailfrag = new DetailFragment();
-
-					FragmentManager fragmentmanager = getFragmentManager();
-					FragmentTransaction fragmenttransaction = fragmentmanager
-							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
-
-					fragmenttransaction.addToBackStack(null);
-					fragmenttransaction.commit();
+					new GettripDetail().execute("", "", "");
 
 				}
 

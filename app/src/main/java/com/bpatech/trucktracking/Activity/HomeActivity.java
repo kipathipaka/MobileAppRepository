@@ -4,6 +4,8 @@ package com.bpatech.trucktracking.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,9 +26,10 @@ import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Service.UpdateLocationService;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
-
+import com.bpatech.app.uninstall.UninstallIntentReceiver;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -52,6 +55,14 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 		setContentView(R.layout.home_fragment);
 		nbtn=(Button)findViewById(R.id.nextbtn);
 		phoneno=(EditText)findViewById(R.id.phoneno);
+		UninstallIntentReceiver broadreceiver=new UninstallIntentReceiver();
+		Intent intent = new Intent(this.getApplicationContext(), UpdateLocationService.class);
+		startService(intent);
+		/*IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+		intentFilter.addAction(Intent.ACTION_PACKAGE_INSTALL);
+		intentFilter.addDataScheme("package");
+		registerReceiver(broadreceiver, intentFilter);*/
 	}
 
 	@Override
@@ -130,5 +141,8 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
+
+
+
 
 }

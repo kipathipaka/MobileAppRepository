@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +23,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Util.CustomAdapter;
 import com.bpatech.trucktracking.Util.ServiceConstants;
+import com.bpatech.trucktracking.Util.SessionManager;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +48,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,20 +59,26 @@ import java.util.List;
     * Created by Anita on 9/14/2015.
             */
     public class TaskDetailFragment extends Fragment   {
-       // public GoogleMap googleMap;
-       protected Context context;
+
+    protected Context context;
     TextView truck, place, phone, txt_contTitle,customer,customer_name,customer_no, lastlocation,updatetime,vechile_trip_id;
     Button Startbtn;
     boolean isstarttrip=true,isendtrip=false;
     TableRow locationrow,lasttimerow;
-    ImageButton whatsup;
+    ImageButton whatsup,inbox;
     boolean startclick;
     String vechile_trip_no;
     MapView mapView;
     Request request;
     String responseStrng;
     ProgressBar progressBar;
+    SessionManager session;
+    Double latitude;
+    Double longitude;
+    String lastlocationtxt,lastupdate_time;
+    String addresstxt;
     public GoogleMap googleMap;
+    ArrayList<AddTrip> currenttripdetails;
     LatLng LOCATION;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,11 +87,80 @@ import java.util.List;
 
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
         Bundle taskdetail = this.getArguments();
+        session = new SessionManager(getActivity().getApplicationContext());
         request= new Request(getActivity().getApplicationContext());
         progressBar=(ProgressBar)view.findViewById(R.id.taskdetailprogresbar);
         progressBar.setProgress(10);
         progressBar.setMax(100);
         progressBar.setVisibility(View.INVISIBLE);
+        txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
+        txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
+        Startbtn = (Button)view.findViewById(R.id.startbtn);
+        inbox = (ImageButton) view.findViewById(R.id.inbox);
+        inbox.setOnClickListener(new SendSmsButtonListener());
+        whatsup=(ImageButton)view.findViewById(R.id.whatsup);
+        whatsup.setOnClickListener(new WhatsupButtonListener());
+        truck = (TextView) view.findViewById(R.id.truckvalu);
+        place = (TextView) view.findViewById(R.id.tovalue);
+        phone = (TextView) view.findViewById(R.id.phoneno);
+        customer = (TextView) view.findViewById(R.id.customerval);
+        customer_name = (TextView) view.findViewById(R.id.customenameval);
+        customer_no = (TextView) view.findViewById(R.id.customenoval);
+        lastlocation=(TextView) view.findViewById(R.id.lastlocationvalue);
+        updatetime=(TextView) view.findViewById(R.id.updateval);
+        lasttimerow=(TableRow)view.findViewById(R.id.updatetextRow);
+        locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
+        locationrow.setVisibility(view.GONE);
+        lasttimerow.setVisibility(view.GONE);
+        // String place=taskdetail.getString(ServiceConstants.CUURENT_TRIP_Place);
+        place.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_PLACE));
+        truck.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_TRUCK));
+        phone.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_PHONE));
+        customer.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER));
+        customer_name.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER_NAME));
+        customer_no.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER_NO));
+        vechile_trip_no=taskdetail.getString(ServiceConstants.VECHILE_TRIP_ID);
+        if(session.getAddtripdetails()!=null && session.getAddtripdetails().size() > 0){
+            List<AddTrip> currenttripdetailslist = new ArrayList<AddTrip>();
+            currenttripdetailslist.addAll(session.getAddtripdetails());
+            for(int i=0;i< currenttripdetailslist.size();i++){
+                if(currenttripdetailslist.get(i).getVehicle_trip_id()== Integer.parseInt(vechile_trip_no)){
+                    if(currenttripdetailslist.get(i).isStartstatus()) {
+                        if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
+                            Startbtn.setText("End Tracking");
+                            Startbtn.setVisibility(View.VISIBLE);
+                            Startbtn.setBackgroundColor(Color.RED);
+                            lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                            lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                            if(currenttripdetailslist.get(i).getLast_sync_time().toString().equalsIgnoreCase("null")) {
+                                DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+                                Date date = new Date();
+                                //vechile_trip_id=Integer.parseInt(vechile_trip_no);
+                                updatetime.setText(dateFormat.format(date).toString());
+                            }else {
+                                DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
+                                Date date = new Date(Long.parseLong(currenttripdetailslist.get(i).getLast_sync_time().toString()));
+                                updatetime.setText(dateFormat1.format(date).toString());
+                            }
+                            locationrow.setVisibility(View.VISIBLE);
+                            lasttimerow.setVisibility(View.VISIBLE);
+                            startclick = true;
+                        }else{
+                            Startbtn.setVisibility(View.VISIBLE);
+                            lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                            lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
+                        }
+                    }else{
+                        Startbtn.setVisibility(View.INVISIBLE);
+                        lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                    }
+
+                }
+
+
+            }
+
+        }
         mapView = (MapView) view.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         googleMap=mapView.getMap();
@@ -89,51 +171,28 @@ import java.util.List;
             //googleMap.getUiSettings().setMapToolbarEnabled(false);
             googleMap.setMyLocationEnabled(true);
             MapsInitializer.initialize(this.getActivity());
-            String addressname = taskdetail.getString(ServiceConstants.ADD_TRIP_SOURCE).toString();
-            Geocoder geoCoder = new Geocoder(this.getActivity());
-            List<Address> listAddress;
             //GeoPoint geoPoint;
-            try {
+             try {
+                String addressname = lastlocationtxt;
+                Geocoder geoCoder = new Geocoder(this.getActivity());
+                List<Address> listAddress;
                 listAddress = geoCoder.getFromLocationName(addressname, 1);
                 if (listAddress == null || listAddress.size() == 0) {
                     Toast.makeText(this.getActivity(), "No Location found", Toast.LENGTH_SHORT).show();
-                    //return null;
+                   // return null;
+                }else {
+                    Address location = listAddress.get(0);
+                    LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(
+                            locationlatlng).title(""));
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
                 }
-                Address location = listAddress.get(0);
-                LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
-                Marker marker = googleMap.addMarker(new MarkerOptions().position(
-                        locationlatlng).title(""));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
                 // googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000,null);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-
-       /* if(googleMap!=null)
-        {
-            String addressname=taskdetail.getString(ServiceConstants.CUURENT_TRIP_PLACE).toString();
-            Geocoder geoCoder = new Geocoder(this.getActivity());
-            List<Address> listAddress;
-            //GeoPoint geoPoint;
-            try {
-                listAddress = geoCoder.getFromLocationName(addressname, 1);
-                if (listAddress == null || listAddress.size()==0) {
-                    Toast.makeText(this.getActivity(), "No Location found", Toast.LENGTH_SHORT).show();
-                    //return null;
-                }
-                Address location = listAddress.get(0);
-                LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
-                Marker marker = googleMap.addMarker(new MarkerOptions().position(
-                        locationlatlng).title(""));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }*/
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
 {
     @Override
@@ -157,46 +216,9 @@ import java.util.List;
 });
 
 
-        txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
-        txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
-        Startbtn = (Button)view.findViewById(R.id.startbtn);
-        whatsup=(ImageButton)view.findViewById(R.id.whatsup);
-       whatsup.setOnClickListener(new WhatsupButtonListener());
-        truck = (TextView) view.findViewById(R.id.truckvalu);
-        place = (TextView) view.findViewById(R.id.tovalue);
-        phone = (TextView) view.findViewById(R.id.phoneno);
-        customer = (TextView) view.findViewById(R.id.customerval);
-        customer_name = (TextView) view.findViewById(R.id.customenameval);
-        customer_no = (TextView) view.findViewById(R.id.customenoval);
-        lastlocation=(TextView) view.findViewById(R.id.lastlocationvalue);
-        updatetime=(TextView) view.findViewById(R.id.updateval);
-        lasttimerow=(TableRow)view.findViewById(R.id.updatetextRow);
-        locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
-        locationrow.setVisibility(view.GONE);
-        lasttimerow.setVisibility(view.GONE);
-        // String place=taskdetail.getString(ServiceConstants.CUURENT_TRIP_Place);
-        place.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_PLACE));
-        truck.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_TRUCK));
-        phone.setText(taskdetail.getString(ServiceConstants.CUURENT_TRIP_PHONE));
-        customer.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER));
-        customer_name.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER_NAME));
-        customer_no.setText(taskdetail.getString(ServiceConstants.ADD_TRIP_CUSTOMER_NO));
-vechile_trip_no=taskdetail.getString(ServiceConstants.VECHILE_TRIP_ID);
-        //startclick=taskdetail.getBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE);
-        /*if(startclick==true){
-            //mapDestroyOnDemand();
-            System.out.println("click on it");
-            Startbtn.setText("End Tracking");
-            Startbtn.setBackgroundColor(Color.RED);
-        }else{
 
-            System.out.println("disbale the click button");
-            Startbtn.setText("Start Tracking");
-            Startbtn.setBackgroundColor(Color.parseColor("#3090C7"));
-        }*/
 
          Startbtn.setOnClickListener(new StartTrackButtonListener());
-        // Toast.makeText(getActivity().getApplicationContext(), place, Toast.LENGTH_LONG).show();
         return view;
     }
 
@@ -205,84 +227,39 @@ vechile_trip_no=taskdetail.getString(ServiceConstants.VECHILE_TRIP_ID);
         @Override
         public void onClick(View v) {
            progressBar.setVisibility(View.VISIBLE);
-           // new UpdateTaskdetail().execute("", "", "");
-           if(startclick==true){
-               // mapDestroyOnDemand();
-               progressBar.setVisibility(View.INVISIBLE);
-                CurrentTripFragment currenttripfrag=new CurrentTripFragment();
-                FragmentManager fragmentmanager = getFragmentManager();
-                FragmentTransaction fragmenttransaction = fragmentmanager
-                        .beginTransaction();
-                fragmenttransaction.replace(R.id.viewers,currenttripfrag);
 
-                fragmenttransaction.addToBackStack(null);
-                fragmenttransaction.commit();
+
+          if(startclick==true){
+               // mapDestroyOnDemand();
+              // progressBar.setVisibility(View.VISIBLE);
+              currenttripdetails=new ArrayList<AddTrip>();
+              new UpdateEndTripdetail().execute("", "", "");
+
             }else {
 
-               System.out.println("click on it");
-               Startbtn.setText("End Tracking");
-               Startbtn.setBackgroundColor(Color.RED);
-               lastlocation.setText("Chennai");
-               DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-               Date date = new Date();
-               //vechile_trip_id=Integer.parseInt(vechile_trip_no);
-               updatetime.setText(dateFormat.format(date).toString());
-               locationrow.setVisibility(View.VISIBLE);
-               lasttimerow.setVisibility(View.VISIBLE);
-               startclick = true;
-                progressBar.setVisibility(View.INVISIBLE);
+             // progressBar.setVisibility(View.VISIBLE);
+              new UpdateStartTripdetail().execute("", "", "");
 
 
-              /*  mapDestroyOnDemand();
-                //onDestroyView();
-                TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
-                Bundle taskdetails=new Bundle();
-
-                taskdetails.putString(ServiceConstants.CUURENT_TRIP_PLACE, place.getText().toString());
-                taskdetails.putString(ServiceConstants.CUURENT_TRIP_TRUCK, truck.getText().toString());
-                taskdetails.putString(ServiceConstants.CUURENT_TRIP_PHONE, phone.getText().toString());
-                taskdetails.putString(ServiceConstants.ADD_TRIP_CUSTOMER, customer.getText().toString());
-                taskdetails.putString(ServiceConstants.ADD_TRIP_CUSTOMER_NAME, customer_name.getText().toString());
-                taskdetails.putString(ServiceConstants.ADD_TRIP_CUSTOMER_NO, customer_no.getText().toString());
-                taskdetails.putBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE, true);
-                taskdetailfrag.setArguments(taskdetails);
-                FragmentManager fragmentmanager = getFragmentManager();
-                FragmentTransaction fragmenttransaction = fragmentmanager
-                        .beginTransaction();
-                fragmenttransaction.replace(R.id.viewers, taskdetailfrag,"BackCurrentTrip");
-
-                fragmenttransaction.addToBackStack(null);
-                fragmenttransaction.commit();*/
            }
 
         }
     }
 
-   /* public void GetLatLangFromAddress() {
-        double latitude;
-        double longitude;
-        if (googleMap != null) {
-
-
-        }
-
-    }*/
-
-
     private class WhatsupButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            System.out.println("whatsup");
 
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-
+            Uri uri = Uri.parse("smsto" + "9962862211");
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+           // sendIntent.setAction(Intent.ACTION_SENDTO);
+           // sendIntent.setData(uri);
             sendIntent.setType("text/plain");
             sendIntent.setPackage("com.whatsapp");
             if (sendIntent!= null) {
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "Whatsup text msg");
-                startActivity(Intent.createChooser(sendIntent, "Share with"));
+                startActivity(Intent.createChooser(sendIntent, ""));
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT)
                         .show();
@@ -291,8 +268,19 @@ vechile_trip_no=taskdetail.getString(ServiceConstants.VECHILE_TRIP_ID);
 
         }
         }
+    private class SendSmsButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            String number = customer_no.getText().toString();
+            String smsmessage = ServiceConstants.MESSAGE_FOR_CUSTOMER;
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(number, null, smsmessage, null, null);
+            Log.d("Sms", "sendSMS " + smsmessage);
+            Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
+                    Toast.LENGTH_SHORT).show();
 
-
+        }
+    }
 /*
     @Override
     public void onDestroyView() {
@@ -343,7 +331,50 @@ public void onResume() {
         mapView.onLowMemory();
     }
 
-    private class UpdateTaskdetail extends
+    private class UpdateStartTripdetail extends
+            AsyncTask<String, Void, String> {
+        @Override
+        protected void onPostExecute(String result) {
+            Startbtn.setText("End Tracking");
+            Startbtn.setBackgroundColor(Color.RED);
+            lastlocation.setText(lastlocationtxt);
+            if(lastupdate_time.equalsIgnoreCase("null")) {
+                DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+                Date date = new Date();
+                //vechile_trip_id=Integer.parseInt(vechile_trip_no);
+                updatetime.setText(dateFormat.format(date).toString());
+            }else {
+                updatetime.setText(lastupdate_time);
+            }
+            locationrow.setVisibility(View.VISIBLE);
+            lasttimerow.setVisibility(View.VISIBLE);
+            startclick = true;
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        protected String doInBackground(String... params) {
+
+            try {
+
+                List<NameValuePair> upadatetripdetail = new ArrayList<NameValuePair>();
+                upadatetripdetail.add(new BasicNameValuePair("vehicle_trip_header_id", vechile_trip_no));
+                    HttpResponse response = request.requestPutType(ServiceConstants.START_TRIP,upadatetripdetail,ServiceConstants.BASE_URL);
+                    responseStrng = "" + response.getStatusLine().getStatusCode();
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    new GetMytripDetail().execute("", "", "");
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+            return responseStrng;
+
+        }
+    }
+
+    private class UpdateEndTripdetail extends
             AsyncTask<String, Void, String> {
         @Override
         protected void onPostExecute(String result) {
@@ -357,41 +388,87 @@ public void onResume() {
 
                 List<NameValuePair> upadatetripdetail = new ArrayList<NameValuePair>();
                 upadatetripdetail.add(new BasicNameValuePair("vehicle_trip_header_id", vechile_trip_no));
-                if(startclick==true){
                     HttpResponse response = request.requestPutType(ServiceConstants.END_TRIP, upadatetripdetail, ServiceConstants.BASE_URL);
                     responseStrng = "" + response.getStatusLine().getStatusCode();
-                    System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
                     JSONObject responseejson = request.responseParsing(response);
                     if (response.getStatusLine().getStatusCode() == 200) {
-                        CurrentTripFragment currenttripfrag=new CurrentTripFragment();
-                        FragmentManager fragmentmanager = getFragmentManager();
-                        FragmentTransaction fragmenttransaction = fragmentmanager
-                                .beginTransaction();
-                        fragmenttransaction.replace(R.id.viewers,currenttripfrag);
-
-                        fragmenttransaction.addToBackStack(null);
-                        fragmenttransaction.commit();
+                        new updateMytripDetail().execute("", "", "");
                     }
 
-                }else {
 
-                    HttpResponse response = request.requestPutType(ServiceConstants.START_TRIP, upadatetripdetail, ServiceConstants.BASE_URL);
-                    responseStrng = "" + response.getStatusLine().getStatusCode();
-                    System.out.println("++++statuscode++++++++" + response.getStatusLine().getStatusCode());
-                    JSONObject responseejson = request.responseParsing(response);
-                    if (response.getStatusLine().getStatusCode() == 200) {
-                        Startbtn.setText("End Tracking");
-                        Startbtn.setBackgroundColor(Color.RED);
-                        lastlocation.setText("Chennai");
-                        DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-                        Date date = new Date();
-                        //vechile_trip_id=Integer.parseInt(vechile_trip_no);
-                        updatetime.setText(dateFormat.format(date).toString());
-                        locationrow.setVisibility(View.VISIBLE);
-                        lasttimerow.setVisibility(View.VISIBLE);
-                        startclick = true;
+            } catch (Exception e) {
 
-                    }
+                e.printStackTrace();
+
+            }
+
+            return responseStrng;
+
+        }
+    }
+
+    private class updateMytripDetail extends
+            AsyncTask<String, Void, String> {
+        @Override
+        protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        protected String doInBackground(String... params) {
+
+            try {
+                //progressBar.setVisibility(View.VISIBLE);
+                String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
+                HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
+
+                responseStrng = "" + response.getStatusLine().getStatusCode();
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    JSONArray responsejSONArray = request.responseArrayParsing(response);
+                    GetMytripListParsing mytripListParsing = new GetMytripListParsing();
+                    currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
+                    session.setAddtripdetails(currenttripdetails);
+                    CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+                    FragmentManager fragmentmanager = getFragmentManager();
+                    FragmentTransaction fragmenttransaction = fragmentmanager
+                            .beginTransaction();
+                    fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+
+                    fragmenttransaction.addToBackStack(null);
+                    fragmenttransaction.commit();
+
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+            return responseStrng;
+
+        }
+    }
+    private class GetMytripDetail extends
+            AsyncTask<String, Void, String> {
+        @Override
+        protected void onPostExecute(String result) {
+
+        }
+
+        protected String doInBackground(String... params) {
+
+            try {
+                //progressBar.setVisibility(View.VISIBLE);
+                String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
+                HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
+
+                responseStrng = "" + response.getStatusLine().getStatusCode();
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    JSONArray responsejSONArray = request.responseArrayParsing(response);
+                    GetMytripListParsing mytripListParsing = new GetMytripListParsing();
+                    List<AddTrip> mytripdetailslist = new ArrayList<AddTrip>();
+                    mytripdetailslist.addAll(mytripListParsing.getmytriplist(responsejSONArray));
+                    session.setAddtripdetails(mytripdetailslist);
+
                 }
             } catch (Exception e) {
 

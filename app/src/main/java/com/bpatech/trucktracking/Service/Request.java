@@ -109,7 +109,6 @@ public class Request {
             internetStatus = connectionCheck();
             if (internetStatus == true) {
                 serverUrl = BASE_URL+Url;
-                System.out.println("++++++++++++++serverUrl++++++"+serverUrl);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet(serverUrl);
                 response = client.execute(request);
@@ -244,14 +243,11 @@ public class Request {
         try {
             internetStatus = connectionCheck();
             if (internetStatus==true) {
-                System.out.println("++++++++++++++userlist++++++"+userlist);
                 serverUrl = BASE_URL+Url;
-                System.out.println("++++++++++++++serverUrl++++++"+serverUrl);
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost(serverUrl);
                 request.setEntity(new UrlEncodedFormEntity(userlist));
                 response = client.execute(request);
-                //System.out.println("++++++++++++++responseentity++++++"+response.getEntity());
             } else {
                // networkIssue();
                noInternetConnection();
@@ -260,7 +256,6 @@ public class Request {
         } catch (SSLException e) {
             try {
                 response = withOutCertificate(Url,userlist);
-                System.out.println("++++++++++++++response++++++"+response);
             } catch (Exception e1) {
 
                 e.printStackTrace();
@@ -292,7 +287,6 @@ public class Request {
             //networkIssue();
         } else if (response.getStatusLine().getStatusCode() == 999
                 || response.getStatusLine().getStatusCode() == 500 ) {
-    System.out.println("++++++++++++++networkissue++++++"+response.getStatusLine().getStatusCode());
             networkIssue();
         }
 

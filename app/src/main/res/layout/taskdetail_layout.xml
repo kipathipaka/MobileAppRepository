@@ -348,7 +348,7 @@
                   android:background="@drawable/whatsapp"/>
              
 
-                  <ImageView
+                  <ImageButton
                       android:id="@+id/inbox"
                       android:layout_width="55dp"
                       android:layout_height="55dp"
@@ -356,7 +356,7 @@
                       android:layout_marginBottom="10dp"
                       android:clickable="false"
                       android:paddingTop="0dp"
-                      android:src="@drawable/smsimage" />
+                      android:background="@drawable/smsimage" />
 
           
               </LinearLayout>

@@ -36,5 +36,8 @@
     <string name="network_head_mes">Connectivity Error</string>
     <string name="network_fail_mes">We were unable to reach the server,please try again soon.</string>
     <string name="internet_fail_msg">No Internet Connection. Please Check NetConnection</string>
+    <string name="AppCrashMessage">Sorry,Something went wrong. \nPlease send error mail to admin!!</string>
+<string name="Text_Field">Welcome,\nto download the App click here www.google.com\nThank You</string>
+
 
 </resources>

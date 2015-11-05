@@ -106,16 +106,17 @@
             <EditText
                 android:id="@+id/edittexview1"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/onehundred_fifty_pt"
+                android:layout_height="@dimen/two_hundred_pt"
                 android:layout_weight="1"
-
+                android:maxLines="10"
+                android:minLines="5"
                 android:background="@color/white"
                 android:ems="10"
-                android:text="The Url is www.google.com"
+                android:text="@string/Text_Field"
 
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/color_cursor"
-                android:inputType="text"
+                android:inputType="text|textMultiLine"
                 android:paddingLeft="5dp" >
             </EditText>
         </TableRow>

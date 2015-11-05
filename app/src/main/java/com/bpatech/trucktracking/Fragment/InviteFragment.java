@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Util.ExceptionHandler;
 
 /**
  * Created by Yugandhar on 9/28/2015.
@@ -32,6 +33,7 @@ public class InviteFragment extends Fragment
     {
         //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
         View view = inflater.inflate(R.layout.invite_layout, container, false);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
         txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
         txt_contTitle.setText("Invite");
         sndbtn=(Button)view.findViewById(R.id.sndbtn);
@@ -52,23 +54,13 @@ public class InviteFragment extends Fragment
                     Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
                             Toast.LENGTH_SHORT).show();
 
-                   /* InviteFragment invitefragment = new InviteFragment();
-                    FragmentManager fragmentmanager = getFragmentManager();
-                    FragmentTransaction fragmenttransaction = fragmentmanager
-                            .beginTransaction();
-                    fragmenttransaction.replace(R.id.viewers, invitefragment, "BackCurrentTrip");
-
-                    fragmenttransaction.addToBackStack(null);
-                    fragmenttransaction.commit();*/
                 } else if(phonenum.getText().toString().length()==10) {
                     String number = phonenum.getText().toString();
                     String sms = edittexview1.getText().toString();
-
-
                     SmsManager smsManager = SmsManager.getDefault();
-                    // smsManager.sendTextMessage(number, null, sms, null, null);
+                    smsManager.sendTextMessage(number, null, sms, null, null);
                     Log.d("Sms", "sendSMS " + sms);
-                    Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!",
+                    Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+number,
                             Toast.LENGTH_SHORT).show();
 
                     CurrentTripFragment currenttripfrag = new CurrentTripFragment();

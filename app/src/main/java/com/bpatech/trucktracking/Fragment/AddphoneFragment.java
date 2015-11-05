@@ -22,6 +22,7 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
@@ -47,8 +48,9 @@ public class AddphoneFragment extends Fragment {
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
-	        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-	        View view = inflater.inflate(R.layout.addphone_layout, container, false);
+
+		 View view = inflater.inflate(R.layout.addphone_layout, container, false);
+		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		 progressBar=(ProgressBar)view.findViewById(R.id.addphoneprogresbar);
 		 progressBar.setProgress(10);
 		 progressBar.setMax(100);
@@ -77,24 +79,16 @@ try {
 	}
 	else if(edityournum.getText().toString().length()==10){
 
-	phonenumber = edityournum.getText().toString();
-		String smsmessage = "message sent to the required user";
+		phonenumber = edityournum.getText().toString();
+		String smsmessage = ServiceConstants.MESSAGE_FOR_ADDPHONE;
 		SmsManager smsManager = SmsManager.getDefault();
 		session = new SessionManager(getActivity().getApplicationContext());
-		smsManager.sendTextMessage(phonenumber, null, smsmessage, null, null);
+        smsManager.sendTextMessage(phonenumber, null, smsmessage, null, null);
 		Log.d("Sms", "sendSMS " + smsmessage);
 
-		Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!",
+		Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+phonenumber,
 				Toast.LENGTH_SHORT).show();
 		new AddUserPhone().execute("", "", "");
-		/*CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-		FragmentManager fragmentmanager = getFragmentManager();
-		FragmentTransaction fragmenttransaction = fragmentmanager
-				.beginTransaction();
-		fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-
-		fragmenttransaction.addToBackStack(null);
-		fragmenttransaction.commit();*/
 	}
 	else
 	{
@@ -114,7 +108,7 @@ try {
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
-			//progressBar.setVisibility(View.INVISIBLE);
+			progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
@@ -150,7 +144,7 @@ try {
 		@Override
 		protected void onPostExecute(String result) {
 
-			progressBar.setVisibility(View.INVISIBLE);
+
 		}
 
 		protected String doInBackground(String... params) {
