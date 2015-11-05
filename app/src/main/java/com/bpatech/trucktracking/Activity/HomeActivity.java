@@ -22,20 +22,10 @@ import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
 import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.R;
-import com.bpatech.trucktracking.Service.AddUserObjectParsing;
-import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
-import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Service.UpdateLocationService;
-import com.bpatech.trucktracking.Util.ServiceConstants;
-import com.bpatech.trucktracking.Util.SessionManager;
-import com.bpatech.app.uninstall.UninstallIntentReceiver;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.json.JSONArray;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.bpatech.trucktracking.Util.SessionManager;
 
 public class HomeActivity extends FragmentActivity {
 
@@ -55,14 +45,8 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 		setContentView(R.layout.home_fragment);
 		nbtn=(Button)findViewById(R.id.nextbtn);
 		phoneno=(EditText)findViewById(R.id.phoneno);
-		UninstallIntentReceiver broadreceiver=new UninstallIntentReceiver();
 		Intent intent = new Intent(this.getApplicationContext(), UpdateLocationService.class);
 		startService(intent);
-		/*IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-		intentFilter.addAction(Intent.ACTION_PACKAGE_INSTALL);
-		intentFilter.addDataScheme("package");
-		registerReceiver(broadreceiver, intentFilter);*/
 	}
 
 	@Override
