@@ -220,7 +220,7 @@ public class UpdateLocationService extends Service
             String message = String.format(
                     "Current Location: \n Longitude: %1$s \n Latitude: %2$s",
                     location.getLongitude(), location.getLatitude());
-           Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+           //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             String result = null;
             try {
