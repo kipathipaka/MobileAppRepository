@@ -25,6 +25,7 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.UpdateLocationService;
 
+import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.SessionManager;
 
 public class HomeActivity extends FragmentActivity {
@@ -43,6 +44,7 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_fragment);
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 		nbtn=(Button)findViewById(R.id.nextbtn);
 		phoneno=(EditText)findViewById(R.id.phoneno);
 		Intent intent = new Intent(this.getApplicationContext(), UpdateLocationService.class);

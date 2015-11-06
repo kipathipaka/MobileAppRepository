@@ -3,9 +3,11 @@ package com.bpatech.trucktracking.Util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
 
 import java.util.ArrayList;
@@ -109,6 +111,22 @@ public class SessionManager {
 		return currenttripdetails;
 	}*/
 
+    public void logoutUser() {
+        // Clearing all data from Shared Preferences
+       // editor.clear();
+       // editor.commit();
+
+        // After logout redirect user to Loing Activity
+        Intent i = new Intent(_context,HomeActivity.class);
+        // Closing all the Activities
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // Add new Flag to start new Activity
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        // Staring Login Activity
+        _context.startActivity(i);
+    }
 
 
 	public static void setAddtripdetails(List<AddTrip> addtripdetails) {

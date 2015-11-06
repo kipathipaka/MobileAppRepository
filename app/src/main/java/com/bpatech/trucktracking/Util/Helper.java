@@ -14,7 +14,9 @@ import java.io.PrintStream;
 public class Helper {
     void SaveAsFile(String ErrorContent, Context context) {
         try {
+            System.out.println("++++++++++++++++++++exceptttt+++++++++++++++++++");
             String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/vm/";
+            System.out.println("++++++++++++++++++++exceptttt+++++++++++++++++++"+filePath);
             File dir = new File(filePath);
 
             if (!dir.exists()) {
@@ -33,7 +35,7 @@ public class Helper {
             printStream.close();
             trace.close();
         } catch (Exception ioe) {
-            Log.v("Crash", ioe.getMessage());
+            Log.v("Crash+++++++", ioe.getMessage());
         }
     }
 }

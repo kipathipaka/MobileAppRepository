@@ -1,10 +1,13 @@
 package com.bpatech.trucktracking.Fragment;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -17,7 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
@@ -86,9 +91,9 @@ import java.util.TimeZone;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-        View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
 
+        View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
         Bundle taskdetail = this.getArguments();
         session = new SessionManager(getActivity().getApplicationContext());
         request= new Request(getActivity().getApplicationContext());
@@ -135,17 +140,17 @@ import java.util.TimeZone;
                             Startbtn.setBackgroundColor(Color.RED);
                             lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
                             lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
-                            if(currenttripdetailslist.get(i).getLast_sync_time().toString().equalsIgnoreCase("null")) {
+                           /* if(currenttripdetailslist.get(i).getLast_sync_time().toString().equalsIgnoreCase("null")) {
                                 DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-                                Date date = new Date();
+                                Date date = new Date();*/
                                 //vechile_trip_id=Integer.parseInt(vechile_trip_no);
-                                updatetime.setText(dateFormat.format(date).toString());
-                            }else {
+                                updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
+                          /*  }else {
                                 DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
                                 dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
                                 Date date = new Date(Long.parseLong(currenttripdetailslist.get(i).getLast_sync_time().toString()));
                                 updatetime.setText(dateFormat1.format(date).toString());
-                            }
+                            }*/
                             locationrow.setVisibility(View.VISIBLE);
                             lasttimerow.setVisibility(View.VISIBLE);
                             startclick = true;
@@ -249,8 +254,30 @@ import java.util.TimeZone;
 
         }
     }
-
     private class WhatsupButtonListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            //IntentSender sender =new IntentSender(IntentSender.CREATOR));
+           // sender.sendIntent();
+            sendIntent.setType("text/plain");
+            sendIntent.setPackage("com.whatsapp");
+            if (sendIntent!= null) {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Whatsup text msg");
+                startActivity(sendIntent);
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+
+        }
+    }
+
+   /* private class WhatsupButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -260,9 +287,9 @@ import java.util.TimeZone;
            sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("text/plain");
             sendIntent.setPackage("com.whatsapp");
-
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "Whatsup text msg");
-                startActivity(Intent.createChooser(sendIntent, ""));
+                startActivity(Intent.createChooser(sendIntent, "share with"));
+               whats_up_dialog();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT)
                         .show();
@@ -273,7 +300,7 @@ import java.util.TimeZone;
 
 
         }
-        }
+        }*/
     private boolean whatsappInstalledOrNot(String uri) {
         PackageManager pm = getActivity().getPackageManager();
         boolean app_installed = false;
@@ -496,6 +523,33 @@ public void onResume() {
 
         }
     }
+    public void whats_up_dialog() {
+        ((getActivity())).runOnUiThread(new Runnable() {
+            public void run() {
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                View promptsView = inflater.inflate(R.layout.whatsup_daialog,
+                        null);
 
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                promptsView.setBackgroundResource(R.color.white);
+                dialog.setContentView(promptsView);
+                dialog.show();
+                EditText whatsuptext=(EditText) promptsView.findViewById(R.id.whatuptext);
+                whatsuptext.setText("start tracking have started");
+                Button btnOK = (Button) promptsView.findViewById(R.id.btnOK);
+                btnOK.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        dialog.dismiss();
+
+                    }
+
+                });
+            }
+        });
+    }
 
 }

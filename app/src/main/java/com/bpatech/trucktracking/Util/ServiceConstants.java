@@ -24,7 +24,7 @@ public class ServiceConstants {
     public static final String CUURENT_TRIP_PLACE = "Place";
     public static final String CUURENT_TRIP_TRUCK= "Truck";
     public static final String CUURENT_TRIP_PHONE= "phone";
-    public static final String APP_CRASH_ADMIN_MAILID = "anitha@bpatech.com";
+    public static final String APP_CRASH_ADMIN_MAILID ="anitha@bpatech.com";
     public static final String PREF_NAME = "VehicleTracking";
     public static final String TASK_DETAIL_TITLE = " Track Details";
     public static final String TASK_DETAIL_ENDPAGE = "Startclick";

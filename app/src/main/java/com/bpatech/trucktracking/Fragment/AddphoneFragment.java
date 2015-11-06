@@ -48,9 +48,9 @@ public class AddphoneFragment extends Fragment {
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
-		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-		 View view = inflater.inflate(R.layout.addphone_layout, container, false);
 
+		 View view = inflater.inflate(R.layout.addphone_layout, container, false);
+		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		 progressBar=(ProgressBar)view.findViewById(R.id.addphoneprogresbar);
 		 progressBar.setProgress(10);
 		 progressBar.setMax(100);

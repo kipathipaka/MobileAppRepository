@@ -39,9 +39,9 @@ LinearLayout triplist_ll,footer_addtrip_ll;
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
-		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-		 View view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 
+		 View view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
+		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		 session = new SessionManager(getActivity().getApplicationContext());
 		 currenttripdetails=new ArrayList<AddTrip>();
 		 request= new Request(getActivity().getApplicationContext());

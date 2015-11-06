@@ -186,17 +186,20 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			DestinationText.setText("To :");
 			//rideText.setText("#");
 			NowText.setText("Now :");
-
-		Nowval.setText(mList.get(position).getLocation().toString());
-
+if(mList.get(position).getLocation().toString().length() >20) {
+	String locationval=mList.get(position).getLocation().toString().substring(0,19);
+	Nowval.setText(locationval);
+}else{
+	Nowval.setText(mList.get(position).getLocation().toString());
+}
 
 			UpdateText.setText("Update :");
 
 	/*	DateFormat dateFormat = new SimpleDateFormat("h:mm a");
 	dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-		Date date = new Date(Long.parseLong("1445817600000"));
-		UpdateVal.setText(dateFormat.format(date).toString());*/
-	if(mList.get(position).getLast_sync_time().toString().equalsIgnoreCase("null")) {
+		Date date = new Date(Long.parseLong("1445817600000"));*/
+		UpdateVal.setText(mList.get(position).getLast_sync_time().toString());
+	/*if(mList.get(position).getLast_sync_time().toString().equalsIgnoreCase("null")) {
 		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
 		Date date = new Date();
 		UpdateVal.setText(dateFormat.format(date).toString());
@@ -205,7 +208,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 		dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
 		Date date = new Date(Long.parseLong(mList.get(position).getLast_sync_time().toString()));
 		UpdateVal.setText(dateFormat1.format(date).toString());
-	}
+	}*/
 			Rideno.setText("#"+mList.get(position).getTruckno() );
 			Destination.setText( mList.get(position).getDestination() );
 			phoneno.setText( mList.get(position).getDriver_phone_no());

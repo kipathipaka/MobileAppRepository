@@ -127,7 +127,7 @@ public class UpdateLocationService extends Service
 
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
-                System.out.println("enabled or not");
+                Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
             }
             else {
                 this.canGetLocation = true;
@@ -217,10 +217,6 @@ public class UpdateLocationService extends Service
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-            String message = String.format(
-                    "Current Location: \n Longitude: %1$s \n Latitude: %2$s",
-                    location.getLongitude(), location.getLatitude());
-           //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             String result = null;
             try {
@@ -235,7 +231,7 @@ public class UpdateLocationService extends Service
                     sb.append(address.getPostalCode()).append("\n");
                     sb.append(address.getCountryName());*/
 
-                    locationval = address.getLocality().toString();
+                    locationval = address.getSubLocality().toString()+","+address.getLocality().toString();
                    // Toast.makeText(getApplicationContext(), locationval, Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
@@ -322,40 +318,6 @@ public class UpdateLocationService extends Service
 
         }
     }
-   /* private class UpdatuserStatus extends
-            AsyncTask<String, Void, String> {
-        @Override
-        protected void onPostExecute(String result) {
 
-            //progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        protected String doInBackground(String... params) {
-
-            try {
-
-                List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
-                createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), "test", "N", "N", "mathi"));
-                HttpResponse response = request.requestPutType(ServiceConstants.UPDATE_USER, createuserlist, ServiceConstants.BASE_URL);
-                responsevalue = ""+response.getStatusLine().getStatusCode();
-
-                if (response.getStatusLine().getStatusCode() == 200) {
-
-
-                }
-
-
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
-
-            }
-
-            return responsevalue;
-
-        }
-
-    }*/
 
 }

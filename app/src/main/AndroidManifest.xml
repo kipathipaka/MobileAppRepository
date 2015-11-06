@@ -32,26 +32,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-      <!--  <activity
-            android:name=".Activity.AppUninstallActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.DELETE" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <data android:scheme="package" />
-            </intent-filter>
-        </activity>-->
+        <activity android:name=".Activity.CrashActivity" android:label="CrashActivity"/>
       <service android:name=".Service.UpdateLocationService"
             android:exported="false"></service>
-    <!-- <receiver android:name="com.bpatech.app.uninstall.UninstallIntentReceiver">
-            <intent-filter android:priority="0">
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-                <data android:scheme="package" />
-            </intent-filter>
 
-        </receiver>-->
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
         <meta-data

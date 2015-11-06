@@ -59,14 +59,13 @@ public class HomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		///Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		View view;
-		view = inflater.inflate(R.layout.currenttrip_progressbar_layout, container, false);
-
-		progressBar1=(ProgressBar)view.findViewById(R.id.currentlistprogresbar);
+		//view = inflater.inflate(R.layout.currenttrip_progressbar_layout, container, false);
+	/*	progressBar1=(ProgressBar)view.findViewById(R.id.currentlistprogresbar);
 		progressBar1.setProgress(10);
 		progressBar1.setMax(10);
-		progressBar1.setVisibility(View.VISIBLE);
+		progressBar1.setVisibility(View.VISIBLE);*/
 		db = new MySQLiteHelper(getActivity().getApplicationContext());
 		//boolean value=db.checkPhonenumber(phoneno);
 		int phonecount = db.getUserCount();
@@ -75,9 +74,8 @@ public class HomeFragment extends Fragment {
 
 		if (phonecount > 0) {
 			//progressBar1.setVisibility(View.INVISIBLE);
-			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 			view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
-
+			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 			progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar);
 			progressBar.setProgress(10);
 			progressBar.setMax(10);
@@ -161,9 +159,9 @@ public class HomeFragment extends Fragment {
 
 		} else {
 			//progressBar1.setVisibility(View.INVISIBLE);
-			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-			view = inflater.inflate(R.layout.activity_home, container, false);
 
+			view = inflater.inflate(R.layout.activity_home, container, false);
+			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 			progressBar=(ProgressBar)view.findViewById(R.id.loginprogressbar);
 			progressBar.setProgress(10);
 			progressBar.setMax(100);

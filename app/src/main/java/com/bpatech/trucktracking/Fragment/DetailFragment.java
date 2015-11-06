@@ -48,8 +48,9 @@ public class DetailFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+
 		View view = inflater.inflate(R.layout.companydetail_layout, container, false);
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		debtn=(Button)view.findViewById(R.id.detbtn);
 		companyname=(EditText)view.findViewById(R.id.editcompanynamee);
 		username=(EditText)view.findViewById(R.id.edityourname);

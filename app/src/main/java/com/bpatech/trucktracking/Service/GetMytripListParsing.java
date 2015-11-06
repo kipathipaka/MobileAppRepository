@@ -5,8 +5,12 @@ import com.bpatech.trucktracking.DTO.AddTrip;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Anita on 10/20/2015.
@@ -43,20 +47,25 @@ public class GetMytripListParsing {
                 mytrip.setCustomer_company(customerarray.getString("company_name"));
                 mytrip.setCustomer_name(customerarray.getString("name"));
                 mytrip.setSource("Delhi");
-                JSONObject locationarray = firstmytriparry
-                        .getJSONObject("vehicleTripDetail");
-               if(locationarray.getString("location").toString().equalsIgnoreCase("null")) {
+               if(firstmytriparry.getString("location").toString().equalsIgnoreCase("null")) {
                    mytrip.setLocation("Delhi");
-                   mytrip.setLatitude(locationarray.getString("latitude"));
-                   mytrip.setLongitude(locationarray.getString("longitude"));
-
+                   mytrip.setLatitude(firstmytriparry.getString("latitude"));
+                   mytrip.setLongitude(firstmytriparry.getString("longitude"));
                }else{
-                   mytrip.setLocation(locationarray.getString("location"));
-                   mytrip.setLatitude(locationarray.getString("latitude"));
-                   mytrip.setLongitude(locationarray.getString("longitude"));
-
+                   mytrip.setLocation(firstmytriparry.getString("location"));
+                   mytrip.setLatitude(firstmytriparry.getString("latitude"));
+                   mytrip.setLongitude(firstmytriparry.getString("longitude"));
                }
-                mytrip.setLast_sync_time(locationarray.getString("last_sync_date_time"));
+                if(firstmytriparry.getString("last_sync_date_time").toString().equalsIgnoreCase("null")) {
+                    DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+                    Date date = new Date();
+                    mytrip.setLast_sync_time(dateFormat.format(date).toString());
+                }else {
+                    DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
+                    dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
+                    Date date = new Date(Long.parseLong(firstmytriparry.getString("last_sync_date_time").toString()));
+                    mytrip.setLast_sync_time(dateFormat1.format(date).toString());
+                }
                 mytriplist.add(mytrip);
             }
         } catch (Exception ex) {

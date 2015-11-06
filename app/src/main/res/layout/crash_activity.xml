@@ -3,23 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/textView1"
-        android:text="Cancel" />
-
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:text="Send Error" />
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -28,5 +11,27 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="18dp"
         android:text="" />
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/btn"
+        android:text="Cancel" />
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textView1"
+        android:text="Send Error" />
+
+    <ProgressBar
+        android:id="@+id/crashprogressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
