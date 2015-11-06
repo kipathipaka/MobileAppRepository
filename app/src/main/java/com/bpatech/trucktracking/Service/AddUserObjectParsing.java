@@ -18,6 +18,8 @@ public class AddUserObjectParsing {
         nameValuePairs.add(new BasicNameValuePair("phone_number",phone_number));
         nameValuePairs.add(new BasicNameValuePair("Name",user_name));
         nameValuePairs.add(new BasicNameValuePair("company_name",company_name));
+            nameValuePairs.add(new BasicNameValuePair("is_active",active_status));
+            nameValuePairs.add(new BasicNameValuePair("app_download_status",download_status));
 
         } catch (Exception e) {
             //TODO

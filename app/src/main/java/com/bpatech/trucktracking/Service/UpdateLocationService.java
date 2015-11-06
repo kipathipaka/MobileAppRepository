@@ -235,7 +235,8 @@ public class UpdateLocationService extends Service
                     sb.append(address.getPostalCode()).append("\n");
                     sb.append(address.getCountryName());*/
 
-                    locationval = address.getAdminArea().toString();
+                    locationval = address.getLocality().toString();
+                   // Toast.makeText(getApplicationContext(), locationval, Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

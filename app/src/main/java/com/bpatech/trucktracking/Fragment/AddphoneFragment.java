@@ -48,9 +48,9 @@ public class AddphoneFragment extends Fragment {
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
-
-		 View view = inflater.inflate(R.layout.addphone_layout, container, false);
 		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		 View view = inflater.inflate(R.layout.addphone_layout, container, false);
+
 		 progressBar=(ProgressBar)view.findViewById(R.id.addphoneprogresbar);
 		 progressBar.setProgress(10);
 		 progressBar.setMax(100);
@@ -114,16 +114,11 @@ try {
 		protected String doInBackground(String... params) {
 
 			try {
-				System.out.println("++++statuscode++++++++"+session.getPhoneno());
 				List<NameValuePair> driverphonelist = new ArrayList<NameValuePair>();
-				driverphonelist.addAll(obj.addDriverPhone(phonenumber,session.getPhoneno()));
-				System.out.println("++++driverphonelist++++++++"+driverphonelist);
+				driverphonelist.addAll(obj.addDriverPhone(phonenumber, session.getPhoneno()));
 				HttpResponse response = request.requestPostType(
-						ServiceConstants.ADD_DRIVER_PHONE,driverphonelist,ServiceConstants.BASE_URL);
+						ServiceConstants.ADD_DRIVER_PHONE, driverphonelist, ServiceConstants.BASE_URL);
 				responseStrng = ""+response.getStatusLine().getStatusCode();
-				System.out.println("++++statuscode++++++++"+response.getStatusLine().getStatusCode());
-				JSONObject responsejson = request.responseParsing(response);
-				System.out.println("++++responsejson++++++++" + responsejson);
 				if (response.getStatusLine().getStatusCode() == 200) {
 
 					new GetdriverPhonelist().execute("", "", "");

@@ -58,8 +58,9 @@ public class AddnewTripFragment extends Fragment {
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
-		 View view = inflater.inflate(R.layout.addnewtrip_layout, container, false);
 		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		 View view = inflater.inflate(R.layout.addnewtrip_layout, container, false);
+
 		 db = new MySQLiteHelper(getActivity().getApplicationContext());
 		 request= new Request(getActivity());
 		 currenttripdetails=new ArrayList<AddTrip>();

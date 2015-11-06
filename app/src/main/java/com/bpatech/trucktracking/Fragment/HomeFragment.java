@@ -59,10 +59,10 @@ public class HomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		View view;
 		view = inflater.inflate(R.layout.currenttrip_progressbar_layout, container, false);
-		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+
 		progressBar1=(ProgressBar)view.findViewById(R.id.currentlistprogresbar);
 		progressBar1.setProgress(10);
 		progressBar1.setMax(10);
@@ -75,9 +75,9 @@ public class HomeFragment extends Fragment {
 
 		if (phonecount > 0) {
 			//progressBar1.setVisibility(View.INVISIBLE);
-
-			view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+			view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
+
 			progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar);
 			progressBar.setProgress(10);
 			progressBar.setMax(10);
@@ -161,8 +161,9 @@ public class HomeFragment extends Fragment {
 
 		} else {
 			//progressBar1.setVisibility(View.INVISIBLE);
-			view = inflater.inflate(R.layout.activity_home, container, false);
 			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+			view = inflater.inflate(R.layout.activity_home, container, false);
+
 			progressBar=(ProgressBar)view.findViewById(R.id.loginprogressbar);
 			progressBar.setProgress(10);
 			progressBar.setMax(100);
@@ -191,6 +192,7 @@ try {
 	if (phoneNo.getText().toString().equals("")) {
 		Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
 				Toast.LENGTH_SHORT).show();
+		progressBar.setVisibility(View.INVISIBLE);
 
 	}  else if(phoneNo.getText().toString().length()==10){
 

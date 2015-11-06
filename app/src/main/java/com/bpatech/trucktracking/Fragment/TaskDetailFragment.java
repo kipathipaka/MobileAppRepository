@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -28,6 +29,7 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.CustomAdapter;
+import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -54,6 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
     * Created by Anita on 9/14/2015.
@@ -83,9 +86,9 @@ import java.util.List;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
-        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
+
         Bundle taskdetail = this.getArguments();
         session = new SessionManager(getActivity().getApplicationContext());
         request= new Request(getActivity().getApplicationContext());
@@ -139,6 +142,7 @@ import java.util.List;
                                 updatetime.setText(dateFormat.format(date).toString());
                             }else {
                                 DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
+                                dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
                                 Date date = new Date(Long.parseLong(currenttripdetailslist.get(i).getLast_sync_time().toString()));
                                 updatetime.setText(dateFormat1.format(date).toString());
                             }
@@ -250,24 +254,37 @@ import java.util.List;
 
         @Override
         public void onClick(View v) {
-
-            Uri uri = Uri.parse("smsto" + "9962862211");
-            Intent sendIntent = new Intent(Intent.ACTION_SEND);
-           // sendIntent.setAction(Intent.ACTION_SENDTO);
-           // sendIntent.setData(uri);
+            boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+            if (isWhatsappInstalled) {
+            Intent sendIntent = new Intent();
+           sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("text/plain");
             sendIntent.setPackage("com.whatsapp");
-            if (sendIntent!= null) {
+
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "Whatsup text msg");
                 startActivity(Intent.createChooser(sendIntent, ""));
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT)
                         .show();
+                Uri uri = Uri.parse("market://details?id=com.whatsapp");
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(goToMarket);
             }
 
 
         }
         }
+    private boolean whatsappInstalledOrNot(String uri) {
+        PackageManager pm = getActivity().getPackageManager();
+        boolean app_installed = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
+    }
     private class SendSmsButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -390,7 +407,6 @@ public void onResume() {
                 upadatetripdetail.add(new BasicNameValuePair("vehicle_trip_header_id", vechile_trip_no));
                     HttpResponse response = request.requestPutType(ServiceConstants.END_TRIP, upadatetripdetail, ServiceConstants.BASE_URL);
                     responseStrng = "" + response.getStatusLine().getStatusCode();
-                    JSONObject responseejson = request.responseParsing(response);
                     if (response.getStatusLine().getStatusCode() == 200) {
                         new updateMytripDetail().execute("", "", "");
                     }
@@ -480,4 +496,6 @@ public void onResume() {
 
         }
     }
+
+
 }

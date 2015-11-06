@@ -48,8 +48,8 @@ public class DetailFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.companydetail_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		View view = inflater.inflate(R.layout.companydetail_layout, container, false);
 		debtn=(Button)view.findViewById(R.id.detbtn);
 		companyname=(EditText)view.findViewById(R.id.editcompanynamee);
 		username=(EditText)view.findViewById(R.id.edityourname);
@@ -117,7 +117,7 @@ public class DetailFragment extends Fragment {
 			try {
 
 				List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
-				createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), "Y", "Y", user.getUserName()));
+				createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), "Y","Y", user.getUserName()));
 				String Getuser_url=ServiceConstants.GET_USER+ session.getPhoneno();
 				response = request.requestGetType(Getuser_url, ServiceConstants.BASE_URL);
 				if (response.getStatusLine().getStatusCode() == 200) {

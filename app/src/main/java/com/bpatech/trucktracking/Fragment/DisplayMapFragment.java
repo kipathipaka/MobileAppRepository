@@ -37,8 +37,8 @@ public class DisplayMapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.map_layout, container, false);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+        View view = inflater.inflate(R.layout.map_layout, container, false);
         Bundle maplist = this.getArguments();
         mapView = (MapView) view.findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);

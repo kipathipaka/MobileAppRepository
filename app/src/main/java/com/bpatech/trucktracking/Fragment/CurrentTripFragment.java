@@ -39,9 +39,9 @@ LinearLayout triplist_ll,footer_addtrip_ll;
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
-
-		 View view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 		 Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		 View view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
+
 		 session = new SessionManager(getActivity().getApplicationContext());
 		 currenttripdetails=new ArrayList<AddTrip>();
 		 request= new Request(getActivity().getApplicationContext());
@@ -123,7 +123,7 @@ LinearLayout triplist_ll,footer_addtrip_ll;
 				 bundle.putBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE, false);
 
 				 taskdetailfrag.setArguments(bundle);
-				// progressBar.setVisibility(View.INVISIBLE);
+				//progressBar.setVisibility(View.INVISIBLE);
 				 FragmentManager fragmentmanager = getFragmentManager();
 				 FragmentTransaction fragmenttransaction = fragmentmanager
 						 .beginTransaction();
