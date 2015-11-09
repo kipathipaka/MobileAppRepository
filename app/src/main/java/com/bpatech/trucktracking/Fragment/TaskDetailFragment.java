@@ -87,6 +87,7 @@ import java.util.TimeZone;
     String addresstxt;
     public GoogleMap googleMap;
     ArrayList<AddTrip> currenttripdetails;
+    int trip_id;
     LatLng LOCATION;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,36 +134,62 @@ import java.util.TimeZone;
             currenttripdetailslist.addAll(session.getAddtripdetails());
             for(int i=0;i< currenttripdetailslist.size();i++){
                 if(currenttripdetailslist.get(i).getVehicle_trip_id()== Integer.parseInt(vechile_trip_no)){
-                    if(currenttripdetailslist.get(i).isStartstatus()) {
-                        if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
-                            Startbtn.setText("End Tracking");
-                            Startbtn.setVisibility(View.VISIBLE);
-                            Startbtn.setBackgroundColor(Color.RED);
-                            lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                            lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                    trip_id=currenttripdetailslist.get(i).getVehicle_trip_id();
+                    System.out.println(trip_id);
+                   if(currenttripdetailslist.get(i).getDriver_phone_no().equalsIgnoreCase(session.getPhoneno()) || currenttripdetailslist.get(i).getCustomer_phoneno().equalsIgnoreCase(session.getPhoneno()))
+                   {
+                       if(currenttripdetailslist.get(i).isStartstatus()) {
+                           if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
+
+                               lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                               lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+
+                               updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
+
+                               locationrow.setVisibility(View.VISIBLE);
+                               lasttimerow.setVisibility(View.VISIBLE);
+                               //startclick = true;
+                           }else{
+                               lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                               lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
+                           }
+                       }else{
+                           Startbtn.setVisibility(View.INVISIBLE);
+                           lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                       }
+                   }else{
+                       if(currenttripdetailslist.get(i).isStartstatus()) {
+                           if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
+                               Startbtn.setText("End Tracking");
+                               Startbtn.setVisibility(View.VISIBLE);
+                               Startbtn.setBackgroundColor(Color.RED);
+                               lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                               lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
                            /* if(currenttripdetailslist.get(i).getLast_sync_time().toString().equalsIgnoreCase("null")) {
                                 DateFormat dateFormat = new SimpleDateFormat("h:mm a");
                                 Date date = new Date();*/
-                                //vechile_trip_id=Integer.parseInt(vechile_trip_no);
-                                updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
+                               //vechile_trip_id=Integer.parseInt(vechile_trip_no);
+                               updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
                           /*  }else {
                                 DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
                                 dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
                                 Date date = new Date(Long.parseLong(currenttripdetailslist.get(i).getLast_sync_time().toString()));
                                 updatetime.setText(dateFormat1.format(date).toString());
                             }*/
-                            locationrow.setVisibility(View.VISIBLE);
-                            lasttimerow.setVisibility(View.VISIBLE);
-                            startclick = true;
-                        }else{
-                            Startbtn.setVisibility(View.VISIBLE);
-                            lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                            lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
-                        }
-                    }else{
-                        Startbtn.setVisibility(View.INVISIBLE);
-                        lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                    }
+                               locationrow.setVisibility(View.VISIBLE);
+                               lasttimerow.setVisibility(View.VISIBLE);
+                               startclick = true;
+                           }else{
+                               Startbtn.setVisibility(View.VISIBLE);
+                               lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                               lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
+                           }
+                       }else{
+                           Startbtn.setVisibility(View.INVISIBLE);
+                           lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                       }
+                   }
+
 
                 }
 
@@ -315,13 +342,15 @@ import java.util.TimeZone;
     private class SendSmsButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            String number = customer_no.getText().toString();
+            sms_dailog();
+
+          /*  String number = customer_no.getText().toString();
             String smsmessage = ServiceConstants.MESSAGE_FOR_CUSTOMER;
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(number, null, smsmessage, null, null);
             Log.d("Sms", "sendSMS " + smsmessage);
             Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT).show();*/
 
         }
     }
@@ -333,8 +362,8 @@ import java.util.TimeZone;
         super.onDestroyView();
 
         Fragment fragment = (getFragmentManager()
-                .findFragmentById(R.id.map_view));
         if (fragment != null) {
+                .findFragmentById(R.id.map_view));
             FragmentTransaction ft = getActivity().getFragmentManager()
                     .beginTransaction();
             ft.remove(fragment);
@@ -551,5 +580,50 @@ public void onResume() {
             }
         });
     }
+public void sms_dailog()
+{
+    (getActivity()).runOnUiThread(new Runnable() {
+        public void run() {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            final View promptsView = inflater.inflate(R.layout.send_sms_popup, null);
+           /*     EditText e1=*/
+         final String num=customer_no.getText().toString();
 
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            promptsView.setBackgroundResource(R.color.white);
+             final EditText phnenum=(EditText) promptsView.findViewById(R.id.phonenum);
+            phnenum.setText(num);
+             EditText message=(EditText)promptsView.findViewById(R.id.edittexview1);
+            final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+            final String sms2=ServiceConstants.MESSAGE_URL+" "+"?"+" "+"trip ="+trip_id;
+            final String sms3= ServiceConstants.MESSAGE_SENDING_END;
+            final String sms=sms1+sms2+sms3;
+            System.out.println("trip_id"+trip_id);
+            message.setText(sms);
+                    dialog.setContentView(promptsView);
+            dialog.show();
+
+            Button textbutton = (Button) promptsView.findViewById(R.id.sndbtn);
+            textbutton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                   // String num=customer_no.getText().toString();
+
+                   /* String smsmessage="hiiiiiiiii";*/
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(num, null,sms, null, null);
+                    Log.d("sms", "sms text is" + sms);
+
+               dialog.dismiss();
+                    Toast.makeText(getActivity().getApplicationContext(), "sms sent to" +num, Toast.LENGTH_SHORT)
+                            .show();
+                }
+
+            });
+        }
+    });
+}
 }

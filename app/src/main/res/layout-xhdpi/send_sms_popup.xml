@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<ScrollView
+android:id="@+id/scrooltrip"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+
+
+
+style="@style/marginlayouts">
+
+
+</ScrollView>
+
+<TableLayout
+android:id="@+id/registerTable"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+
+android:orientation="horizontal"
+android:paddingLeft="0.5dp"
+android:paddingRight="0.5dp"
+
+android:layout_alignLeft="@+id/scrooltrip"
+android:layout_alignStart="@+id/scrooltrip"
+android:layout_alignRight="@+id/scrooltrip"
+android:layout_alignEnd="@+id/scrooltrip">
+
+<TableRow
+    android:id="@+id/tableRow1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:paddingLeft="1dp"
+    android:paddingRight="1dp" >
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginBottom="@dimen/fifteen_pt"
+        style="@style/codefont"
+        android:text="To:"
+        android:paddingLeft="5dp" >
+    </TextView>
+</TableRow>
+
+<TableRow
+    android:id="@+id/tableRow2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray"
+    android:layout_marginTop="0dp"
+    android:paddingLeft="1.5dp"
+    android:paddingRight="1.5dp"
+    android:paddingBottom="1.5dp"
+    android:paddingTop="1.5dp">
+
+    <EditText
+        android:id="@+id/phonenum"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/seventy_pt"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:ems="10"
+        android:singleLine="true"
+        android:nextFocusDown="@+id/edittexview1"
+        android:maxLength="10"
+        android:hint="e.g:9543492022"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:inputType="phone"
+        android:paddingLeft="5dp" >
+    </EditText>
+</TableRow>
+<TableRow
+    android:id="@+id/tableRow3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/ten_pt"
+    android:paddingLeft="1dp"
+    android:paddingRight="1dp" >
+
+    <TextView
+        android:id="@+id/textview1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginBottom="@dimen/fifteen_pt"
+        style="@style/codefont"
+        android:text="Message:"
+        android:paddingLeft="5dp" >
+    </TextView>
+</TableRow>
+<TableRow
+    android:id="@+id/tableRow4"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray"
+    android:layout_marginTop="0dp"
+    android:paddingLeft="1.5dp"
+    android:paddingRight="1.5dp"
+    android:paddingBottom="1.5dp"
+    android:paddingTop="1.5dp">
+
+    <EditText
+        android:id="@+id/edittexview1"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/two_hundred_pt"
+        android:layout_weight="1"
+        android:maxLines="10"
+        android:minLines="5"
+        android:background="@color/white"
+        android:ems="10"
+
+
+        android:cursorVisible="true"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:inputType="text|textMultiLine"
+        android:paddingLeft="5dp" >
+    </EditText>
+</TableRow>
+<TableRow
+    android:id="@+id/buttonrow5"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:paddingBottom="1.5dp"
+    android:paddingTop="1.5dp"
+    android:background="@color/darkskyblue"
+    android:layout_marginTop="@dimen/twenty_pt">
+    <Button
+        android:id="@+id/sndbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/send_btn"
+        style="@style/textbutton"/>
+</TableRow>
+</TableLayout>
+
+    </RelativeLayout>
