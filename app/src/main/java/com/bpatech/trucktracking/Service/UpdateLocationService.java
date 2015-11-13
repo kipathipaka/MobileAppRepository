@@ -17,8 +17,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
@@ -26,8 +24,6 @@ import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +51,13 @@ public class UpdateLocationService extends Service
     List<User>userlist;
     User user;
     AddUserObjectParsing obj;
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 10
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10
     String userphoneno;
     Request request;
     Handler mhandler;
+    HttpResponse response;
     // The minimum time beetwen updates in milliseconds 15 * 60 * 1000.
-    private static final long MIN_TIME_BW_UPDATES = 0;
+    private static final long MIN_TIME_BW_UPDATES = 20 * 60 * 1000;
 
     /*public UpdateLocationService() {
         super("HelloService");
@@ -69,7 +66,7 @@ public class UpdateLocationService extends Service
     @Override
     public void onCreate() {
         mhandler = new Handler();
-        request = new Request(getBaseContext());
+      request = new Request(getBaseContext());
         session = new SessionManager(getApplicationContext());
         db = new MySQLiteHelper(getApplicationContext());
         obj = new AddUserObjectParsing();
@@ -80,7 +77,8 @@ public class UpdateLocationService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         userlist=new ArrayList<User>();
-        onHandleIntent(intent);
+        getLocation();
+       // onHandleIntent();
         return Service.START_STICKY;
     }
 
@@ -91,13 +89,13 @@ public class UpdateLocationService extends Service
     }
 
     /* @Override*/
-    protected void onHandleIntent(Intent intent) {
+   /* protected void onHandleIntent() {
 
-        mhandler.postDelayed(ToastRunnable, 15 * 60 * 1000);
+        mhandler.postDelayed(ToastRunnable,20000);
 
-    }
+    }*/
 
-    final Runnable ToastRunnable = new Runnable() {
+   /* final Runnable ToastRunnable = new Runnable() {
         public void run() {
             userlist.addAll(db.getOwnerphoneno());
             if(userlist!=null && userlist.size()>0) {
@@ -111,7 +109,7 @@ public class UpdateLocationService extends Service
         }
 
     };
-
+*/
 
     public Location getLocation() {
         try {
@@ -132,14 +130,16 @@ public class UpdateLocationService extends Service
             else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
-
+                    System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++++++++++++++++++++++++"+isNetworkEnabled);
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
                                 @Override
                                 public void onLocationChanged(Location location) {
-                                    //updateGPSCoordinates();
+                                    updateGPSCoordinates();
+                                   // new UpdateLocationApi().execute("", "", "");
+                                    //Toast.makeText(getApplicationContext(), location.getLatitude()+""+location.getLongitude(), Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
@@ -163,11 +163,12 @@ public class UpdateLocationService extends Service
                     if (locationManager != null) {
                         location = locationManager
                                 .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                       // updateGPSCoordinates();
+
                     }
 
                 }
-                if (isGPSEnabled) {
+                /*if (isGPSEnabled) {
+                    System.out.println("++++++++++++++++++++++++++++++++++isGPSEnabled+++++++++++++++++++++++++++"+isGPSEnabled);
                     if (location == null) {
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
@@ -203,7 +204,7 @@ public class UpdateLocationService extends Service
                     }
                 }
 
-
+*/
 
             }
         } catch (Exception e) {
@@ -232,7 +233,8 @@ public class UpdateLocationService extends Service
                     sb.append(address.getCountryName());*/
 
                     locationval = address.getSubLocality().toString()+","+address.getLocality().toString();
-                   // Toast.makeText(getApplicationContext(), locationval, Toast.LENGTH_SHORT).show();
+                 // Toast.makeText(getApplicationContext(), locationval, Toast.LENGTH_SHORT).show();
+                    new UpdateLocationApi().execute("", "", "");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -245,27 +247,24 @@ public class UpdateLocationService extends Service
             AsyncTask<String, Void, String> {
         @Override
         protected void onPostExecute(String result) {
-            mhandler.postDelayed(ToastRunnable,15 * 60 * 1000);
+
         }
 
         protected String doInBackground(String... params) {
-
             try {
-                if(userphoneno==null) {
+                if(session.getPhoneno()==null || latitude.toString()==null ||longitude.toString()==null) {
                     responsevalue = null;
                 }else {
-
+               //System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" + session.getPhoneno());
                     List<NameValuePair> updatelocationlist = new ArrayList<NameValuePair>();
-                    updatelocationlist.add(new BasicNameValuePair("driver_phone_number",userphoneno));
+                    updatelocationlist.add(new BasicNameValuePair("driver_phone_number",session.getPhoneno()));
                     updatelocationlist.add(new BasicNameValuePair("location", locationval));
                     updatelocationlist.add(new BasicNameValuePair("latitude", latitude.toString()));
                     updatelocationlist.add(new BasicNameValuePair("longitude", longitude.toString()));
-                    HttpResponse response = request.requestPostType(
+                    response = request.requestLocationServicePostType(
                             ServiceConstants.UPDATE_LOCATION, updatelocationlist, ServiceConstants.BACKGROUND_BASE_URL);
                     responsevalue = "" + response.getStatusLine().getStatusCode();
-                    if (response.getStatusLine().getStatusCode() == 200) {
-                        new UpdateMytripDetail().execute("", "", "");
-                    }
+                   // System.out.println("++++++++++++++++++++++++++++++++++response+eee++++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
                 }
             } catch (Exception e) {
 
@@ -280,44 +279,7 @@ public class UpdateLocationService extends Service
 
 
 
-    private class UpdateMytripDetail extends
-            AsyncTask<String, Void, String> {
-        @Override
-        protected void onPostExecute(String result) {
-            //  progressBar.setVisibility(View.INVISIBLE);
-        }
 
-        protected String doInBackground(String... params) {
-
-            try {
-                ArrayList<AddTrip> updatetripdetails=new ArrayList<AddTrip>();
-
-
-                    String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
-                    HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
-
-                    responsevalue = "" + response.getStatusLine().getStatusCode();
-                    if (response.getStatusLine().getStatusCode() == 200) {
-                        JSONArray responsejSONArray = request.responseArrayParsing(response);
-                        GetMytripListParsing mytripListParsing = new GetMytripListParsing();
-                        updatetripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
-                        session.setAddtripdetails(updatetripdetails);
-
-
-                    }
-
-
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
-
-            }
-
-            return responsevalue;
-
-        }
-    }
 
 
 }

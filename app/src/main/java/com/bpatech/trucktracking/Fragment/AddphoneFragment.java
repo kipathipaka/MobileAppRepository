@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ public class AddphoneFragment extends Fragment {
 	String phonenumber;
 	String responseStrng = null;
 	TextView txt_contTitle;
+	RelativeLayout addPhoneLayout;
 	 @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                             Bundle savedInstanceState) {
@@ -58,12 +60,22 @@ public class AddphoneFragment extends Fragment {
 		 txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
 		 txt_contTitle.setText("Add Phone");
 		 addbtn=(Button)view.findViewById(R.id.addbtn);
+		 addPhoneLayout = (RelativeLayout) view.findViewById(R.id.addphone_layout);
 		 edityournum=(EditText)view.findViewById(R.id.edityournum);
 		 obj = new AddUserObjectParsing();
 		 request = new Request(getActivity());
+		 addPhoneLayout.setOnClickListener(new AddPhoneLayoutclicklistener());
 		 addbtn.setOnClickListener(new MyaddButtonListener());
 	        return view;
 	    }
+
+	private class AddPhoneLayoutclicklistener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+
+		}
+	}
 	private class MyaddButtonListener implements View.OnClickListener{
 		@Override
 		public void onClick(View v)
@@ -80,13 +92,13 @@ try {
 	else if(edityournum.getText().toString().length()==10){
 
 		phonenumber = edityournum.getText().toString();
+		String number="+91"+phonenumber;
 		String smsmessage = ServiceConstants.MESSAGE_FOR_ADDPHONE;
 		SmsManager smsManager = SmsManager.getDefault();
 		session = new SessionManager(getActivity().getApplicationContext());
-        smsManager.sendTextMessage(phonenumber, null, smsmessage, null, null);
+        smsManager.sendTextMessage(number, null, smsmessage, null, null);
 		Log.d("Sms", "sendSMS " + smsmessage);
-
-		Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+phonenumber,
+		Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+number,
 				Toast.LENGTH_SHORT).show();
 		new AddUserPhone().execute("", "", "");
 	}
@@ -94,6 +106,7 @@ try {
 	{
 		Toast.makeText(getActivity().getApplicationContext(), "enter the valid phone number!",
 				Toast.LENGTH_SHORT).show();
+		progressBar.setVisibility(View.INVISIBLE);
 	}
 }catch (Exception e){
 	Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
@@ -120,8 +133,14 @@ try {
 						ServiceConstants.ADD_DRIVER_PHONE, driverphonelist, ServiceConstants.BASE_URL);
 				responseStrng = ""+response.getStatusLine().getStatusCode();
 				if (response.getStatusLine().getStatusCode() == 200) {
-
-					new GetdriverPhonelist().execute("", "", "");
+					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers,currenttripfrag);
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
+					//new GetdriverPhonelist().execute("", "", "");
 				}
 			} catch (Exception e) {
 
@@ -155,13 +174,11 @@ try {
 					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
 					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
 					session.setDriverlist(driverphonenolist);
-					System.out.println("+++++++++++getDriverlist+++++++++++" + session.getDriverlist().size());
 					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
 							.beginTransaction();
 					fragmenttransaction.replace(R.id.viewers,currenttripfrag);
-
 					fragmenttransaction.addToBackStack(null);
 					fragmenttransaction.commit();
 				}

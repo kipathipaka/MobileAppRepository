@@ -28,7 +28,7 @@ ProgressBar progressBar;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crash_activity);
-        sm = new SessionManager(getApplicationContext());
+        sm = new SessionManager(this.getApplicationContext());
         final TextView textView = (TextView) findViewById(R.id.textView1);
         textView.setText(R.string.AppCrashMessage);
         progressBar=(ProgressBar)findViewById(R.id.crashprogressbar);

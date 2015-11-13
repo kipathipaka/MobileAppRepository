@@ -106,12 +106,14 @@ public class AddnewTripFragment extends Fragment {
 							 Toast.LENGTH_SHORT).show();
 					 progressBar.setVisibility(View.INVISIBLE);
 
-				 } else if(String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim())){
-					 Toast.makeText(getActivity().getApplicationContext(), "Entered Customer phone number and driver phone are same.. Please Check ",
+				 } else if(String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim()) ||
+						 String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(session.getPhoneno().toString().trim()) ||
+						 session.getPhoneno().toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim()) ){
+					 Toast.makeText(getActivity().getApplicationContext(), "Entered Owner phonenumber,Customer phone number and driver phone are same.. Please Check ",
 							 Toast.LENGTH_SHORT).show();
 					 progressBar.setVisibility(View.INVISIBLE);
 				 }
-				 else if(customer_phoneno.getText().toString().length()==10){
+				 else if(customer_phoneno.getText().toString().length()==10 ){
 					 addtrip.setDestination(editdestination.getText().toString());
 					 addtrip.setTruckno(editride.getText().toString());
 					 addtrip.setDriver_phone_no(String.valueOf(phonespinner.getSelectedItem()));
@@ -166,7 +168,8 @@ public class AddnewTripFragment extends Fragment {
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
-			progressBar.setVisibility(View.INVISIBLE);
+
+			//progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
@@ -179,8 +182,14 @@ public class AddnewTripFragment extends Fragment {
 						ServiceConstants.ADD_TRIP,addtriplist,ServiceConstants.BASE_URL);
 				responsevalue=""+response.getStatusLine().getStatusCode();
 				if (response.getStatusLine().getStatusCode() == 200) {
-					new GetMytripDetail().execute("", "", "");
+					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers, currenttripfrag);
 
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
 
 				}
 			} catch (Exception e) {

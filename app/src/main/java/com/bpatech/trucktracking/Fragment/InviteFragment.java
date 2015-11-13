@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class InviteFragment extends Fragment
     Button sndbtn;
     EditText phonenum,edittexview1;
     TextView txt_contTitle;
+    RelativeLayout inviteLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -38,10 +40,19 @@ public class InviteFragment extends Fragment
         txt_contTitle.setText("Invite");
         sndbtn=(Button)view.findViewById(R.id.sndbtn);
         phonenum=(EditText)view.findViewById(R.id.phonenum);
+        inviteLayout = (RelativeLayout) view.findViewById(R.id.invite_layout);
         edittexview1=(EditText)view.findViewById(R.id.edittexview1);
-
+        inviteLayout.setOnClickListener(new InviteLayoutclicklistener());
         sndbtn.setOnClickListener(new MyaddButtonListener());
         return view;
+    }
+
+    private class InviteLayoutclicklistener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+        }
     }
     private class MyaddButtonListener implements View.OnClickListener{
         @Override
@@ -57,10 +68,11 @@ public class InviteFragment extends Fragment
                 } else if(phonenum.getText().toString().length()==10) {
                     String number = phonenum.getText().toString();
                     String sms = edittexview1.getText().toString();
+                    String smsno="+91"+number;
                     SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(number, null, sms, null, null);
+                    smsManager.sendTextMessage(smsno, null, sms, null, null);
                     Log.d("Sms", "sendSMS " + sms);
-                    Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+number,
+                    Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+smsno,
                             Toast.LENGTH_SHORT).show();
 
                     CurrentTripFragment currenttripfrag = new CurrentTripFragment();
@@ -68,7 +80,6 @@ public class InviteFragment extends Fragment
                     FragmentTransaction fragmenttransaction = fragmentmanager
                             .beginTransaction();
                     fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-
                     fragmenttransaction.addToBackStack(null);
                     fragmenttransaction.commit();
 

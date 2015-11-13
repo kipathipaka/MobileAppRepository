@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,15 +35,9 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,9 +50,9 @@ public class CustomAdapter extends ArrayAdapter {
 	ProgressBar progressBar;
 	 private Context mContext;
 	    private ArrayList<AddTrip> mList;
-	Bundle savedInstanceState;
+Bundle savedInstanceState;
 	private int[] colors = new int[] { 0x300000FF,0x30FF0000  };
-	    
+
 @SuppressWarnings("unchecked")
 public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 	
@@ -169,7 +164,6 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 		AlertDialog dialog = builder.create();
 		dialog.show()*/;
 	}
-
 			TextView DestinationText=(TextView) view.findViewById(R.id.tovalue);
 			//TextView rideText=(TextView) view.findViewById(R.id.ride);
 			TextView NowText=(TextView) view.findViewById(R.id.nowmsg);
@@ -179,10 +173,8 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			TextView Rideno = (TextView) view.findViewById(R.id.rideno);
 			TextView Destination = (TextView) view.findViewById(R.id.place);
 			TextView phoneno = (TextView) view.findViewById(R.id.phoneno);
-			TextView customer = (TextView) view.findViewById(R.id.customer);
 	        TextView vechile_trip_id = (TextView) view.findViewById(R.id.vechiletrip_no);
-			TextView customer_name = (TextView) view.findViewById(R.id.customername);
-			TextView customer_no = (TextView) view.findViewById(R.id.customerno);
+
 			DestinationText.setText("To :");
 			//rideText.setText("#");
 			NowText.setText("Now :");
@@ -212,14 +204,13 @@ if(mList.get(position).getLocation().toString().length() >20) {
 			Rideno.setText("#"+mList.get(position).getTruckno() );
 			Destination.setText( mList.get(position).getDestination() );
 			phoneno.setText( mList.get(position).getDriver_phone_no());
-			customer.setText( mList.get(position).getCustomer_company());
-			customer_name.setText( mList.get(position).getCustomer_name());
-			customer_no.setText(mList.get(position).getCustomer_phoneno());
+
 	vechile_trip_id.setText(String.valueOf(mList.get(position).getVehicle_trip_id()));
 			view.setBackgroundColor(getContext().getResources().getColor(R.color.darkskyblue));
 
 	        return view;
 	    }
+
 	public boolean isGoogleMapsInstalled()
 	{
 
@@ -250,4 +241,5 @@ if(mList.get(position).getLocation().toString().length() >20) {
 			}
 		};
 	}
+
 }

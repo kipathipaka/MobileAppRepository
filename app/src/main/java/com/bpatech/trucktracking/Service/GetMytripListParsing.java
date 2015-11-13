@@ -32,7 +32,14 @@ public class GetMytripListParsing {
                 JSONObject vehiclearray = firstmytriparry
                         .getJSONObject("vehicle");
                 mytrip.setTruckno(vehiclearray.getString("vehicle_registration_number"));
-
+                JSONObject vehicleownerarray = firstmytriparry
+                        .getJSONObject("vehicleOwner");
+                mytrip.setOwner_phone_no(vehicleownerarray.getString("phone_number"));
+                if (vehicleownerarray.getString("is_active").equalsIgnoreCase("Y") && vehicleownerarray.getString("app_download_status").equalsIgnoreCase("Y")) {
+                    mytrip.setOwner_status(true);
+                } else {
+                    mytrip.setOwner_status(false);
+                }
                 JSONObject driverarray = firstmytriparry
                         .getJSONObject("driver");
                 mytrip.setDriver_phone_no(driverarray.getString("phone_number"));
@@ -62,9 +69,11 @@ public class GetMytripListParsing {
                     mytrip.setLast_sync_time(dateFormat.format(date).toString());
                 }else {
                     DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
-                    dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
+                    dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
+                    //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
                     Date date = new Date(Long.parseLong(firstmytriparry.getString("last_sync_date_time").toString()));
                     mytrip.setLast_sync_time(dateFormat1.format(date).toString());
+                   // System.out.println("++++++++++++++++++++++++++++++++++date+++++++++++++++++++++++++++"+mytrip.getLast_sync_time());
                 }
                 mytriplist.add(mytrip);
             }

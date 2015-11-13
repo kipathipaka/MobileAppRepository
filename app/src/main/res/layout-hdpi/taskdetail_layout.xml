@@ -278,13 +278,13 @@
 
                 
 
-                <TableRow  android:id="@+id/customer_tableRow"
+                <TableRow  android:id="@+id/customer_company_tableRow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp" >   
 
                      <TextView
-                         android:id="@+id/customer"
+                         android:id="@+id/customer_company"
                          android:layout_width="wrap_content"
                          android:layout_height="30dp"
                          android:layout_column="1"
@@ -296,7 +296,7 @@
                    
 
                       <TextView
-                         android:id="@+id/customerval"
+                         android:id="@+id/customer_company_val"
                          android:layout_width="100dp"
                          android:layout_height="wrap_content"
                          android:layout_column="2"
@@ -337,13 +337,13 @@
 
                  </TableRow>
                 
-           <TableRow  android:id="@+id/coustomerno_tableRow"
+           <TableRow  android:id="@+id/coustomerphoneno_tableRow"
                      android:layout_width="0dp"
                      android:layout_height="wrap_content"
                      android:layout_marginTop="6dp" >
 
                      <TextView
-                         android:id="@+id/customerno"
+                         android:id="@+id/customerphoneno"
                          android:layout_width="wrap_content"
                          android:layout_height="30dp"
                          android:layout_column="1"
@@ -355,7 +355,7 @@
 
 
                      <TextView
-                         android:id="@+id/customenoval"
+                         android:id="@+id/customephonenoval"
                          android:layout_width="100dp"
                          android:layout_height="wrap_content"
                          android:layout_column="2"

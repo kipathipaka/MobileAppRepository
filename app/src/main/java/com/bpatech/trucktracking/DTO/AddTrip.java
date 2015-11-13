@@ -5,6 +5,8 @@ public class AddTrip {
 	String destination;
 	String truckno;
 	String driver_phone_no;
+	String owner_phone_no;
+	boolean owner_status;
 	String customer_company;
 	String customer_name;
 	String customer_phoneno;
@@ -109,6 +111,12 @@ public class AddTrip {
 	public void setStartstatus(boolean startstatus) {
 		this.startstatus = startstatus;
 	}
+	public boolean isOwner_status() {
+		return owner_status;
+	}
+	public void setOwner_status(boolean owner_status) {
+		this.owner_status = owner_status;
+	}
 	public String getLatitude() {
 		return latitude;
 	}
@@ -148,5 +156,12 @@ public class AddTrip {
 	}
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public String getOwner_phone_no() {
+		return owner_phone_no;
+	}
+	public void setOwner_phone_no(String owner_phone_no) {
+		this.owner_phone_no = owner_phone_no;
 	}
 }

@@ -63,7 +63,7 @@ public class Request {
     private Context myContext;
     BufferedReader reader;
     String serverUrl;
-    HttpResponse response;
+    HttpResponse response,locationResponse;
     JSONObject responseJson;
     Boolean internetStatus;
 
@@ -279,6 +279,47 @@ public class Request {
 
         }
         return responseValidation(response);
+    }
+    public HttpResponse requestLocationServicePostType(String Url,List<NameValuePair> userlist, String BASE_URL) {
+        try {
+            internetStatus = connectionCheck();
+            if (internetStatus==true) {
+                serverUrl = BASE_URL+Url;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost(serverUrl);
+                request.setEntity(new UrlEncodedFormEntity(userlist));
+                locationResponse = client.execute(request);
+            } else {
+                // networkIssue();
+                noInternetConnection();
+            }
+
+        } catch (SSLException e) {
+            try {
+                locationResponse = withOutCertificate(Url,userlist);
+            } catch (Exception e1) {
+
+                e.printStackTrace();
+                e1.printStackTrace();
+
+                ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
+                StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
+                locationResponse = new BasicHttpResponse(sl);
+                return responseValidation(locationResponse);
+            }
+            return responseValidation(locationResponse);
+        }
+        catch (Exception e) {
+
+            e.printStackTrace();
+
+            ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
+            StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
+            response = new BasicHttpResponse(sl);
+            return responseValidation(locationResponse);
+
+        }
+        return responseValidation(locationResponse);
     }
 
     public HttpResponse responseValidation(HttpResponse response) {

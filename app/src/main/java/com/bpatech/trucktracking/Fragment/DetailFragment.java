@@ -130,7 +130,13 @@ public class DetailFragment extends Fragment {
 						response = request.requestPutType(ServiceConstants.UPDATE_USER,updateuserlist,ServiceConstants.BASE_URL);
 						responseStrng = ""+response.getStatusLine().getStatusCode();
 						if (response.getStatusLine().getStatusCode() == 200) {
-							new GetMytripDetail().execute("", "", "");
+							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers,currenttripfrag);
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
 
 						}
 
@@ -139,7 +145,13 @@ public class DetailFragment extends Fragment {
 								ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
 						responseStrng = ""+response.getStatusLine().getStatusCode();
 						if (response.getStatusLine().getStatusCode() == 200) {
-							new GetMytripDetail().execute("", "", "");
+							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers,currenttripfrag);
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
 
 
 						}
@@ -149,7 +161,13 @@ public class DetailFragment extends Fragment {
 							ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
 					responseStrng = ""+response.getStatusLine().getStatusCode();
 					if (response.getStatusLine().getStatusCode() == 200) {
-						new GetMytripDetail().execute("", "", "");
+						CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+						FragmentManager fragmentmanager = getFragmentManager();
+						FragmentTransaction fragmenttransaction = fragmentmanager
+								.beginTransaction();
+						fragmenttransaction.replace(R.id.viewers,currenttripfrag);
+						fragmenttransaction.addToBackStack(null);
+						fragmenttransaction.commit();
 
 					}
 				}
@@ -166,44 +184,5 @@ public class DetailFragment extends Fragment {
 
 	}
 
-	private class GetMytripDetail extends
-			AsyncTask<String, Void, String> {
-		@Override
-		protected void onPostExecute(String result)
-		{
 
-			progressBar.setVisibility(View.INVISIBLE);
-		}
-
-		protected String doInBackground(String... params) {
-
-			try {
-				String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
-				HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
-				responseStrng = "" + response.getStatusLine().getStatusCode();
-				if (response.getStatusLine().getStatusCode() == 200) {
-					JSONArray responsejSONArray = request.responseArrayParsing(response);
-					GetMytripListParsing mytripListParsing = new GetMytripListParsing();
-					currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
-					session.setAddtripdetails(currenttripdetails);
-					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-					FragmentManager fragmentmanager = getFragmentManager();
-					FragmentTransaction fragmenttransaction = fragmentmanager
-							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-
-					fragmenttransaction.addToBackStack(null);
-					fragmenttransaction.commit();
-
-				}
-			} catch (Exception e) {
-
-				e.printStackTrace();
-
-			}
-
-			return responseStrng;
-
-		}
-	}
 }

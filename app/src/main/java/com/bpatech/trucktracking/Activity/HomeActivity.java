@@ -1,22 +1,19 @@
 package com.bpatech.trucktracking.Activity;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
@@ -24,29 +21,29 @@ import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.UpdateLocationService;
-
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.SessionManager;
 
 public class HomeActivity extends FragmentActivity {
 
-MySQLiteHelper db;
-private Button nbtn;
-private EditText phoneno;
-SessionManager session;
-public static final String MyPREFERENCES = "MyPrefs" ;
-	/*private Callbacks mCallbacks;
-
-	public interface Callbacks {
-		public void onBackPressedCallback();
-	}*/
+	MySQLiteHelper db;
+	private Button nbtn;
+	private EditText phoneno;
+	SessionManager session;
+	public static final String MyPREFERENCES = "MyPrefs" ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home_fragment);
+		db = new MySQLiteHelper(this.getApplicationContext());
+		//boolean value=db.checkPhonenumber(phoneno);
+		int phonecount = db.getUserCount();
+		System.out.println("********************phonecount************************** sync call end ..."+phonecount);
+		if (phonecount > 0) {
+			setContentView(R.layout.currenttrip_fragment);
+		}else {
+			setContentView(R.layout.home_fragment);
+		}
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-		nbtn=(Button)findViewById(R.id.nextbtn);
-		phoneno=(EditText)findViewById(R.id.phoneno);
 		Intent intent = new Intent(this.getApplicationContext(), UpdateLocationService.class);
 		startService(intent);
 	}
@@ -73,61 +70,58 @@ public static final String MyPREFERENCES = "MyPrefs" ;
 
 
 
-	 public void addtripclick(View v) {
+	public void addtripclick(View v) {
 
-			  AddnewTripFragment addtripfragment = new AddnewTripFragment();
-				pageRedirection(addtripfragment);
+		AddnewTripFragment addtripfragment = new AddnewTripFragment();
+		pageRedirection(addtripfragment);
 
-		    }
+	}
 
-		 public void addphoneclick(View v) {
+	public void addphoneclick(View v) {
 
-			 AddphoneFragment addphonefragment = new AddphoneFragment();
-			 //addphonefragment.sett
-			 pageRedirection(addphonefragment);
-		    }
-      public void addinviteclick(View v){
-		  InviteFragment invitefragment=new InviteFragment();
-		  pageRedirection(invitefragment);
-	  }
+		AddphoneFragment addphonefragment = new AddphoneFragment();
+		//addphonefragment.sett
+		pageRedirection(addphonefragment);
+	}
+	public void addinviteclick(View v){
+		InviteFragment invitefragment=new InviteFragment();
+		pageRedirection(invitefragment);
+	}
 
 
-		 public void pageRedirection(Fragment fragment) {
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, fragment,"BackCurrentTrip");
+	public void pageRedirection(Fragment fragment) {
+		FragmentManager fragmentmanager = getFragmentManager();
+		FragmentTransaction fragmenttransaction = fragmentmanager
+				.beginTransaction();
+		fragmenttransaction.replace(R.id.viewers, fragment,"BackCurrentTrip");
+		fragmenttransaction.addToBackStack(null);
+		fragmenttransaction.commit();
+	}
 
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		FragmentManager mgr = getFragmentManager();
+		if (mgr.getBackStackEntryCount() == 0) {
+			// No backstack to pop, so calling super
+			super.onBackPressed();
+		} else {
+			Fragment testfragment=mgr.findFragmentById(R.id.viewers);
+			if(testfragment.getTag()!=null) {
+				if (testfragment.getTag().equalsIgnoreCase("BackCurrentTrip")) {
+					mgr.popBackStack();
+				}
+			}else{
+				super.onBackPressed();
 			}
+		}
 
-
-         @Override
-		 public void onBackPressed() {
-		    // TODO Auto-generated method stub
-			 FragmentManager mgr = getFragmentManager();
-			 if (mgr.getBackStackEntryCount() == 0) {
-				 // No backstack to pop, so calling super
-				 super.onBackPressed();
-			 } else {
-				 Fragment testfragment=mgr.findFragmentById(R.id.viewers);
-				 if(testfragment.getTag()!=null) {
-					 System.out.println("+++++testfragment.getTag()++++++"+testfragment.getTag());
-					 if (testfragment.getTag().equalsIgnoreCase("BackCurrentTrip")) {
-						 mgr.popBackStack();
-					 }
-				 }else{
-					 super.onBackPressed();
-				 }
-			 }
-
-		 }
+	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
-
 
 
 

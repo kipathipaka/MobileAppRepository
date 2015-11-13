@@ -38,5 +38,6 @@ public class ServiceConstants {
     public static  String MESSAGE_SENDING_START="Welcome,\n To know your Truck current location Click below link";
     public static String MESSAGE_URL="\nhttp://52.88.194.128:2020/vehicletracking-spring/Home.html\n";
     public static String MESSAGE_SENDING_END="\nThank You";
+    public static String TEXT_MESSAGE="hi, Welcome to vehicleTracking";
 
 }

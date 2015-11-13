@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/invite_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white">
@@ -19,7 +20,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         style="@style/marginlayouts"
-
+        android:background="@color/white"
         android:orientation="horizontal"
         android:paddingLeft="0.5dp"
         android:paddingRight="0.5dp"
