@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/networkFailPopup"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/popupPage">
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -10,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
-        android:textColor="#000000"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:text="Whatsup Message"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -69,7 +70,7 @@
             android:layout_marginRight="5dp"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:background="@color/darkskyblue"
+            android:background="@color/popupbutton"
             android:text="OK" />
 
     </TableRow>

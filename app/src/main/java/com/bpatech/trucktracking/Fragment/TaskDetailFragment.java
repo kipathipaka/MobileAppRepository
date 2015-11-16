@@ -461,7 +461,7 @@ public void onResume() {
 
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                promptsView.setBackgroundResource(R.color.white);
+                //promptsView.setBackgroundResource(R.color.);
                 dialog.setContentView(promptsView);
                 dialog.show();
               whatsuptext=(EditText) promptsView.findViewById(R.id.whatuptext);

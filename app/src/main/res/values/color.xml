@@ -11,6 +11,8 @@
     <color name="red">#e75b1d</color>
      <color name="darkred">#B40431</color>
     <color name="white">#FFFFFF</color>
+    <color name="popupPage">#00b6d9</color>
+    <color name="popupbutton">#002b42</color>
     <color name="darkgreen">#298A08</color>
     <color name="green">#04B404</color>
     <color name="fontColor">#012942</color>
