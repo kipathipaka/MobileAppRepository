@@ -94,7 +94,7 @@ import java.util.List;
         txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
         txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
         Startbtn = (Button)view.findViewById(R.id.startbtn);
-        Startbtn.setVisibility(View.INVISIBLE);
+        Startbtn.setVisibility(View.GONE);
         inbox = (ImageButton) view.findViewById(R.id.inbox);
         inbox.setOnClickListener(new SendSmsButtonListener());
         whatsup=(ImageButton)view.findViewById(R.id.whatsup);
@@ -112,8 +112,8 @@ import java.util.List;
         lasttimerow.setVisibility(view.GONE);
         whatsup.setOnClickListener(new WhatsupButtonListener());
         mapView = (MapView)view.findViewById(R.id.map_view);
-       mapView.onCreate(savedInstanceState);
-        googleMap=mapView.getMap();
+      mapView.onCreate(savedInstanceState);
+       googleMap=mapView.getMap();
        new GetTrackDetail().execute("", "", "");
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
@@ -341,50 +341,11 @@ public void onResume() {
         }
     }
 
-    private class updateMytripDetail extends
-            AsyncTask<String, Void, String> {
-        @Override
-        protected void onPostExecute(String result) {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        protected String doInBackground(String... params) {
-
-            try {
-                //progressBar.setVisibility(View.VISIBLE);
-                String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
-                HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
-
-                responseStrng = "" + response.getStatusLine().getStatusCode();
-                if (response.getStatusLine().getStatusCode() == 200) {
-                    JSONArray responsejSONArray = request.responseArrayParsing(response);
-                    GetMytripListParsing mytripListParsing = new GetMytripListParsing();
-                    currenttripdetails.addAll(mytripListParsing.getmytriplist(responsejSONArray));
-                    session.setAddtripdetails(currenttripdetails);
-                    CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-                    FragmentManager fragmentmanager = getFragmentManager();
-                    FragmentTransaction fragmenttransaction = fragmentmanager
-                            .beginTransaction();
-                    fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-                   fragmenttransaction.addToBackStack(null);
-                    fragmenttransaction.commit();
-
-                }
-            } catch (Exception e) {
-
-                e.printStackTrace();
-
-            }
-
-            return responseStrng;
-
-        }
-    }
     private class GetTrackDetail extends
             AsyncTask<String, Void, String> {
         @Override
         protected void onPostExecute(String result) {
-            Load_map();
+
             progressBar.setVisibility(View.INVISIBLE);
         }
 
@@ -439,14 +400,14 @@ public void onResume() {
                                                         lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
                                                     }
                                                 }else{
-                                                    Startbtn.setVisibility(View.INVISIBLE);
+                                                    Startbtn.setVisibility(View.GONE);
                                                     lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
                                                 }
                                             }else{
                                                if(currenttripdetailslist.get(i).isStartstatus()) {
                                                     if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         //Startbtn.setText("End Tracking");
-                                                        Startbtn.setVisibility(View.INVISIBLE);
+                                                        Startbtn.setVisibility(View.GONE);
                                                        // Startbtn.setBackgroundColor(Color.RED);
                                                         lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
                                                         lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
@@ -455,12 +416,12 @@ public void onResume() {
                                                         lasttimerow.setVisibility(View.VISIBLE);
                                                         //startclick = true;
                                                     }else{
-                                                        Startbtn.setVisibility(View.INVISIBLE);
+                                                        Startbtn.setVisibility(View.GONE);
                                                         lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
                                                         lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
                                                     }
                                                 }else{
-                                                    Startbtn.setVisibility(View.INVISIBLE);
+                                                    Startbtn.setVisibility(View.GONE);
                                                     lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
                                                 }
                                             }
@@ -470,7 +431,7 @@ public void onResume() {
 
 
                                     }
-
+                                    Load_map();
                                 }
 
 
@@ -575,8 +536,8 @@ public void sms_dailog()
 }
 
     public void Load_map(){
-       // mapView.onCreate(b);
-       // googleMap=mapView.getMap();
+        //mapView.onCreate(b);
+      // googleMap=mapView.getMap();
         if(googleMap!=null) {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -604,6 +565,8 @@ public void sms_dailog()
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else{
+
         }
 
 

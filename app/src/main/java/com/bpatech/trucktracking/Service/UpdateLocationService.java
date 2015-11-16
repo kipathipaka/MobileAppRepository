@@ -122,7 +122,14 @@ public class UpdateLocationService extends Service
             // getting network status
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
+           /* Criteria crta = new Criteria();
+            crta.setAccuracy(Criteria.ACCURACY_FINE);
+            crta.setAltitudeRequired(false);
+            crta.setBearingRequired(false);
+            crta.setCostAllowed(true);
+            crta.setPowerRequirement(Criteria.POWER_LOW);
+            String provider = locationManager.getBestProvider(crta, true);
+            System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*/
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
                 Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
@@ -130,14 +137,15 @@ public class UpdateLocationService extends Service
             else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
-                    System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++++++++++++++++++++++++"+isNetworkEnabled);
+                  // System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++++++++++++++++++++++++"+isNetworkEnabled);
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
                                 @Override
                                 public void onLocationChanged(Location location) {
-                                    updateGPSCoordinates();
+                                  // System.out.println("++++++++++++++++++++++isNetworkEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
+                                    updateGPSCoordinates(location);
                                    // new UpdateLocationApi().execute("", "", "");
                                     //Toast.makeText(getApplicationContext(), location.getLatitude()+""+location.getLongitude(), Toast.LENGTH_SHORT).show();
                                 }
@@ -167,16 +175,17 @@ public class UpdateLocationService extends Service
                     }
 
                 }
-                /*if (isGPSEnabled) {
-                    System.out.println("++++++++++++++++++++++++++++++++++isGPSEnabled+++++++++++++++++++++++++++"+isGPSEnabled);
+                if (isGPSEnabled) {
+                    //System.out.println("++++++++++++++++++++++++++++++++++isGPSEnabled+++++++++++++++++++++++++++"+isGPSEnabled);
                     if (location == null) {
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                                MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
                                     @Override
                                     public void onLocationChanged(Location location) {
-
+                                        updateGPSCoordinates(location);
+                                        //System.out.println("++++++++++++++++++++++isGPSEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
                                     }
 
                                     @Override
@@ -204,7 +213,7 @@ public class UpdateLocationService extends Service
                     }
                 }
 
-*/
+
 
             }
         } catch (Exception e) {
@@ -214,10 +223,10 @@ public class UpdateLocationService extends Service
         return location;
     }
 
-    public void updateGPSCoordinates() {
-        if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+    public void updateGPSCoordinates(Location updatelocation) {
+        if (updatelocation != null) {
+            latitude = updatelocation.getLatitude();
+            longitude = updatelocation.getLongitude();
             Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             String result = null;
             try {
@@ -234,6 +243,7 @@ public class UpdateLocationService extends Service
 
                     locationval = address.getSubLocality().toString()+","+address.getLocality().toString();
                  // Toast.makeText(getApplicationContext(), locationval, Toast.LENGTH_SHORT).show();
+                   // update_location();
                     new UpdateLocationApi().execute("", "", "");
                 }
             } catch (IOException e) {
@@ -243,6 +253,8 @@ public class UpdateLocationService extends Service
         }
     }
 
+
+
     private class UpdateLocationApi extends
             AsyncTask<String, Void, String> {
         @Override
@@ -251,11 +263,14 @@ public class UpdateLocationService extends Service
         }
 
         protected String doInBackground(String... params) {
+
             try {
+              //  System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" +
+                        //session.getPhoneno()+latitude.toString()+longitude.toString());
                 if(session.getPhoneno()==null || latitude.toString()==null ||longitude.toString()==null) {
                     responsevalue = null;
                 }else {
-               //System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" + session.getPhoneno());
+             // System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" + session.getPhoneno());
                     List<NameValuePair> updatelocationlist = new ArrayList<NameValuePair>();
                     updatelocationlist.add(new BasicNameValuePair("driver_phone_number",session.getPhoneno()));
                     updatelocationlist.add(new BasicNameValuePair("location", locationval));
@@ -264,7 +279,7 @@ public class UpdateLocationService extends Service
                     response = request.requestLocationServicePostType(
                             ServiceConstants.UPDATE_LOCATION, updatelocationlist, ServiceConstants.BACKGROUND_BASE_URL);
                     responsevalue = "" + response.getStatusLine().getStatusCode();
-                   // System.out.println("++++++++++++++++++++++++++++++++++response+eee++++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
+                //  System.out.println("++++++++++++++++++++++++++++++++++response+eee++++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
                 }
             } catch (Exception e) {
 
@@ -276,7 +291,6 @@ public class UpdateLocationService extends Service
 
         }
     }
-
 
 
 

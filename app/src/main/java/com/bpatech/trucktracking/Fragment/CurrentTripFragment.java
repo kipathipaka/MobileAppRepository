@@ -75,12 +75,6 @@ public class CurrentTripFragment  extends Fragment {
 		triplist_ll.setVisibility(view.GONE);
 		listView = (ListView)view.findViewById(R.id.listview);
 		View footerLayout =view.findViewById(R.id.footer);
-		String lenght="1447326936000";
-		DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
-		dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
-		Date date = new Date(Long.parseLong(lenght.toString()));
-		System.out.println("**********************************dateFormat1.format(date).toString()*" +
-				"*********** sync call end ..."+dateFormat1.format(date).toString());
 		footer_addtrip_ll=(LinearLayout)footerLayout.findViewById(R.id.addtrip_ll);
 
 		listView.setOnItemClickListener(new OnItemClickListener() {

@@ -2,6 +2,7 @@ package com.bpatech.trucktracking.Activity;
 
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import com.bpatech.trucktracking.Fragment.AddphoneFragment;
 import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
+import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
 import com.bpatech.trucktracking.Service.UpdateLocationService;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.SessionManager;
@@ -46,6 +48,13 @@ public class HomeActivity extends FragmentActivity {
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 		Intent intent = new Intent(this.getApplicationContext(), UpdateLocationService.class);
 		startService(intent);
+		/*AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (20 * 1000), intent);
+		//startService(intent);*/
+		/*Intent broadintent = new Intent(this, UpdateLocationReceiver.class);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (20 * 1000), broadintent);*/
+		//sendBroadcast(broadintent);
 	}
 
 	@Override
@@ -122,7 +131,6 @@ public class HomeActivity extends FragmentActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
-
 
 
 }

@@ -49,6 +49,7 @@ public class CustomAdapter extends ArrayAdapter {
 	//GoogleMap map;
 	ProgressBar progressBar;
 	 private Context mContext;
+	private GoogleMap map;
 	    private ArrayList<AddTrip> mList;
 Bundle savedInstanceState;
 	private int[] colors = new int[] { 0x300000FF,0x30FF0000  };
@@ -83,8 +84,7 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 				progressBar.setMax(100);
 				progressBar.setVisibility(View.VISIBLE);
 	        }
-	        int listsize= mList.size();
-		//	System.out.println("size" + listsize);
+
 	mapView = (MapView) view.findViewById(R.id.maplist_view);
 	mapView.onCreate(savedInstanceState);
 	mapView.onResume();
@@ -96,8 +96,8 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 				new OnMapReadyCallback() {
 					@Override
 					public void onMapReady(GoogleMap googlemap) {
-						final GoogleMap map = googlemap;
-
+                   try{
+						 map = googlemap;
 						if (map != null) {
 							map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 							map.getUiSettings().setMyLocationButtonEnabled(false);
@@ -106,14 +106,14 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 							MapsInitializer.initialize(context);
 							String addressname = mList.get(position).getLocation().toString();
 							Geocoder geoCoder = new Geocoder(getContext());
-							try{
-							List<Address> listAddress;
+							try {
+								List<Address> listAddress;
 
 								listAddress = geoCoder.getFromLocationName(addressname, 1);
 								if (listAddress == null || listAddress.size() == 0) {
 									Toast.makeText(getContext(), "No Location found", Toast.LENGTH_SHORT).show();
 									//return null;
-								}else{
+								} else {
 									Address location = listAddress.get(0);
 									LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
 									Marker marker = map.addMarker(new MarkerOptions().position(
@@ -126,23 +126,11 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 							}
 						}
 
-					/*map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-					map.getUiSettings().setMyLocationButtonEnabled(false);
-					map.getUiSettings().setMapToolbarEnabled(false);
-					map.setMyLocationEnabled(true);
-					MapsInitializer.initialize(context);
+					}catch (Exception e)
 
-					//map.setMyLocationEnabled(true);
-					double latitude=13.0827;
-					double longitude= 80.2707;
-					LatLng LOCATION = new LatLng(latitude,longitude);
-
-					Marker marker = map.addMarker(new MarkerOptions().position(
-							LOCATION).title(""));
-					map.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION, 10));*/
-							// Zoom in, animating the camera.
-							//map.animateCamera(CameraUpdateFactory.zoomTo(15),2000,null);
-
+					{
+						e.printStackTrace();
+					}
 
 					}
 				}
@@ -187,9 +175,6 @@ if(mList.get(position).getLocation().toString().length() >20) {
 
 			UpdateText.setText("Update :");
 
-	/*	DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-	dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-		Date date = new Date(Long.parseLong("1445817600000"));*/
 		UpdateVal.setText(mList.get(position).getLast_sync_time().toString());
 	/*if(mList.get(position).getLast_sync_time().toString().equalsIgnoreCase("null")) {
 		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
