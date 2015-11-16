@@ -465,8 +465,12 @@ public void onResume() {
                 dialog.setContentView(promptsView);
                 dialog.show();
               whatsuptext=(EditText) promptsView.findViewById(R.id.whatuptext);
-                final String text=ServiceConstants.TEXT_MESSAGE;
-                whatsuptext.setText(text);
+                final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+                final String sms2=ServiceConstants.MESSAGE_URL+" "+"?"+" "+"trip ="+trip_id;
+                final String sms3= ServiceConstants.MESSAGE_SENDING_END;
+                final String sms = sms1 + sms2 + sms3;
+
+                whatsuptext.setText(sms);
 
 
                 Button btnOK = (Button) promptsView.findViewById(R.id.btnOK);
@@ -501,7 +505,7 @@ public void sms_dailog()
 
             final Dialog dialog = new Dialog(getActivity());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            promptsView.setBackgroundResource(R.color.white);
+            //promptsView.setBackgroundResource(R.color.white);
              final EditText phnenum=(EditText) promptsView.findViewById(R.id.phonenum);
             phnenum.setText(num);
               message=(EditText)promptsView.findViewById(R.id.edittexview1);

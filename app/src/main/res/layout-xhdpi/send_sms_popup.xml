@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    android:id="@+id/networkFailPopup1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<ScrollView
-android:id="@+id/scrooltrip"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/popupPage">
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+
+        android:text="Text Message"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
 
-style="@style/marginlayouts">
 
-
-</ScrollView>
 
 <TableLayout
 android:id="@+id/registerTable"
-android:layout_width="fill_parent"
+android:layout_width="match_parent"
 android:layout_height="wrap_content"
-
-android:orientation="horizontal"
 android:paddingLeft="0.5dp"
 android:paddingRight="0.5dp"
-
-android:layout_alignLeft="@+id/scrooltrip"
-android:layout_alignStart="@+id/scrooltrip"
-android:layout_alignRight="@+id/scrooltrip"
-android:layout_alignEnd="@+id/scrooltrip">
+    style="@style/marginlayouts"
+    android:layout_below="@+id/textView2">
 
 <TableRow
     android:id="@+id/tableRow1"
@@ -74,7 +75,7 @@ android:layout_alignEnd="@+id/scrooltrip">
         android:cursorVisible="true"
         android:textCursorDrawable="@drawable/color_cursor"
         android:inputType="phone"
-        android:paddingLeft="5dp" >
+        android:paddingLeft="10dp" >
     </EditText>
 </TableRow>
 <TableRow
@@ -128,19 +129,24 @@ android:layout_alignEnd="@+id/scrooltrip">
     android:id="@+id/buttonrow5"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:layout_marginBottom="10dp"
     android:paddingBottom="1.5dp"
     android:paddingTop="1.5dp"
     android:background="@color/darkskyblue"
-    android:layout_marginTop="@dimen/twenty_pt">
+    android:layout_marginTop="@dimen/twenty_pt"
+    android:layout_below="@id/tableRow4">
     <Button
         android:id="@+id/sndbtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         android:text="@string/send_btn"
-        style="@style/textbutton"/>
+        android:background="@color/darkskyblue"
+       />
 </TableRow>
 </TableLayout>
 
-    </RelativeLayout>
+</RelativeLayout>
