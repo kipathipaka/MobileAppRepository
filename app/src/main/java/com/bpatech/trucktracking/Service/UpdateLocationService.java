@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,6 +16,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
@@ -24,6 +24,7 @@ import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class UpdateLocationService extends Service
 
     // flag for network status
     boolean isNetworkEnabled = false;
-
+public Context context;
     boolean canGetLocation = false;
     SessionManager session;
     Location location;
@@ -111,6 +112,23 @@ public class UpdateLocationService extends Service
     };
 */
 
+    /*LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+
+    View promptsView = inflater.inflate(R.layout.location_enable_popup,null);*/
+
+    /*Button textbutton = (Button) .findViewById(R.id.btnYes);
+    textbutton.setOnClickListener(new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+
+            dialog.dismiss();
+
+        }
+
+    });*/
+
     public Location getLocation() {
         try {
 
@@ -131,9 +149,51 @@ public class UpdateLocationService extends Service
             String provider = locationManager.getBestProvider(crta, true);
             System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*/
             if (!isGPSEnabled && !isNetworkEnabled) {
-                // no network provider is enabled
-                Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
-            }
+               /* LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                View promptsView = inflater.inflate(R.layout.location_enable_popup,null);*/
+
+        /*AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getApplicationContext()).create();
+             *//*   alertDialog .setView(promptsView);*//*
+                alertDialogBuilder.setTitle("use Location");
+                alertDialogBuilder.setMessage("the Device want to change the setting Enable the Location");
+
+
+        alertDialogBuilder.show();
+                alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+*//** Here it's leading to GPS setting options*//*
+                        Intent callGPSSettingIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(callGPSSettingIntent);
+                    }
+                });*/
+               /* Button textbutton=(Button)promptsView.findViewById(R.id.btnYes);
+
+                textbutton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent callGPSSettingIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(callGPSSettingIntent);
+                    }
+                });
+                Button textbutton1=(Button)promptsView.findViewById(R.id.btnNo);
+                textbutton1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        alertDialog.dismiss();
+
+                    }
+                });
+*/
+
+                        Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
+                    }
+
+
             else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
@@ -291,9 +351,5 @@ public class UpdateLocationService extends Service
 
         }
     }
-
-
-
-
 
 }
