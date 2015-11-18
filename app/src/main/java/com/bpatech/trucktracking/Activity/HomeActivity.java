@@ -1,9 +1,12 @@
 package com.bpatech.trucktracking.Activity;
 
 
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,16 +22,16 @@ import com.bpatech.trucktracking.Fragment.AddphoneFragment;
 import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
-import com.bpatech.trucktracking.Service.UpdateLocationService;
-import com.bpatech.trucktracking.Util.ExceptionHandler;
+import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
 import com.bpatech.trucktracking.Util.SessionManager;
-
+import com.google.android.gms.common.api.GoogleApiClient;
 public class HomeActivity extends FragmentActivity {
 
 	MySQLiteHelper db;
 	private Button nbtn;
 	private EditText phoneno;
 	SessionManager session;
+	GoogleApiClient googleApiClient;
 	public static final String MyPREFERENCES = "MyPrefs" ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,29 +39,17 @@ public class HomeActivity extends FragmentActivity {
 		db = new MySQLiteHelper(this.getApplicationContext());
 		//boolean value=db.checkPhonenumber(phoneno);
 		int phonecount = db.getUserCount();
-		System.out.println("********************phonecount************************** sync call end ..."+phonecount);
+		System.out.println("********************phonecount************************** sync call end ..." + phonecount);
 		if (phonecount > 0) {
 			setContentView(R.layout.currenttrip_fragment);
 		}else {
 			setContentView(R.layout.home_fragment);
 		}
-		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-		Intent intent = new Intent(this.getApplicationContext(), UpdateLocationService.class);
-		startService(intent);
-
-		/*Intent intent1=new Intent(this.getApplicationContext(), UpdateLocationReceiver.class);
-		startService(intent1);*/
-
-		/*AlertDialog alertDialog = new AlertDialog.Builder(
-				getApplicationContext()).create();
-		alertDialog.show();*/
-		/*AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (20 * 1000), intent);
-		//startService(intent);*/
-		/*Intent broadintent = new Intent(this, UpdateLocationReceiver.class);
-		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (20 * 1000), broadintent);*/
-		//sendBroadcast(broadintent);
+		AlarmManager alarmManager=(AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+		Intent intentR = new Intent(getApplicationContext(), UpdateLocationReceiver.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intentR, 0);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20*60* 1000,
+				pendingIntent);
 	}
 
 	@Override
