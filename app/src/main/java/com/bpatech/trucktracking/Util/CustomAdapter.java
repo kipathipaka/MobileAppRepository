@@ -105,26 +105,29 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 							map.setMyLocationEnabled(true);
 							MapsInitializer.initialize(context);
 							String addressname = mList.get(position).getLocation().toString();
-							Geocoder geoCoder = new Geocoder(getContext());
-							try {
-								List<Address> listAddress;
+								Geocoder geoCoder = new Geocoder(getContext());
+								try {
+									List<Address> listAddress;
+									listAddress = geoCoder.getFromLocationName(addressname, 1);
+									if (listAddress == null || listAddress.size() == 0) {
+										Toast.makeText(getContext(), "No Location found", Toast.LENGTH_SHORT).show();
+										//return null;
+									} else {
+										Address location = listAddress.get(0);
+										if (location.hasLatitude() || location.hasLongitude()) {
+											LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+											Marker marker = map.addMarker(new MarkerOptions().position(
+													locationlatlng).title(""));
+											map.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+										}
 
-								listAddress = geoCoder.getFromLocationName(addressname, 1);
-								if (listAddress == null || listAddress.size() == 0) {
-									Toast.makeText(getContext(), "No Location found", Toast.LENGTH_SHORT).show();
-									//return null;
-								} else {
-									Address location = listAddress.get(0);
-									LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
-									Marker marker = map.addMarker(new MarkerOptions().position(
-											locationlatlng).title(""));
-									map.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+									}
+
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
-
-							} catch (Exception e) {
-								e.printStackTrace();
 							}
-						}
+
 
 					}catch (Exception e)
 
@@ -166,12 +169,17 @@ public CustomAdapter(Context context, ArrayList<AddTrip> list, final Bundle b) {
 			DestinationText.setText("To :");
 			//rideText.setText("#");
 			NowText.setText("Now :");
-if(mList.get(position).getLocation().toString().length() >20) {
-	String locationval=mList.get(position).getLocation().toString().substring(0,19);
-	Nowval.setText(locationval);
-}else{
-	Nowval.setText(mList.get(position).getLocation().toString());
-}
+	if(mList.get(position).getLocation().toString().equalsIgnoreCase("null") ) {
+		Nowval.setText("");
+	}else
+	{
+		if (mList.get(position).getLocation().toString().length() > 20) {
+			String locationval = mList.get(position).getLocation().toString().substring(0, 19);
+			Nowval.setText(locationval);
+		} else {
+			Nowval.setText(mList.get(position).getLocation().toString());
+		}
+	}
 
 			UpdateText.setText("Update :");
 
