@@ -1,44 +1,34 @@
 package com.bpatech.trucktracking.Service;
 
 
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
+
 import com.bpatech.trucktracking.DTO.User;
-import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Anita on 10/29/2015.
@@ -70,7 +60,7 @@ public class UpdateLocationService extends Service
     private Context context;
     HttpResponse response;
     // The minimum time beetwen updates in milliseconds 15 * 60 * 1000.
-    private static final long MIN_TIME_BW_UPDATES =60 * 1000;
+    private static final long MIN_TIME_BW_UPDATES =20 * 60 * 1000;
 
 
     @Override
@@ -124,7 +114,7 @@ public class UpdateLocationService extends Service
             String provider = locationManager.getBestProvider(crta, true);
             System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*/
             if (!isGPSEnabled && !isNetworkEnabled) {
-               // locationEnable_popup();
+                // locationEnable_popup();
                 // no network provider is enabled
                 Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
             } else {

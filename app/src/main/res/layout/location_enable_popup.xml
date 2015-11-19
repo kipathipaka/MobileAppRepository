@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/networkFailPopup"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/graystroke">
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:text="Use Location?"
+
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TableLayout
+        android:id="@+id/registerTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/textView1"
+        android:paddingLeft="0.5dp"
+        android:paddingRight="0.5dp"
+        style="@style/marginlayouts">
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            >
+
+            <TextView
+                android:id="@+id/companyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginBottom="@dimen/fifteen_pt"
+                android:text="The Device want to change ur settings."
+                android:paddingLeft="50dp"
+                style="@style/codefont">
+            </TextView>
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            >
+
+            <TextView
+                android:id="@+id/company1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginBottom="@dimen/fifteen_pt"
+                android:text="Enable the Location"
+                android:paddingLeft="50dp"
+                style="@style/codefont">
+            </TextView>
+        </TableRow>
+    </TableLayout>
+    <LinearLayout
+        android:id="@+id/addinvite_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.00"
+        android:onClick="addinviteclick"
+        android:orientation="horizontal"
+
+
+        android:weightSum="2"
+        android:layout_below="@+id/registerTable"
+        android:layout_centerHorizontal="true">
+        <Button
+            android:id="@+id/btnNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="@color/darkskyblue"
+            android:text="No" />
+        <Button
+            android:id="@+id/btnYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="@color/darkskyblue"
+            android:text="yes" />
+
+
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>

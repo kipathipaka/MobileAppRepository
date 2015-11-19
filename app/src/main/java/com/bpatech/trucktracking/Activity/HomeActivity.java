@@ -1,20 +1,15 @@
 package com.bpatech.trucktracking.Activity;
 
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +23,6 @@ import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
-import com.bpatech.trucktracking.Service.UpdateLocationService;
-import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.SessionManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 public class HomeActivity extends FragmentActivity {
@@ -55,7 +48,7 @@ public class HomeActivity extends FragmentActivity {
 		AlarmManager alarmManager=(AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		Intent intentR = new Intent(getApplicationContext(), UpdateLocationReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intentR, 0);
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),60 * 1000,
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20*60* 1000,
 				pendingIntent);
 	}
 
