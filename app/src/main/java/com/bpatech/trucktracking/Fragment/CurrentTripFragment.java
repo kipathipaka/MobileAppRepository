@@ -1,11 +1,18 @@
 package com.bpatech.trucktracking.Fragment;
 
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +24,28 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.Request;
+import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
 import com.bpatech.trucktracking.Util.CustomAdapter;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 
 import org.apache.http.HttpResponse;
@@ -39,7 +59,8 @@ import java.util.List;
 import java.util.TimeZone;
 
 
-public class CurrentTripFragment  extends Fragment {
+public class CurrentTripFragment  extends Fragment implements GoogleApiClient.ConnectionCallbacks,
+		GoogleApiClient.OnConnectionFailedListener {
 	private static Bundle b;
 	SessionManager session;
 	LinearLayout triplist_ll,footer_addtrip_ll;
@@ -51,6 +72,8 @@ public class CurrentTripFragment  extends Fragment {
 	ArrayList<AddTrip> currenttripdetails;
 	ListView listView;
 	View view;
+	private GoogleApiClient googleApiClient;
+	public static final int REQUEST_CHECK_SETTINGS =1000 ;
 	private static ProgressBar progressBar;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +81,15 @@ public class CurrentTripFragment  extends Fragment {
 		b= savedInstanceState;
 		 view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		AlarmManager alarmManager=(AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+		Intent intentR = new Intent( getActivity().getApplicationContext(), UpdateLocationReceiver.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity().getApplicationContext(), 0, intentR, 0);
+		//intentR.setAction(UpdateLocationReceiver.);//the same as up
+		//boolean isWorking = (PendingIntent.getBroadcast(getActivity(), 1001, intentR, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
+		//Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
+		//System.out.println("********************************isWorking************** sync call end ..."+isWorking);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+60 * 1000,20 * 60 * 1000,
+				pendingIntent);
 		session = new SessionManager(getActivity());
 		request= new Request(getActivity());
 		currenttripdetails=new ArrayList<AddTrip>();
@@ -76,7 +108,65 @@ public class CurrentTripFragment  extends Fragment {
 		listView = (ListView)view.findViewById(R.id.listview);
 		View footerLayout =view.findViewById(R.id.footer);
 		footer_addtrip_ll=(LinearLayout)footerLayout.findViewById(R.id.addtrip_ll);
+		if (googleApiClient == null) {
+			googleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
+					.addConnectionCallbacks(this)
+					.addOnConnectionFailedListener(this)
+					.addApi(LocationServices.API)
+					.build();
+			googleApiClient.connect();
 
+			LocationRequest locationRequest = LocationRequest.create();
+			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+			locationRequest.setInterval(30 * 1000);
+			locationRequest.setFastestInterval(5 * 1000);
+			LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+					.addLocationRequest(locationRequest);
+
+			// **************************
+			builder.setAlwaysShow(true); // this is the key ingredient
+			// **************************
+
+			PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi
+					.checkLocationSettings(googleApiClient, builder.build());
+			result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+
+
+				@Override
+				public void onResult(LocationSettingsResult result) {
+					final Status status = result.getStatus();
+					final LocationSettingsStates state = result
+							.getLocationSettingsStates();
+					switch (status.getStatusCode()) {
+						case LocationSettingsStatusCodes.SUCCESS:
+							// All location settings are satisfied. The client can
+							// initialize location
+							// requests here.
+							break;
+						case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+							// Location settings are not satisfied. But could be
+							// fixed by showing the user
+							// a dialog.
+							try {
+								// Show the dialog by calling
+								// startResolutionForResult(),
+								// and check the result in onActivityResult().
+								status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+							} catch (IntentSender.SendIntentException e) {
+								// Ignore the error.
+							}
+							break;
+						case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+							// Location settings are not satisfied. However, we have
+							// no way to fix the
+							// settings so we won't show the dialog.
+							break;
+					}
+				}
+
+			});
+
+		}
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -106,6 +196,22 @@ public class CurrentTripFragment  extends Fragment {
 
 
 	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+
+	}
+
+	@Override
+	public void onConnectionSuspended(int i) {
+
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+
+	}
+
 	private class Layoutclicklistener implements View.OnClickListener {
 
 		@Override
@@ -124,7 +230,7 @@ public class CurrentTripFragment  extends Fragment {
 		protected String doInBackground(String... params) {
 
 			try {
-				System.out.println("********************************************** sync call...");
+				//System.out.println("********************************************** sync call...");
 				progressBar.setVisibility(View.VISIBLE);
 				String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
 				HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
@@ -136,7 +242,7 @@ public class CurrentTripFragment  extends Fragment {
 					List<AddTrip> mytripdetailslist = new ArrayList<AddTrip>();
 					mytripdetailslist.addAll(mytripListParsing.getmytriplist(responsejSONArray));
 					session.setAddtripdetails(mytripdetailslist);
-					System.out.println("********************************************** sync call end ...");
+					//System.out.println("********************************************** sync call end ...");
 					getActivity().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -150,7 +256,7 @@ public class CurrentTripFragment  extends Fragment {
 								listView.setAdapter(adapter);
 
 								listView.setDividerHeight(5);
-								System.out.println("********************************************** after list set ...");
+								//System.out.println("********************************************** after list set ...");
 								// btnDone.setVisibility(View.VISIBLE);
 
 							} catch (Exception e) {
@@ -234,5 +340,25 @@ public class CurrentTripFragment  extends Fragment {
 		}
 
 	}
-
+	/*@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		//final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+		switch (requestCode) {
+			case REQUEST_CHECK_SETTINGS:
+				switch (resultCode) {
+					case Activity.RESULT_OK:
+						// All required changes were successfully made
+						if (googleApiClient.isConnected() ) {
+							//startLocationUpdates();
+						}
+						break;
+					case Activity.RESULT_CANCELED:
+						// The user was asked to change settings, but chose not to
+						break;
+					default:
+						break;
+				}
+				break;
+		}
+	}*/
 }

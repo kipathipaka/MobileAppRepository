@@ -1,6 +1,7 @@
 package com.bpatech.trucktracking.Service;
 
 
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +14,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 
 import com.bpatech.trucktracking.DTO.User;
+import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
@@ -29,6 +35,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Anita on 10/29/2015.
@@ -114,9 +122,11 @@ public class UpdateLocationService extends Service
             String provider = locationManager.getBestProvider(crta, true);
             System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*/
             if (!isGPSEnabled && !isNetworkEnabled) {
-                // locationEnable_popup();
-                // no network provider is enabled
-                Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
+                locationEnable_popup();
+               /* Intent intent = new Intent(this.getApplicationContext(),HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);*/
+                //Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
             } else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
@@ -279,9 +289,9 @@ public class UpdateLocationService extends Service
     }
 
 
-    /*public void locationEnable_popup() {
+    public void locationEnable_popup() {
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        View promptsView = inflater.inflate(R.layout.locationenable_layout, null);
+        View promptsView = inflater.inflate(R.layout.location_enable_popup, null);
 
         final AlertDialog alertDialog = new AlertDialog.Builder(this.getApplicationContext()).create();
 
@@ -323,5 +333,6 @@ public class UpdateLocationService extends Service
 
 
     }
-*/
+
+
 }

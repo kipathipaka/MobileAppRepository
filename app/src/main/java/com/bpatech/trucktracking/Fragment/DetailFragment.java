@@ -2,6 +2,7 @@ package com.bpatech.trucktracking.Fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bpatech.trucktracking.Activity.HomeActivity;
+import com.bpatech.trucktracking.Activity.RegistrationActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
@@ -130,6 +133,9 @@ public class DetailFragment extends Fragment {
 						response = request.requestPutType(ServiceConstants.UPDATE_USER,updateuserlist,ServiceConstants.BASE_URL);
 						responseStrng = ""+response.getStatusLine().getStatusCode();
 						if (response.getStatusLine().getStatusCode() == 200) {
+							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							startActivity(intent);*/
 							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 							FragmentManager fragmentmanager = getFragmentManager();
 							FragmentTransaction fragmenttransaction = fragmentmanager
@@ -145,6 +151,9 @@ public class DetailFragment extends Fragment {
 								ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
 						responseStrng = ""+response.getStatusLine().getStatusCode();
 						if (response.getStatusLine().getStatusCode() == 200) {
+							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							startActivity(intent);*/
 							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 							FragmentManager fragmentmanager = getFragmentManager();
 							FragmentTransaction fragmenttransaction = fragmentmanager
@@ -161,6 +170,9 @@ public class DetailFragment extends Fragment {
 							ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
 					responseStrng = ""+response.getStatusLine().getStatusCode();
 					if (response.getStatusLine().getStatusCode() == 200) {
+						/*Intent intent = new Intent(getActivity(), HomeActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(intent);*/
 						CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 						FragmentManager fragmentmanager = getFragmentManager();
 						FragmentTransaction fragmenttransaction = fragmentmanager

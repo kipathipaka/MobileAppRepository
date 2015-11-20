@@ -1,14 +1,10 @@
 package com.bpatech.trucktracking.Activity;
 
-
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -24,33 +20,105 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
 import com.bpatech.trucktracking.Util.SessionManager;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-public class HomeActivity extends FragmentActivity {
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+
+public class HomeActivity extends FragmentActivity  {
 
 	MySQLiteHelper db;
 	private Button nbtn;
 	private EditText phoneno;
 	SessionManager session;
-	GoogleApiClient googleApiClient;
 	public static final String MyPREFERENCES = "MyPrefs" ;
+	private GoogleApiClient googleApiClient;
+	public static final int REQUEST_CHECK_SETTINGS =1000 ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		db = new MySQLiteHelper(this.getApplicationContext());
-		//boolean value=db.checkPhonenumber(phoneno);
 		int phonecount = db.getUserCount();
-		System.out.println("********************phonecount************************** sync call end ..." + phonecount);
-		if (phonecount > 0) {
-			setContentView(R.layout.currenttrip_fragment);
-		}else {
-			setContentView(R.layout.home_fragment);
+		//System.out.println("********************phonecount************************** sync call end ..." + phonecount);
+		  if (phonecount > 0) {
+			  setContentView(R.layout.currenttrip_fragment);
+			/*  if (googleApiClient == null) {
+				  googleApiClient = new GoogleApiClient.Builder(this)
+						  .addConnectionCallbacks(this)
+						  .addOnConnectionFailedListener(this)
+						  .addApi(LocationServices.API)
+						  .build();
+				  googleApiClient.connect();
+
+				  LocationRequest locationRequest = LocationRequest.create();
+				  locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+				  locationRequest.setInterval(30 * 1000);
+				  locationRequest.setFastestInterval(5 * 1000);
+				  LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+						  .addLocationRequest(locationRequest);
+
+				  // **************************
+				  builder.setAlwaysShow(true); // this is the key ingredient
+				  // **************************
+
+				  PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi
+						  .checkLocationSettings(googleApiClient, builder.build());
+				  result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+
+
+					  @Override
+					  public void onResult(LocationSettingsResult result) {
+						  final Status status = result.getStatus();
+						  final LocationSettingsStates state = result
+								  .getLocationSettingsStates();
+						  switch (status.getStatusCode()) {
+							  case LocationSettingsStatusCodes.SUCCESS:
+								  // All location settings are satisfied. The client can
+								  // initialize location
+								  // requests here.
+								  break;
+							  case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+								  // Location settings are not satisfied. But could be
+								  // fixed by showing the user
+								  // a dialog.
+								  try {
+									  // Show the dialog by calling
+									  // startResolutionForResult(),
+									  // and check the result in onActivityResult().
+									  status.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS);
+								  } catch (IntentSender.SendIntentException e) {
+									  // Ignore the error.
+								  }
+								  break;
+							  case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+								  // Location settings are not satisfied. However, we have
+								  // no way to fix the
+								  // settings so we won't show the dialog.
+								  break;
+						  }
+					  }
+
+				  });
+
+			  }*/
+		  }else{
+			  setContentView(R.layout.home_fragment);
+		  }
+			/*AlarmManager alarmManager=(AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+			Intent intentR = new Intent(getApplicationContext(), UpdateLocationReceiver.class);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intentR, 0);
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60 * 1000,
+					pendingIntent);*/
 		}
-		AlarmManager alarmManager=(AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-		Intent intentR = new Intent(getApplicationContext(), UpdateLocationReceiver.class);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intentR, 0);
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20*60* 1000,
-				pendingIntent);
-	}
+
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,9 +174,14 @@ public class HomeActivity extends FragmentActivity {
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		FragmentManager mgr = getFragmentManager();
+ FragmentManager mgr = getFragmentManager();
+
+		System.out.println("*****************home***mgr*********************** ..." + mgr.getBackStackEntryCount());
 		if (mgr.getBackStackEntryCount() == 0) {
-			// No backstack to pop, so calling super
+			/*Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);*/
 			super.onBackPressed();
 		} else {
 			Fragment testfragment=mgr.findFragmentById(R.id.viewers);
@@ -117,6 +190,10 @@ public class HomeActivity extends FragmentActivity {
 					mgr.popBackStack();
 				}
 			}else{
+				/*Intent intent = new Intent(Intent.ACTION_MAIN);
+				intent.addCategory(Intent.CATEGORY_HOME);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(intent);*/
 				super.onBackPressed();
 			}
 		}
@@ -126,6 +203,28 @@ public class HomeActivity extends FragmentActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
+	/*@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		//final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+		switch (requestCode) {
+			case REQUEST_CHECK_SETTINGS:
+				switch (resultCode) {
+					case Activity.RESULT_OK:
+						// All required changes were successfully made
+						if (googleApiClient.isConnected() ) {
+							//startLocationUpdates();
+						}
+						break;
+					case Activity.RESULT_CANCELED:
+						// The user was asked to change settings, but chose not to
+						break;
+					default:
+						break;
+				}
+				break;
+		}
+	}*/
+
 
 
 }
