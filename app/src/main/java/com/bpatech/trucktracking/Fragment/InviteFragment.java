@@ -33,7 +33,6 @@ public class InviteFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-
         View view = inflater.inflate(R.layout.invite_layout, container, false);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
         txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);

@@ -233,7 +233,7 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 				//System.out.println("********************************************** sync call...");
 				progressBar.setVisibility(View.VISIBLE);
 				String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
-				HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
+				HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
 
 				responseStrng = "" + response.getStatusLine().getStatusCode();
 				if (response.getStatusLine().getStatusCode() == 200) {

@@ -85,7 +85,7 @@ public class CustomAdapter extends ArrayAdapter {
 					new OnMapReadyCallback() {
 						@Override
 						public void onMapReady(GoogleMap googlemap) {
-							try{
+							try {
 								map = googlemap;
 								if (map != null) {
 									map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -118,13 +118,15 @@ public class CustomAdapter extends ArrayAdapter {
 								}
 
 
-							}catch (Exception e)
 
-							{
-								e.printStackTrace();
+								}catch(Exception e)
+
+								{
+									e.printStackTrace();
+								}
+
 							}
 
-						}
 					}
 			);
 

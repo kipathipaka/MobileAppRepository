@@ -7,9 +7,9 @@ public class ServiceConstants {
 
     public static final boolean LOGGING = false;
     public static final String IS_LOGIN = "IsLoggedIn";
-    public static final String BASE_URL= "http://52.88.194.128:8080";
-    public static final String BACKGROUND_BASE_URL= "http://52.88.194.128:2020/vehicletracking-spring/api";
-    public static final String UPDATE_LOCATION="/trip/trackTrip";
+   // public static final String BASE_URL= "http://52.88.194.128:8080";
+    public static final String BASE_URL= "http://52.88.194.128:2020/vehicletracking-spring";
+    public static final String UPDATE_LOCATION="/api/trip/trackTrip";
     public static final String CREATE_USER="/api/user/addUser";
     public static final String ADD_DRIVER_PHONE="/api/drivers/addDriverPhone";
     public static final String ADD_TRIP="/api/trip/addTrip";

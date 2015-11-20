@@ -273,7 +273,7 @@ public class UpdateLocationService extends Service
                     updatelocationlist.add(new BasicNameValuePair("latitude", latitude.toString()));
                     updatelocationlist.add(new BasicNameValuePair("longitude", longitude.toString()));
                     response = request.requestLocationServicePostType(
-                            ServiceConstants.UPDATE_LOCATION, updatelocationlist, ServiceConstants.BACKGROUND_BASE_URL);
+                            ServiceConstants.UPDATE_LOCATION, updatelocationlist, ServiceConstants.BASE_URL);
                     responsevalue = "" + response.getStatusLine().getStatusCode();
                     //System.out.println("++++++++++++++++++++++++++++++++++response+eee++++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
                 }
