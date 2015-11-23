@@ -361,4 +361,9 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 				break;
 		}
 	}*/
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+
 }

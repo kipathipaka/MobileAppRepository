@@ -225,6 +225,9 @@ public class HomeActivity extends FragmentActivity  {
 		}
 	}*/
 
-
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
 
 }

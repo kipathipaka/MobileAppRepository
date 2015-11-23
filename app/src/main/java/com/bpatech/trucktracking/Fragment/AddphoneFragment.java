@@ -191,7 +191,7 @@ public class AddphoneFragment extends Fragment {
 									driverlist.addAll(session.getDriverlist());
 									for (int i = 0; i < driverlist.size(); i++) {
 										//System.out.println("+++++++++++++++sizeeeeeeee+++list++++++++++++"+driverlist.get(i).toString());
-										if (driverlist.get(i).toString().equalsIgnoreCase(phonenumber) || driverlist.get(i).toString().equalsIgnoreCase(session.getPhoneno())) {
+										if (driverlist.get(i).toString().equalsIgnoreCase(phonenumber)) {
 											checkdriverStatus = true;
 
 										}

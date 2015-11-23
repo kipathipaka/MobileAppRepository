@@ -1,10 +1,12 @@
 package com.bpatech.trucktracking.Fragment;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -34,6 +36,8 @@ import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -110,10 +114,11 @@ import java.util.List;
         locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
         locationrow.setVisibility(view.GONE);
         lasttimerow.setVisibility(view.GONE);
-        whatsup.setOnClickListener(new WhatsupButtonListener());
         mapView = (MapView)view.findViewById(R.id.map_view);
-      mapView.onCreate(savedInstanceState);
-       googleMap=mapView.getMap();
+        mapView.onCreate(savedInstanceState);
+        googleMap=mapView.getMap();
+        whatsup.setOnClickListener(new WhatsupButtonListener());
+
        new GetTrackDetail().execute("", "", "");
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
@@ -388,7 +393,11 @@ public void onResume() {
                                                         Startbtn.setVisibility(View.VISIBLE);
                                                         Startbtn.setBackgroundColor(Color.RED);
                                                         lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                                                        lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                        if(currenttripdetailslist.get(i).getLocation().toString().equalsIgnoreCase("null") ) {
+                                                            lastlocation.setText("");
+                                                        }else {
+                                                            lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                        }
                                                         updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
@@ -410,7 +419,11 @@ public void onResume() {
                                                         Startbtn.setVisibility(View.GONE);
                                                        // Startbtn.setBackgroundColor(Color.RED);
                                                         lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                                                        lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                        if(currenttripdetailslist.get(i).getLocation().toString().equalsIgnoreCase("null") ) {
+                                                            lastlocation.setText("");
+                                                        }else {
+                                                            lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                        }
                                                         updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
@@ -483,7 +496,7 @@ public void onResume() {
                         sendIntent.setType("text/plain");
                         sendIntent.setPackage("com.whatsapp");
                         final String edittext=whatsuptext.getText().toString();
-                        sendIntent.putExtra(Intent.EXTRA_TEXT,edittext);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, edittext);
                         startActivity(Intent.createChooser(sendIntent, "share with"));
                         // TODO Auto-generated method stub
                         dialog.dismiss();
@@ -542,37 +555,76 @@ public void sms_dailog()
     public void Load_map(){
         //mapView.onCreate(b);
       // googleMap=mapView.getMap();
-        if(googleMap!=null) {
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        if (isGoogleMapsInstalled()==true) {
+            if (googleMap != null) {
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-            // googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            //googleMap.getUiSettings().setMapToolbarEnabled(false);
-            googleMap.setMyLocationEnabled(true);
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-            //GeoPoint geoPoint;
-            try {
-                String addressname = lastlocationtxt;
-                Geocoder geoCoder = new Geocoder(getActivity().getApplicationContext());
-                List<Address> listAddress;
-                listAddress = geoCoder.getFromLocationName(addressname, 1);
-                if (listAddress == null || listAddress.size() == 0) {
-                    Toast.makeText(getActivity().getApplicationContext(), "No Location found", Toast.LENGTH_SHORT).show();
-                    // return null;
-                }else {
-                    Address location = listAddress.get(0);
-                    LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
-                    Marker marker = googleMap.addMarker(new MarkerOptions().position(
-                            locationlatlng).title(""));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+                // googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                //googleMap.getUiSettings().setMapToolbarEnabled(false);
+                googleMap.setMyLocationEnabled(true);
+                MapsInitializer.initialize(getActivity().getApplicationContext());
+                //GeoPoint geoPoint;
+                try {
+                    String addressname = lastlocationtxt;
+                    Geocoder geoCoder = new Geocoder(getActivity().getApplicationContext());
+                    List<Address> listAddress;
+                    listAddress = geoCoder.getFromLocationName(addressname, 1);
+                    if (listAddress == null || listAddress.size() == 0) {
+                        Toast.makeText(getActivity().getApplicationContext(), "No Location found", Toast.LENGTH_SHORT).show();
+                        // return null;
+                    } else {
+                        Address location = listAddress.get(0);
+                        LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+                        Marker marker = googleMap.addMarker(new MarkerOptions().position(
+                                locationlatlng).title(""));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+                    }
+                    // googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000,null);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                // googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000,null);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }else{
-
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("Install Google Maps");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Install", getGoogleMapsListener());
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
 
 
     }
+
+    public boolean isGoogleMapsInstalled()
+	{
+
+		int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity().getApplicationContext());
+		if(result != ConnectionResult.SUCCESS) {
+			return false;
+		}else{
+			return true;
+		}
+
+		//ApplicationInfo info = getContext().getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0);
+
+
+
+	}
+	public DialogInterface.OnClickListener getGoogleMapsListener()
+	{
+		return new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+                getActivity().getApplicationContext().startActivity(intent);
+
+				//Finish the activity so they can't circumvent the check
+				//finish();
+			}
+		};
+	}
+
 }
