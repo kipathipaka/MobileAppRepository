@@ -570,7 +570,7 @@ public class TaskDetailFragment extends Fragment   {
                     List<Address> listAddress;
                     listAddress = geoCoder.getFromLocationName(addressname, 1);
                     if (listAddress == null || listAddress.size() == 0) {
-                        Toast.makeText(getActivity().getApplicationContext(), "No Location found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "No Location found", Toast.LENGTH_LONG).show();
                         // return null;
                     } else {
                         Address location = listAddress.get(0);

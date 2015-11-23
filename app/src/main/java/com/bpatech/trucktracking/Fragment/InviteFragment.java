@@ -71,7 +71,7 @@ public class InviteFragment extends Fragment
 
                 if (phonenum.getText().toString().trim().equalsIgnoreCase("") || edittexview1.getText().toString().trim().equalsIgnoreCase("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
 
                 } else if(phonenum.getText().toString().length()==10) {
                     String number = phonenum.getText().toString();
@@ -81,7 +81,7 @@ public class InviteFragment extends Fragment
                     smsManager.sendTextMessage(smsno, null, edittexview1.getText().toString(), null, null);
                     //Log.d("Sms", "sendSMS " + sms);
                     Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+smsno,
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
 
                     CurrentTripFragment currenttripfrag = new CurrentTripFragment();
                     FragmentManager fragmentmanager = getFragmentManager();
@@ -96,14 +96,14 @@ public class InviteFragment extends Fragment
                 else
                 {
                     Toast.makeText(getActivity().getApplicationContext(), "Enter the valid phone number",
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
                 }
         }
 
         catch(Exception e)
         {
            Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         }
