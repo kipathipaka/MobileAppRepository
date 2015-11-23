@@ -62,7 +62,7 @@ ProgressBar progressBar;
     private void sendErrorMail(Context _context, String filePath) {
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
         String subject = "Error Description";
-        String body = "Unfortunately InvolveCare application crashed.\nPlease find the attached error log.";
+        String body = "Unfortunately Vehilce Tracking application crashed.\nPlease find the attached error log.";
         sendIntent.setType("plain/text");
         sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{ServiceConstants.APP_CRASH_ADMIN_MAILID});
         sendIntent.putExtra(Intent.EXTRA_TEXT, body);
