@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,8 @@ import android.widget.Toast;
 
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
+import com.bpatech.trucktracking.Util.ServiceConstants;
+import com.bpatech.trucktracking.Util.SessionManager;
 
 /**
  * Created by Yugandhar on 9/28/2015.
@@ -28,6 +29,7 @@ public class InviteFragment extends Fragment
     Button sndbtn;
     EditText phonenum,edittexview1;
     TextView txt_contTitle;
+    SessionManager session;
     RelativeLayout inviteLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,12 +37,19 @@ public class InviteFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.invite_layout, container, false);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+        session = new SessionManager(getActivity().getApplicationContext());
         txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
         txt_contTitle.setText("Invite");
         sndbtn=(Button)view.findViewById(R.id.sndbtn);
         phonenum=(EditText)view.findViewById(R.id.phonenum);
         inviteLayout = (RelativeLayout) view.findViewById(R.id.invite_layout);
         edittexview1=(EditText)view.findViewById(R.id.edittexview1);
+        String phone =session.getUsername();
+        String sms1= ServiceConstants.MESSAGE_INVITE;
+        String sms2=ServiceConstants.APP_NAME;
+        String sms3=ServiceConstants.TEXT_MESSAGE_URL;
+        String sms=phone+" "+sms1+" "+sms2+" "+sms3;
+        edittexview1.setText(sms);
         inviteLayout.setOnClickListener(new InviteLayoutclicklistener());
         sndbtn.setOnClickListener(new MyaddButtonListener());
         return view;
@@ -62,17 +71,17 @@ public class InviteFragment extends Fragment
 
                 if (phonenum.getText().toString().trim().equalsIgnoreCase("") || edittexview1.getText().toString().trim().equalsIgnoreCase("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
 
                 } else if(phonenum.getText().toString().length()==10) {
                     String number = phonenum.getText().toString();
-                    String sms = edittexview1.getText().toString();
+
                     String smsno="+91"+number;
                     SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(smsno, null, sms, null, null);
-                    Log.d("Sms", "sendSMS " + sms);
+                    smsManager.sendTextMessage(smsno, null, edittexview1.getText().toString(), null, null);
+                    //Log.d("Sms", "sendSMS " + sms);
                     Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+smsno,
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
 
                     CurrentTripFragment currenttripfrag = new CurrentTripFragment();
                     FragmentManager fragmentmanager = getFragmentManager();
@@ -87,14 +96,14 @@ public class InviteFragment extends Fragment
                 else
                 {
                     Toast.makeText(getActivity().getApplicationContext(), "Enter the valid phone number",
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
                 }
         }
 
         catch(Exception e)
         {
            Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         }

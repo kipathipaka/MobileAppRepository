@@ -2,7 +2,6 @@ package com.bpatech.trucktracking.Fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,22 +15,20 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.bpatech.trucktracking.Activity.HomeActivity;
-import com.bpatech.trucktracking.Activity.RegistrationActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
-import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,13 +77,15 @@ public class DetailFragment extends Fragment {
 				inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				if (companyname.getText().toString().trim().equalsIgnoreCase("") || username.getText().toString().trim().equalsIgnoreCase("")) {
 					Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 				} else {
 
 					user.setPhone_no(session.getPhoneno());
 					user.setCompanyName(companyname.getText().toString());
 					user.setUserName(username.getText().toString());
+					session.setUsername(username.getText().toString());
+					System.out.println("+++++++username+++++"+session.getUsername());
 					InsertUser(user);
 					new AddUserDetail().execute("", "", "");
 				}

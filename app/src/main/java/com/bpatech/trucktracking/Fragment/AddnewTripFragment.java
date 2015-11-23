@@ -23,7 +23,6 @@ import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
-import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
@@ -33,7 +32,6 @@ import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,14 +103,14 @@ public class AddnewTripFragment extends Fragment {
 						|| customer_company.getText().toString().trim().equalsIgnoreCase("") ||
 						customer_name.getText().toString().trim().equalsIgnoreCase("") || customer_phoneno.getText().toString().trim().equalsIgnoreCase("")) {
 					Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 
 				} else if (String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim()) ||
 						String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(session.getPhoneno().toString().trim()) ||
 						session.getPhoneno().toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim())) {
 					Toast.makeText(getActivity().getApplicationContext(), "Entered Owner phonenumber,Customer phone number and driver phone are same.. Please Check ",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 				} else if (customer_phoneno.getText().toString().length() == 10) {
 					addtrip.setDestination(editdestination.getText().toString());
@@ -125,12 +123,12 @@ public class AddnewTripFragment extends Fragment {
 					new AddTripDetail().execute("", "", "");
 				} else {
 					Toast.makeText(getActivity().getApplicationContext(), "enter the valid phone number!",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 				}
 			} catch (Exception e) {
 				Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-						Toast.LENGTH_SHORT).show();
+						Toast.LENGTH_LONG).show();
 				progressBar.setVisibility(View.INVISIBLE);
 				e.printStackTrace();
 			}

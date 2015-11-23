@@ -3,14 +3,12 @@ package com.bpatech.trucktracking.Fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -29,12 +27,8 @@ import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.SessionManager;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
-import java.util.TimeZone;
 
 public class HomeFragment extends Fragment {
 	MySQLiteHelper db;
@@ -87,7 +81,7 @@ try {
 	inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	if (phoneNo.getText().toString().equals("")) {
 		Toast.makeText(getActivity().getApplicationContext(), " Value is  empty!",
-				Toast.LENGTH_SHORT).show();
+				Toast.LENGTH_LONG).show();
 		progressBar.setVisibility(View.INVISIBLE);
 
 	}  else if(phoneNo.getText().toString().length()==10){
@@ -110,13 +104,13 @@ try {
 	else
 	{
 		Toast.makeText(getActivity().getApplicationContext(), "enter the valid phone number!",
-				Toast.LENGTH_SHORT).show();
+				Toast.LENGTH_LONG).show();
 		progressBar.setVisibility(View.INVISIBLE);
 	}
 } catch(Exception e)
 {
 	Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-			Toast.LENGTH_SHORT).show();
+			Toast.LENGTH_LONG).show();
 	e.printStackTrace();
 	progressBar.setVisibility(View.INVISIBLE);
 }

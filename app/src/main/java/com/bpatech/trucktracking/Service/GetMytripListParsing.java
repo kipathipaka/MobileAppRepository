@@ -48,10 +48,10 @@ public class GetMytripListParsing {
                     mytrip.setLatitude(firstmytriparry.getString("latitude"));
                     mytrip.setLongitude(firstmytriparry.getString("longitude"));
                 }else{*/
-                    mytrip.setLocation(driverarray.getString("location"));
-                    mytrip.setLatitude(driverarray.getString("latitude"));
-                    mytrip.setLongitude(driverarray.getString("longitude"));
-               // }
+                mytrip.setLocation(driverarray.getString("location"));
+                mytrip.setLatitude(driverarray.getString("latitude"));
+                mytrip.setLongitude(driverarray.getString("longitude"));
+                // }
                 if (driverarray.getString("is_active").equalsIgnoreCase("Y") && driverarray.getString("app_download_status").equalsIgnoreCase("Y")) {
                     mytrip.setStartstatus(true);
                 } else {

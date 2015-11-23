@@ -88,14 +88,14 @@ public class AddphoneFragment extends Fragment {
 				inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				if (edityournum.getText().toString().trim().equalsIgnoreCase("")) {
 					Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 				}
 				else if(session.getPhoneno().toString().trim().equalsIgnoreCase(edityournum.getText().toString()))
 				{
 					//System.out.println("number" + session.getPhoneno());
 					Toast.makeText(getActivity().getApplicationContext(), "Owner cannot be a Driver!",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 				}
 				else if (edityournum.getText().toString().length() == 10) {
@@ -111,12 +111,12 @@ public class AddphoneFragment extends Fragment {
 					new GetdriverPhonelist().execute("", "", "");
 				} else {
 					Toast.makeText(getActivity().getApplicationContext(), "enter the valid phone number!",
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 				}
 			} catch (Exception e) {
 				Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-						Toast.LENGTH_SHORT).show();
+						Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 				progressBar.setVisibility(View.INVISIBLE);
 			}
@@ -201,17 +201,21 @@ public class AddphoneFragment extends Fragment {
 								}
 								if(checkdriverStatus==false) {
 									String number = "+91" + phonenumber;
-									String smsmessage = ServiceConstants.MESSAGE_FOR_ADDPHONE;
+									String owner_phone_no =session.getUsername();
+									String sms1= ServiceConstants.MESSAGE_INVITE;
+									String sms2=ServiceConstants.APP_NAME;
+									String sms3=ServiceConstants.TEXT_MESSAGE_URL;
+									String smsmessage=owner_phone_no+" "+sms1+" "+sms2+" "+sms3;
 									SmsManager smsManager = SmsManager.getDefault();
 									smsManager.sendTextMessage(number, null, smsmessage, null, null);
 									Log.d("Sms", "sendSMS " + smsmessage);
 									Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
-											Toast.LENGTH_SHORT).show();
+											Toast.LENGTH_LONG).show();
 									new AddUserPhone().execute("", "", "");
 								}else{
-								Toast.makeText(getActivity().getApplicationContext(), "This Driver PhoneNumber Already Added",
-										Toast.LENGTH_SHORT).show();
-							}
+									Toast.makeText(getActivity().getApplicationContext(), "This Driver PhoneNumber Already Added",
+											Toast.LENGTH_LONG).show();
+								}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
