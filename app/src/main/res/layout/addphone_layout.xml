@@ -41,8 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginBottom="@dimen/fifteen_pt"
-                    android:text="Enter the phone number
-                                    you want to track"
+                    android:text="@string/driver_page_label"
                     android:paddingLeft="5dp"
                     style="@style/codefont">
                 </TextView>
@@ -70,7 +69,7 @@
                     android:cursorVisible="true"
                     android:textCursorDrawable="@drawable/color_cursor"
                     android:maxLength="10"
-                    android:hint="e.g:9543492022"
+                    android:hint="@string/driver_page_label_hint"
                      android:inputType="phone"
                     android:paddingLeft="5dp" />
             </TableRow>
