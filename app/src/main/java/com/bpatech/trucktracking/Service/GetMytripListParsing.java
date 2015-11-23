@@ -43,15 +43,15 @@ public class GetMytripListParsing {
                 JSONObject driverarray = firstmytriparry
                         .getJSONObject("driver");
                 mytrip.setDriver_phone_no(driverarray.getString("phone_number"));
-                if (firstmytriparry.getString("travel_status").equalsIgnoreCase("STR")){
+                /*if (firstmytriparry.getString("travel_status").equalsIgnoreCase("STR")){
                     mytrip.setLocation(firstmytriparry.getString("location"));
                     mytrip.setLatitude(firstmytriparry.getString("latitude"));
                     mytrip.setLongitude(firstmytriparry.getString("longitude"));
-                }else{
-                    mytrip.setLocation(driverarray.getString("location"));
-                    mytrip.setLatitude(driverarray.getString("latitude"));
-                    mytrip.setLongitude(driverarray.getString("longitude"));
-                }
+                }else{*/
+                mytrip.setLocation(driverarray.getString("location"));
+                mytrip.setLatitude(driverarray.getString("latitude"));
+                mytrip.setLongitude(driverarray.getString("longitude"));
+                // }
                 if (driverarray.getString("is_active").equalsIgnoreCase("Y") && driverarray.getString("app_download_status").equalsIgnoreCase("Y")) {
                     mytrip.setStartstatus(true);
                 } else {
@@ -62,23 +62,13 @@ public class GetMytripListParsing {
                 mytrip.setCustomer_phoneno(customerarray.getString("phone_number"));
                 mytrip.setCustomer_company(customerarray.getString("company_name"));
                 mytrip.setCustomer_name(customerarray.getString("name"));
-                mytrip.setSource("Delhi");
-              /* if(firstmytriparry.getString("location").toString().equalsIgnoreCase("null")) {
-                   mytrip.setLocation("Delhi");
-                   mytrip.setLatitude(firstmytriparry.getString("latitude"));
-                   mytrip.setLongitude(firstmytriparry.getString("longitude"));
-               }else{
-                   mytrip.setLocation(firstmytriparry.getString("location"));
-                   mytrip.setLatitude(firstmytriparry.getString("latitude"));
-                   mytrip.setLongitude(firstmytriparry.getString("longitude"));
-               }*/
                 if(firstmytriparry.getString("last_sync_date_time").toString().equalsIgnoreCase("null")) {
-                    DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-                    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
+                    DateFormat dateFormat = new SimpleDateFormat("MMM,dd h:mm a");
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
                     Date date = new Date(Long.parseLong(firstmytriparry.getString("created_on").toString()));
                     mytrip.setLast_sync_time(dateFormat.format(date).toString());
                 }else {
-                    DateFormat dateFormat1 = new SimpleDateFormat("h:mm a");
+                    DateFormat dateFormat1 = new SimpleDateFormat("MMM,dd h:mm a");
                     dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
                     //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
                     Date date = new Date(Long.parseLong(firstmytriparry.getString("last_sync_date_time").toString()));

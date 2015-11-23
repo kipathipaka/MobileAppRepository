@@ -41,13 +41,42 @@
              android:layout_height="150dp"
              android:clickable="true"
              />
+         <LinearLayout
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+             android:layout_marginBottom="0dp"
 
+             android:layout_gravity="center"
+             android:orientation="horizontal">
+
+             <ImageButton
+                 android:id="@+id/whatsup"
+                 android:layout_width="50dp"
+                 android:layout_height="50dp"
+                 android:paddingTop="20dp"
+                 android:layout_marginTop="10dp"
+                 android:background="@drawable/whatsapp"/>
+
+
+             <ImageButton
+                 android:id="@+id/inbox"
+                 android:layout_width="55dp"
+                 android:layout_height="55dp"
+                 android:layout_marginLeft="5dp"
+                 android:layout_marginBottom="10dp"
+                 android:clickable="false"
+                 android:paddingTop="0dp"
+                 android:background="@drawable/smsimage" />
+
+
+         </LinearLayout>
                   <LinearLayout
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_marginBottom="5dp"
               android:layout_marginLeft="0dp"
-             android:layout_marginTop="10dp"
+             android:layout_marginTop="5dp"
              android:orientation="vertical" >
                       <TableLayout
                           android:layout_width="match_parent"
@@ -393,7 +422,7 @@
              
                
              </LinearLayout>
-          <LinearLayout
+          <!--<LinearLayout
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_marginTop="10dp"
@@ -422,7 +451,7 @@
                   android:background="@drawable/smsimage" />
 
 
-          </LinearLayout>
+          </LinearLayout>-->
 
       </LinearLayout>
 

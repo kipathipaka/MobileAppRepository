@@ -87,6 +87,8 @@ public class DetailFragment extends Fragment {
 					user.setPhone_no(session.getPhoneno());
 					user.setCompanyName(companyname.getText().toString());
 					user.setUserName(username.getText().toString());
+					session.setUsername(username.getText().toString());
+					System.out.println("+++++++username+++++"+session.getUsername());
 					InsertUser(user);
 					new AddUserDetail().execute("", "", "");
 				}

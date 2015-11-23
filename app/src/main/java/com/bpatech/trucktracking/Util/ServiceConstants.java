@@ -39,5 +39,7 @@ public class ServiceConstants {
     public static String MESSAGE_URL="\nhttp://52.88.194.128:2020/vehicletracking-spring/Home.html";
     public static String MESSAGE_SENDING_END="\nThank You";
     public static String TEXT_MESSAGE="hi, Welcome to vehicleTracking";
-
+    public static String MESSAGE_INVITE="has shared truck location app";
+    public static String APP_NAME="Vehicle Tracking.";
+    public static String TEXT_MESSAGE_URL="Download here WWW.google.com.";
 }

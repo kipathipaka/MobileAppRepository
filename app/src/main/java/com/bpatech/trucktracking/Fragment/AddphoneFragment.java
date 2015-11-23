@@ -191,7 +191,7 @@ public class AddphoneFragment extends Fragment {
 									driverlist.addAll(session.getDriverlist());
 									for (int i = 0; i < driverlist.size(); i++) {
 										//System.out.println("+++++++++++++++sizeeeeeeee+++list++++++++++++"+driverlist.get(i).toString());
-										if (driverlist.get(i).toString().equalsIgnoreCase(phonenumber) || driverlist.get(i).toString().equalsIgnoreCase(session.getPhoneno())) {
+										if (driverlist.get(i).toString().equalsIgnoreCase(phonenumber)) {
 											checkdriverStatus = true;
 
 										}
@@ -201,7 +201,11 @@ public class AddphoneFragment extends Fragment {
 								}
 								if(checkdriverStatus==false) {
 									String number = "+91" + phonenumber;
-									String smsmessage = ServiceConstants.MESSAGE_FOR_ADDPHONE;
+									String owner_phone_no =session.getUsername();
+									String sms1= ServiceConstants.MESSAGE_INVITE;
+									String sms2=ServiceConstants.APP_NAME;
+									String sms3=ServiceConstants.TEXT_MESSAGE_URL;
+									String smsmessage=owner_phone_no+" "+sms1+" "+sms2+" "+sms3;
 									SmsManager smsManager = SmsManager.getDefault();
 									smsManager.sendTextMessage(number, null, smsmessage, null, null);
 									Log.d("Sms", "sendSMS " + smsmessage);
@@ -209,9 +213,9 @@ public class AddphoneFragment extends Fragment {
 											Toast.LENGTH_SHORT).show();
 									new AddUserPhone().execute("", "", "");
 								}else{
-								Toast.makeText(getActivity().getApplicationContext(), "This Driver PhoneNumber Already Added",
-										Toast.LENGTH_SHORT).show();
-							}
+									Toast.makeText(getActivity().getApplicationContext(), "This Driver PhoneNumber Already Added",
+											Toast.LENGTH_SHORT).show();
+								}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

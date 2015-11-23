@@ -1,10 +1,12 @@
 package com.bpatech.trucktracking.Fragment;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -34,6 +36,8 @@ import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -54,9 +58,9 @@ import java.util.List;
 
 
 /**
-    * Created by Anita on 9/14/2015.
-            */
-    public class TaskDetailFragment extends Fragment   {
+ * Created by Anita on 9/14/2015.
+ */
+public class TaskDetailFragment extends Fragment   {
 
     protected Context context;
     TextView truck, place, phone, txt_contTitle,customer_company,
@@ -110,32 +114,33 @@ import java.util.List;
         locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
         locationrow.setVisibility(view.GONE);
         lasttimerow.setVisibility(view.GONE);
-        whatsup.setOnClickListener(new WhatsupButtonListener());
         mapView = (MapView)view.findViewById(R.id.map_view);
-      mapView.onCreate(savedInstanceState);
-       googleMap=mapView.getMap();
-       new GetTrackDetail().execute("", "", "");
+        mapView.onCreate(savedInstanceState);
+        googleMap=mapView.getMap();
+        whatsup.setOnClickListener(new WhatsupButtonListener());
+
+        new GetTrackDetail().execute("", "", "");
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
-{
-    @Override
-    public void onMapClick(LatLng latLng) {
-        DisplayMapFragment displayMapFragment= new DisplayMapFragment();
-        Double latitude=latLng.latitude;
-        Double longitude=latLng.longitude;
-        Bundle bundle=new Bundle();
-        bundle.putDouble("latitude",latitude);
-        bundle.putDouble("longitude",longitude);
-        displayMapFragment.setArguments(bundle);
-        FragmentManager fragmentmanager = getFragmentManager();
-        FragmentTransaction fragmenttransaction = fragmentmanager
-                .beginTransaction();
-        fragmenttransaction.replace(R.id.viewers, displayMapFragment,"BackCurrentTrip");
-        fragmenttransaction.addToBackStack(null);
-        fragmenttransaction.commit();
+        {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                DisplayMapFragment displayMapFragment= new DisplayMapFragment();
+                Double latitude=latLng.latitude;
+                Double longitude=latLng.longitude;
+                Bundle bundle=new Bundle();
+                bundle.putDouble("latitude",latitude);
+                bundle.putDouble("longitude",longitude);
+                displayMapFragment.setArguments(bundle);
+                FragmentManager fragmentmanager = getFragmentManager();
+                FragmentTransaction fragmenttransaction = fragmentmanager
+                        .beginTransaction();
+                fragmenttransaction.replace(R.id.viewers, displayMapFragment,"BackCurrentTrip");
+                fragmenttransaction.addToBackStack(null);
+                fragmenttransaction.commit();
 
-    }
-});
+            }
+        });
 
 
 
@@ -148,22 +153,22 @@ import java.util.List;
 
         @Override
         public void onClick(View v) {
-           progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
 
 
-          if(startclick==true){
-               // mapDestroyOnDemand();
-              // progressBar.setVisibility(View.VISIBLE);
-              currenttripdetails=new ArrayList<AddTrip>();
-              new UpdateEndTripdetail().execute("", "", "");
+            if(startclick==true){
+                // mapDestroyOnDemand();
+                // progressBar.setVisibility(View.VISIBLE);
+                currenttripdetails=new ArrayList<AddTrip>();
+                new UpdateEndTripdetail().execute("", "", "");
 
             }else {
 
-             // progressBar.setVisibility(View.VISIBLE);
-              new UpdateStartTripdetail().execute("", "", "");
+                // progressBar.setVisibility(View.VISIBLE);
+                new UpdateStartTripdetail().execute("", "", "");
 
 
-           }
+            }
 
         }
     }
@@ -174,7 +179,7 @@ import java.util.List;
         public void onClick(View v) {
             boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
             if (isWhatsappInstalled) {
-               whats_up_dialog();
+                whats_up_dialog();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT)
                         .show();
@@ -185,7 +190,7 @@ import java.util.List;
 
 
         }
-        }
+    }
     private boolean whatsappInstalledOrNot(String uri) {
         PackageManager pm = getActivity().getPackageManager();
         boolean app_installed = false;
@@ -212,38 +217,38 @@ import java.util.List;
 
         }
     }
-/*
+    /*
+        @Override
+        public void onDestroyView() {
+            // TODO Auto-generated method stub
+
+            super.onDestroyView();
+
+            Fragment fragment = (getFragmentManager()
+            if (fragment != null) {
+                    .findFragmentById(R.id.map_view));
+                FragmentTransaction ft = getActivity().getFragmentManager()
+                        .beginTransaction();
+                ft.remove(fragment);
+                ft.commit();
+            }
+        }
+
+        public void mapDestroyOnDemand() {
+            Fragment fragment = (getFragmentManager()
+                    .findFragmentById(R.id.map_view));
+            if (fragment != null) {
+                FragmentTransaction ft = getActivity().getFragmentManager()
+                        .beginTransaction();
+                ft.remove(fragment);
+                ft.commit();
+            }
+        }*/
     @Override
-    public void onDestroyView() {
-        // TODO Auto-generated method stub
-
-        super.onDestroyView();
-
-        Fragment fragment = (getFragmentManager()
-        if (fragment != null) {
-                .findFragmentById(R.id.map_view));
-            FragmentTransaction ft = getActivity().getFragmentManager()
-                    .beginTransaction();
-            ft.remove(fragment);
-            ft.commit();
-        }
+    public void onResume() {
+        mapView.onResume();
+        super.onResume();
     }
-
-    public void mapDestroyOnDemand() {
-        Fragment fragment = (getFragmentManager()
-                .findFragmentById(R.id.map_view));
-        if (fragment != null) {
-            FragmentTransaction ft = getActivity().getFragmentManager()
-                    .beginTransaction();
-            ft.remove(fragment);
-            ft.commit();
-        }
-    }*/
-@Override
-public void onResume() {
-    mapView.onResume();
-    super.onResume();
-}
 
     @Override
     public void onPause() {
@@ -289,8 +294,8 @@ public void onResume() {
 
                 List<NameValuePair> upadatetripdetail = new ArrayList<NameValuePair>();
                 upadatetripdetail.add(new BasicNameValuePair("vehicle_trip_header_id", vechile_trip_no));
-                    HttpResponse response = request.requestPutType(ServiceConstants.START_TRIP,upadatetripdetail,ServiceConstants.BASE_URL);
-                    responseStrng = "" + response.getStatusLine().getStatusCode();
+                HttpResponse response = request.requestPutType(ServiceConstants.START_TRIP,upadatetripdetail,ServiceConstants.BASE_URL);
+                responseStrng = "" + response.getStatusLine().getStatusCode();
             } catch (Exception e) {
 
                 e.printStackTrace();
@@ -316,18 +321,18 @@ public void onResume() {
 
                 List<NameValuePair> upadatetripdetail = new ArrayList<NameValuePair>();
                 upadatetripdetail.add(new BasicNameValuePair("vehicle_trip_header_id", vechile_trip_no));
-                    HttpResponse response = request.requestPutType(ServiceConstants.END_TRIP, upadatetripdetail, ServiceConstants.BASE_URL);
-                    responseStrng = "" + response.getStatusLine().getStatusCode();
-                    if (response.getStatusLine().getStatusCode() == 200) {
-                       // new updateMytripDetail().execute("", "", "");
-                        CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-                        FragmentManager fragmentmanager = getFragmentManager();
-                        FragmentTransaction fragmenttransaction = fragmentmanager
-                                .beginTransaction();
-                        fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-                        fragmenttransaction.addToBackStack(null);
-                        fragmenttransaction.commit();
-                    }
+                HttpResponse response = request.requestPutType(ServiceConstants.END_TRIP, upadatetripdetail, ServiceConstants.BASE_URL);
+                responseStrng = "" + response.getStatusLine().getStatusCode();
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    // new updateMytripDetail().execute("", "", "");
+                    CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+                    FragmentManager fragmentmanager = getFragmentManager();
+                    FragmentTransaction fragmenttransaction = fragmentmanager
+                            .beginTransaction();
+                    fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+                    fragmenttransaction.addToBackStack(null);
+                    fragmenttransaction.commit();
+                }
 
 
             } catch (Exception e) {
@@ -388,7 +393,11 @@ public void onResume() {
                                                         Startbtn.setVisibility(View.VISIBLE);
                                                         Startbtn.setBackgroundColor(Color.RED);
                                                         lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                                                        lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                        if(currenttripdetailslist.get(i).getLocation().toString().equalsIgnoreCase("null") ) {
+                                                            lastlocation.setText("");
+                                                        }else {
+                                                            lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                        }
                                                         updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
@@ -404,13 +413,17 @@ public void onResume() {
                                                     lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
                                                 }
                                             }else{
-                                               if(currenttripdetailslist.get(i).isStartstatus()) {
+                                                if(currenttripdetailslist.get(i).isStartstatus()) {
                                                     if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         //Startbtn.setText("End Tracking");
                                                         Startbtn.setVisibility(View.GONE);
-                                                       // Startbtn.setBackgroundColor(Color.RED);
+                                                        // Startbtn.setBackgroundColor(Color.RED);
                                                         lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                                                        lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                        if(currenttripdetailslist.get(i).getLocation().toString().equalsIgnoreCase("null") ) {
+                                                            lastlocation.setText("");
+                                                        }else {
+                                                            lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                        }
                                                         updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
@@ -464,7 +477,7 @@ public void onResume() {
                 //promptsView.setBackgroundResource(R.color.);
                 dialog.setContentView(promptsView);
                 dialog.show();
-              whatsuptext=(EditText) promptsView.findViewById(R.id.whatuptext);
+                whatsuptext=(EditText) promptsView.findViewById(R.id.whatuptext);
                 final String sms1=ServiceConstants.MESSAGE_SENDING_START;
                 final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
                 final String sms3= ServiceConstants.MESSAGE_SENDING_END;
@@ -483,7 +496,7 @@ public void onResume() {
                         sendIntent.setType("text/plain");
                         sendIntent.setPackage("com.whatsapp");
                         final String edittext=whatsuptext.getText().toString();
-                        sendIntent.putExtra(Intent.EXTRA_TEXT,edittext);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, edittext);
                         startActivity(Intent.createChooser(sendIntent, "share with"));
                         // TODO Auto-generated method stub
                         dialog.dismiss();
@@ -494,85 +507,124 @@ public void onResume() {
             }
         });
     }
-public void sms_dailog()
-{
-    (getActivity()).runOnUiThread(new Runnable() {
-        public void run() {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            final View promptsView = inflater.inflate(R.layout.send_sms_popup, null);
+    public void sms_dailog()
+    {
+        (getActivity()).runOnUiThread(new Runnable() {
+            public void run() {
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                final View promptsView = inflater.inflate(R.layout.send_sms_popup, null);
            /*     EditText e1=*/
-         final String num=customer_phone_no.getText().toString();
+                final String num=customer_phone_no.getText().toString();
 
-            final Dialog dialog = new Dialog(getActivity());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            //promptsView.setBackgroundResource(R.color.white);
-             final EditText phnenum=(EditText) promptsView.findViewById(R.id.phonenum);
-            phnenum.setText(num);
-              message=(EditText)promptsView.findViewById(R.id.edittexview1);
-            final String sms1=ServiceConstants.MESSAGE_SENDING_START;
-            final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
-            final String sms3= ServiceConstants.MESSAGE_SENDING_END;
-            final String sms = sms1 + sms2 + sms3;
-            System.out.println("trip_id" + trip_id);
-            message.setText(sms);
-            dialog.setContentView(promptsView);
-            dialog.show();
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                //promptsView.setBackgroundResource(R.color.white);
+                final EditText phnenum=(EditText) promptsView.findViewById(R.id.phonenum);
+                phnenum.setText(num);
+                message=(EditText)promptsView.findViewById(R.id.edittexview1);
+                final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+                final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+                final String sms3= ServiceConstants.MESSAGE_SENDING_END;
+                final String sms = sms1 + sms2 + sms3;
+                System.out.println("trip_id" + trip_id);
+                message.setText(sms);
+                dialog.setContentView(promptsView);
+                dialog.show();
 
-            Button textbutton = (Button) promptsView.findViewById(R.id.sndbtn);
-            textbutton.setOnClickListener(new View.OnClickListener() {
+                Button textbutton = (Button) promptsView.findViewById(R.id.sndbtn);
+                textbutton.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    String number="+91"+num;
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        String number="+91"+num;
                         SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(number, null,message.getText().toString(), null, null);
-                    Log.d("sms", "sms text is" + sms);
+                        smsManager.sendTextMessage(number, null,message.getText().toString(), null, null);
+                        Log.d("sms", "sms text is" + sms);
 
-               dialog.dismiss();
-                    Toast.makeText(getActivity().getApplicationContext(), "sms sent to" +number,Toast.LENGTH_SHORT)
-                            .show();
-                }
+                        dialog.dismiss();
+                        Toast.makeText(getActivity().getApplicationContext(), "sms sent to" +number,Toast.LENGTH_SHORT)
+                                .show();
+                    }
 
-            });
-        }
-    });
-}
+                });
+            }
+        });
+    }
 
     public void Load_map(){
         //mapView.onCreate(b);
-      // googleMap=mapView.getMap();
-        if(googleMap!=null) {
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        // googleMap=mapView.getMap();
+        if (isGoogleMapsInstalled()==true) {
+            if (googleMap != null) {
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-            // googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            //googleMap.getUiSettings().setMapToolbarEnabled(false);
-            googleMap.setMyLocationEnabled(true);
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-            //GeoPoint geoPoint;
-            try {
-                String addressname = lastlocationtxt;
-                Geocoder geoCoder = new Geocoder(getActivity().getApplicationContext());
-                List<Address> listAddress;
-                listAddress = geoCoder.getFromLocationName(addressname, 1);
-                if (listAddress == null || listAddress.size() == 0) {
-                    Toast.makeText(getActivity().getApplicationContext(), "No Location found", Toast.LENGTH_SHORT).show();
-                    // return null;
-                }else {
-                    Address location = listAddress.get(0);
-                    LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
-                    Marker marker = googleMap.addMarker(new MarkerOptions().position(
-                            locationlatlng).title(""));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+                // googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                //googleMap.getUiSettings().setMapToolbarEnabled(false);
+                googleMap.setMyLocationEnabled(true);
+                MapsInitializer.initialize(getActivity().getApplicationContext());
+                //GeoPoint geoPoint;
+                try {
+                    String addressname = lastlocationtxt;
+                    Geocoder geoCoder = new Geocoder(getActivity().getApplicationContext());
+                    List<Address> listAddress;
+                    listAddress = geoCoder.getFromLocationName(addressname, 1);
+                    if (listAddress == null || listAddress.size() == 0) {
+                        Toast.makeText(getActivity().getApplicationContext(), "No Location found", Toast.LENGTH_SHORT).show();
+                        // return null;
+                    } else {
+                        Address location = listAddress.get(0);
+                        LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+                        Marker marker = googleMap.addMarker(new MarkerOptions().position(
+                                locationlatlng).title(""));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
+                    }
+                    // googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000,null);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                // googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000,null);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }else{
-
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("Install Google Maps");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Install", getGoogleMapsListener());
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
 
 
     }
+
+    public boolean isGoogleMapsInstalled()
+    {
+
+        int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity().getApplicationContext());
+        if(result != ConnectionResult.SUCCESS) {
+            return false;
+        }else{
+            return true;
+        }
+
+        //ApplicationInfo info = getContext().getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0);
+
+
+
+    }
+    public DialogInterface.OnClickListener getGoogleMapsListener()
+    {
+        return new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+                getActivity().getApplicationContext().startActivity(intent);
+
+                //Finish the activity so they can't circumvent the check
+                //finish();
+            }
+        };
+    }
+
 }

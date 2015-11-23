@@ -1,13 +1,7 @@
 package com.bpatech.trucktracking.Util;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,23 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CustomAdapter extends ArrayAdapter {
 	MapView mapView;
@@ -74,11 +58,11 @@ public class CustomAdapter extends ArrayAdapter {
 			progressBar.setVisibility(View.VISIBLE);
 		}
 
-		mapView = (MapView) view.findViewById(R.id.maplist_view);
+		/*mapView = (MapView) view.findViewById(R.id.maplist_view);
 		mapView.onCreate(savedInstanceState);
 		mapView.onResume();
+	if (isGoogleMapsInstalled()==true){
 
-		if (isGoogleMapsInstalled()==true){
 			progressBar.setVisibility(View.VISIBLE);
 			//checkGooglePlayServicesAvailability();
 			mapView.getMapAsync(
@@ -129,9 +113,9 @@ public class CustomAdapter extends ArrayAdapter {
 
 					}
 			);
+*/
 
-			progressBar.setVisibility(View.INVISIBLE);
-		}else {
+		/*}else {
 			//System.out.println("+++++++++++map++++++++");
 			AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setMessage("Install Google Maps");
@@ -139,13 +123,13 @@ public class CustomAdapter extends ArrayAdapter {
 			builder.setPositiveButton("Install", getGoogleMapsListener());
 			AlertDialog dialog = builder.create();
 			dialog.show();
-		/*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		*//*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setMessage("Install Google Maps");
 		builder.setCancelable(false);
 		builder.setPositiveButton("Install", getGoogleMapsListener());
 		AlertDialog dialog = builder.create();
-		dialog.show()*/;
-		}
+		dialog.show()*//*;
+		}*/
 		TextView DestinationText=(TextView) view.findViewById(R.id.tovalue);
 		//TextView rideText=(TextView) view.findViewById(R.id.ride);
 		TextView NowText=(TextView) view.findViewById(R.id.nowmsg);
@@ -191,11 +175,11 @@ public class CustomAdapter extends ArrayAdapter {
 
 		vechile_trip_id.setText(String.valueOf(mList.get(position).getVehicle_trip_id()));
 		view.setBackgroundColor(getContext().getResources().getColor(R.color.darkskyblue));
-
+		progressBar.setVisibility(View.INVISIBLE);
 		return view;
 	}
 
-	public boolean isGoogleMapsInstalled()
+	/*public boolean isGoogleMapsInstalled()
 	{
 
 		int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext());
@@ -225,5 +209,5 @@ public class CustomAdapter extends ArrayAdapter {
 			}
 		};
 	}
-
+*/
 }
