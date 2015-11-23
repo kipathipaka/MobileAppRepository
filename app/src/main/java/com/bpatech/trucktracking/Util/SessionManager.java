@@ -138,7 +138,7 @@ public class SessionManager {
 
         SessionManager.addtripdetails=addtripdetails;
         //currenttripdetails.addAll(addtripdetails);
-        System.out.println("addtripdetailsaddtripdetails"+currenttripdetails.size());
+        //System.out.println("addtripdetailsaddtripdetails"+currenttripdetails.size());
     }
 
     public boolean isLoggedIn() {
