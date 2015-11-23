@@ -30,7 +30,6 @@ import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,7 @@ public class AddphoneFragment extends Fragment {
 		progressBar.setMax(100);
 		progressBar.setVisibility(View.INVISIBLE);
 		txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
-		txt_contTitle.setText("Add Phone");
+		txt_contTitle.setText("Add Driver");
 		addbtn = (Button) view.findViewById(R.id.addbtn);
 		addPhoneLayout = (RelativeLayout) view.findViewById(R.id.addphone_layout);
 		edityournum = (EditText) view.findViewById(R.id.edityournum);
@@ -91,7 +90,15 @@ public class AddphoneFragment extends Fragment {
 					Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
 							Toast.LENGTH_SHORT).show();
 					progressBar.setVisibility(View.INVISIBLE);
-				} else if (edityournum.getText().toString().length() == 10) {
+				}
+				else if(session.getPhoneno().toString().trim().equalsIgnoreCase(edityournum.getText().toString()))
+				{
+					//System.out.println("number" + session.getPhoneno());
+					Toast.makeText(getActivity().getApplicationContext(), "Owner cannot be a Driver!",
+							Toast.LENGTH_SHORT).show();
+					progressBar.setVisibility(View.INVISIBLE);
+				}
+				else if (edityournum.getText().toString().length() == 10) {
 					progressBar.setVisibility(View.INVISIBLE);
 					phonenumber = edityournum.getText().toString();
 		/*String number="+91"+phonenumber;

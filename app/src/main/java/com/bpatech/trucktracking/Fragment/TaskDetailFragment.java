@@ -466,7 +466,7 @@ public void onResume() {
                 dialog.show();
               whatsuptext=(EditText) promptsView.findViewById(R.id.whatuptext);
                 final String sms1=ServiceConstants.MESSAGE_SENDING_START;
-                final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip ="+trip_id;
+                final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
                 final String sms3= ServiceConstants.MESSAGE_SENDING_END;
                 final String sms = sms1 + sms2 + sms3;
 
@@ -510,7 +510,7 @@ public void sms_dailog()
             phnenum.setText(num);
               message=(EditText)promptsView.findViewById(R.id.edittexview1);
             final String sms1=ServiceConstants.MESSAGE_SENDING_START;
-            final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip ="+trip_id;
+            final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
             final String sms3= ServiceConstants.MESSAGE_SENDING_END;
             final String sms = sms1 + sms2 + sms3;
             System.out.println("trip_id" + trip_id);
