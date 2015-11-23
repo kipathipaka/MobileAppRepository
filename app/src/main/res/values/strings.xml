@@ -13,7 +13,7 @@
     <string name="otp">OTP :</string>
     <string name="truck_no">Truck Number :</string>
     <string name="destination_txt">Destination :</string>
-    <string name="phone_txt">Choose Phone Number :</string>
+    <string name="phone_txt">Choose Driver :</string>
     <string name="customer">Customer Company :</string>
     <string name="customer_name">Customer Name :</string>
     <string name="customerno_txt">Customer Phone Number :</string>
@@ -40,6 +40,9 @@
     <string name="btnNo">No</string>
     <string name="AppCrashMessage">Sorry,Something went wrong. \nPlease send error mail to admin!!</string>
 <string name="Text_Field">Welcome,\nto download the App click below link www.google.com\nThank You</string>
+    <!--add driver label-->
+    <string name="driver_page_label">Enter Phone Number of Driver you want to track</string>
+    <string name="driver_page_label_hint">e.g:9543492022</string>
 
 
 
