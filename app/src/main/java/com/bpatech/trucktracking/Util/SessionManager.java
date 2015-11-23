@@ -36,6 +36,7 @@ public class SessionManager {
     
     // User name (make variable public to access from outside)
     public static final String KEY_phoneno = "phoneno";
+    public static final String KEY_Username = "username";
     
     // Email address (make variable public to access from outside)
     public static final String KEY_otpno = "otpno";
@@ -43,6 +44,7 @@ public class SessionManager {
     public static List<AddTrip> currenttripdetails = new ArrayList<AddTrip>();
     public static List<String> driverlist;
     public static String currentLoggedPage;
+    public static String username;
 
 
 
@@ -88,8 +90,16 @@ public class SessionManager {
 
 		return pref.getString(KEY_phoneno, null);
 	}
-    
-    
+
+    public void setUsername(String username) {
+
+        editor.putString(KEY_Username, username);
+        editor.commit();
+    }
+    public String getUsername() {
+
+        return pref.getString(KEY_Username, null);
+    }
     public void setOTPno(int otp) {
 		editor.putInt(KEY_otpno, otp);
 		editor.commit();
