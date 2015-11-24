@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.crittercism.app.Crittercism;
 
 public class HomeActivity extends FragmentActivity  {
 
@@ -45,6 +46,7 @@ public class HomeActivity extends FragmentActivity  {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
 		db = new MySQLiteHelper(this.getApplicationContext());
 		int phonecount = db.getUserCount();
 		//System.out.println("********************phonecount************************** sync call end ..." + phonecount);
