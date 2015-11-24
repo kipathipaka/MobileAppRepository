@@ -63,16 +63,16 @@ public class GetMytripListParsing {
                 mytrip.setCustomer_phoneno(customerarray.getString("phone_number"));
                 mytrip.setCustomer_company(customerarray.getString("company_name"));
                 mytrip.setCustomer_name(customerarray.getString("name"));
-                if(firstmytriparry.getString("last_sync_date_time").toString().equalsIgnoreCase("null")) {
+                if(driverarray.getString("last_sync_date_time").toString().equalsIgnoreCase("null") || driverarray.getString("location").toString().equalsIgnoreCase("null")) {
                     DateFormat dateFormat = new SimpleDateFormat("MMM,dd h:mm a");
-                    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
                     Date date = new Date(Long.parseLong(firstmytriparry.getString("created_on").toString()));
                     mytrip.setLast_sync_time(dateFormat.format(date).toString());
                 }else {
                     DateFormat dateFormat1 = new SimpleDateFormat("MMM,dd h:mm a");
-                    dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
+                    dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));//GMT+5:30
                     //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
-                    Date date = new Date(Long.parseLong(firstmytriparry.getString("last_sync_date_time").toString()));
+                    Date date = new Date(Long.parseLong(driverarray.getString("last_sync_date_time").toString()));
                     mytrip.setLast_sync_time(dateFormat1.format(date).toString());
                     // System.out.println("++++++++++++++++++++++++++++++++++date+++++++++++++++++++++++++++"+mytrip.getLast_sync_time());
                 }
