@@ -298,7 +298,8 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
 					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
 					session.setDriverlist(driverphonenolist);
-					getActivity().runOnUiThread(new Runnable() {
+					/* not require*/
+					/*getActivity().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							try {
@@ -321,7 +322,7 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 								e.printStackTrace();
 							}
 						}
-					});
+					});*/
 
 
 
