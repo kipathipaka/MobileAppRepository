@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
@@ -143,9 +144,14 @@ public class HomeActivity extends FragmentActivity  {
 
 
 	public void addtripclick(View v) {
+		if(session.getDriverlist()!=null && session.getDriverlist().size() > 0){
+			AddnewTripFragment addtripfragment = new AddnewTripFragment();
+			pageRedirection(addtripfragment);
+		}else{
+			Toast.makeText(this.getApplicationContext(), "Add at least one driver!",
+					Toast.LENGTH_LONG).show();
+		}
 
-		AddnewTripFragment addtripfragment = new AddnewTripFragment();
-		pageRedirection(addtripfragment);
 
 	}
 
