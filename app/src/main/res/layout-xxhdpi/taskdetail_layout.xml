@@ -435,6 +435,34 @@
              
                
              </LinearLayout>
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="20dp"
+             android:layout_marginBottom="10dp"
+             android:layout_gravity="center"
+             android:orientation="horizontal">
+
+             <Button
+                 android:id="@+id/refreshbtn"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:paddingLeft="25dp"
+                 android:paddingRight="25dp"
+                 android:layout_marginLeft="@dimen/thirty_pt"
+                 android:layout_marginRight="@dimen/thirty_pt"
+                 android:text="Refresh"
+                 style="@style/textbutton"
+                 />
+
+            <!-- <ImageButton
+                 android:id="@+id/refresh"
+                 android:layout_width="50dp"
+                 android:layout_height="50dp"
+                 android:paddingTop="20dp"
+                 android:layout_marginTop="10dp"
+                 android:background="@drawable/refresh_image"/>-->
+         </LinearLayout>
          <!-- <LinearLayout
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"

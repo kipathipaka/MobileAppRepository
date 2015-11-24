@@ -65,7 +65,7 @@ public class TaskDetailFragment extends Fragment   {
     protected Context context;
     TextView truck, place, phone, txt_contTitle,customer_company,
             customer_name,customer_phone_no,lastlocation,updatetime;
-    Button Startbtn;
+    Button Startbtn,refreshbutton;
     TableRow locationrow,lasttimerow;
     ImageButton whatsup,inbox;
     boolean startclick;
@@ -78,6 +78,11 @@ public class TaskDetailFragment extends Fragment   {
     EditText whatsuptext,message;
     String lastlocationtxt,lastupdate_time;
     private static GoogleMap googleMap;
+    Bundle taskdetail;
+    Double mapLatitude;
+    Double latitude;
+    Double longitude;
+    Double maplongitude;
     ArrayList<AddTrip> currenttripdetails;
     int trip_id;
     private static Bundle b;
@@ -87,7 +92,7 @@ public class TaskDetailFragment extends Fragment   {
         b=savedInstanceState;
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-        Bundle taskdetail = this.getArguments();
+      taskdetail = this.getArguments();
         session = new SessionManager(getActivity().getApplicationContext());
         request= new Request(getActivity());
         vechile_trip_no=taskdetail.getString(ServiceConstants.VECHILE_TRIP_ID);
@@ -98,10 +103,12 @@ public class TaskDetailFragment extends Fragment   {
         txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
         txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
         Startbtn = (Button)view.findViewById(R.id.startbtn);
-        Startbtn.setVisibility(View.GONE);
+        Startbtn.setVisibility(View.INVISIBLE);
+        Startbtn.setEnabled(false);
         inbox = (ImageButton) view.findViewById(R.id.inbox);
         inbox.setOnClickListener(new SendSmsButtonListener());
         whatsup=(ImageButton)view.findViewById(R.id.whatsup);
+        refreshbutton=(Button)view.findViewById(R.id.refreshbtn);
         truck = (TextView) view.findViewById(R.id.truckvalu);
         place = (TextView) view.findViewById(R.id.tovalue);
         phone = (TextView) view.findViewById(R.id.phoneno);
@@ -118,7 +125,7 @@ public class TaskDetailFragment extends Fragment   {
         mapView.onCreate(savedInstanceState);
         googleMap=mapView.getMap();
         whatsup.setOnClickListener(new WhatsupButtonListener());
-
+        refreshbutton.setOnClickListener(new RefreshButtonListener());
         new GetTrackDetail().execute("", "", "");
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
@@ -126,8 +133,13 @@ public class TaskDetailFragment extends Fragment   {
             @Override
             public void onMapClick(LatLng latLng) {
                 DisplayMapFragment displayMapFragment= new DisplayMapFragment();
-                Double latitude=latLng.latitude;
-                Double longitude=latLng.longitude;
+                if(mapLatitude==null || maplongitude==null) {
+                     latitude=latLng.latitude;
+                     longitude=latLng.longitude;
+                }else {
+                  latitude = mapLatitude;
+                   longitude = maplongitude;
+                }
                 Bundle bundle=new Bundle();
                 bundle.putDouble("latitude",latitude);
                 bundle.putDouble("longitude",longitude);
@@ -172,7 +184,21 @@ public class TaskDetailFragment extends Fragment   {
 
         }
     }
+    private class RefreshButtonListener implements View.OnClickListener {
 
+        @Override
+        public void onClick(View v) {
+
+           TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
+            taskdetailfrag.setArguments(taskdetail);
+            FragmentManager fragmentmanager = getFragmentManager();
+            FragmentTransaction fragmenttransaction = fragmentmanager
+                    .beginTransaction();
+            fragmenttransaction.replace(R.id.viewers, taskdetailfrag, "BackRefreshCurrentTrip");
+            fragmenttransaction.addToBackStack(null);
+            fragmenttransaction.commit();
+        }
+    }
     private class WhatsupButtonListener implements View.OnClickListener {
 
         @Override
@@ -191,6 +217,7 @@ public class TaskDetailFragment extends Fragment   {
 
         }
     }
+
     private boolean whatsappInstalledOrNot(String uri) {
         PackageManager pm = getActivity().getPackageManager();
         boolean app_installed = false;
@@ -217,16 +244,16 @@ public class TaskDetailFragment extends Fragment   {
 
         }
     }
-    /*
-        @Override
+
+      /*  @Override
         public void onDestroyView() {
             // TODO Auto-generated method stub
 
             super.onDestroyView();
 
-            Fragment fragment = (getFragmentManager()
+            Fragment fragment = (getFragmentManager().findFragmentById(R.id.map_view));
             if (fragment != null) {
-                    .findFragmentById(R.id.map_view));
+
                 FragmentTransaction ft = getActivity().getFragmentManager()
                         .beginTransaction();
                 ft.remove(fragment);
@@ -256,11 +283,11 @@ public class TaskDetailFragment extends Fragment   {
         mapView.onPause();
     }
 
-    @Override
+    /*@Override
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-    }
+    }*/
     @Override
     public void onLowMemory() {
         super.onLowMemory();
@@ -391,12 +418,15 @@ public class TaskDetailFragment extends Fragment   {
                                                     if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         Startbtn.setText("End Tracking");
                                                         Startbtn.setVisibility(View.VISIBLE);
+                                                        Startbtn.setEnabled(true);
                                                         Startbtn.setBackgroundColor(Color.RED);
-                                                        lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                                                        if(currenttripdetailslist.get(i).getLocation().toString().equalsIgnoreCase("null") ) {
+                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
+                                                        if(currenttripdetailslist.get(i).getFullAddress().toString().equalsIgnoreCase("null") ) {
                                                             lastlocation.setText("");
                                                         }else {
-                                                            lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                            lastlocation.setText(currenttripdetailslist.get(i).getFullAddress().toString());
                                                         }
                                                         updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
                                                         locationrow.setVisibility(View.VISIBLE);
@@ -405,37 +435,60 @@ public class TaskDetailFragment extends Fragment   {
                                                         //startclick = true;
                                                     }else{
                                                         Startbtn.setVisibility(View.VISIBLE);
-                                                        lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                                                        Startbtn.setEnabled(true);
+                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                         lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
                                                     }
                                                 }else{
-                                                    Startbtn.setVisibility(View.GONE);
-                                                    lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                                                   // Startbtn.setVisibility(View.GONE);
+                                                    Startbtn.setVisibility(View.VISIBLE);
+                                                    Startbtn.setEnabled(false);
+                                                    Startbtn.setBackgroundColor(R.color.gray);
+                                                    mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                    maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                    lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                 }
                                             }else{
                                                 if(currenttripdetailslist.get(i).isStartstatus()) {
                                                     if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         //Startbtn.setText("End Tracking");
-                                                        Startbtn.setVisibility(View.GONE);
+                                                       // Startbtn.setVisibility(View.GONE);
+                                                        Startbtn.setVisibility(View.VISIBLE);
+                                                        Startbtn.setEnabled(false);
+                                                        Startbtn.setBackgroundColor(R.color.gray);
                                                         // Startbtn.setBackgroundColor(Color.RED);
-                                                        lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
-                                                        if(currenttripdetailslist.get(i).getLocation().toString().equalsIgnoreCase("null") ) {
+                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
+                                                        if(currenttripdetailslist.get(i).getFullAddress().toString().equalsIgnoreCase("null") ) {
                                                             lastlocation.setText("");
                                                         }else {
-                                                            lastlocation.setText(currenttripdetailslist.get(i).getLocation().toString());
+                                                            lastlocation.setText(currenttripdetailslist.get(i).getFullAddress().toString());
                                                         }
                                                         updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
                                                         //startclick = true;
                                                     }else{
-                                                        Startbtn.setVisibility(View.GONE);
-                                                        lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                                                        //Startbtn.setVisibility(View.GONE);
+                                                        Startbtn.setVisibility(View.VISIBLE);
+                                                        Startbtn.setEnabled(false);
+                                                        Startbtn.setBackgroundColor(R.color.gray);
+                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                         lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
                                                     }
                                                 }else{
-                                                    Startbtn.setVisibility(View.GONE);
-                                                    lastlocationtxt=currenttripdetailslist.get(i).getLocation().toString();
+                                                    //Startbtn.setVisibility(View.GONE);
+                                                    Startbtn.setVisibility(View.VISIBLE);
+                                                    Startbtn.setEnabled(false);
+                                                    Startbtn.setBackgroundColor(R.color.gray);
+                                                    mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                    maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                    lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                 }
                                             }
 
@@ -565,20 +618,21 @@ public class TaskDetailFragment extends Fragment   {
                 MapsInitializer.initialize(getActivity().getApplicationContext());
                 //GeoPoint geoPoint;
                 try {
-                    String addressname = lastlocationtxt;
+                  /*  String addressname = lastlocationtxt;
                     Geocoder geoCoder = new Geocoder(getActivity().getApplicationContext());
                     List<Address> listAddress;
-                    listAddress = geoCoder.getFromLocationName(addressname, 1);
-                    if (listAddress == null || listAddress.size() == 0) {
+                    listAddress = geoCoder.getFromLocationName(addressname, 1);*/
+                   /*if (mapLatitude == null || maplongitude == null) {
                         Toast.makeText(getActivity().getApplicationContext(), "No Location found", Toast.LENGTH_LONG).show();
                         // return null;
-                    } else {
-                        Address location = listAddress.get(0);
-                        LatLng locationlatlng = new LatLng(location.getLatitude(), location.getLongitude());
+                    } else {*/
+                        // Address location = listAddress.get(0);
+                        LatLng locationlatlng = new LatLng(mapLatitude, maplongitude);
                         Marker marker = googleMap.addMarker(new MarkerOptions().position(
                                 locationlatlng).title(""));
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationlatlng, 10));
-                    }
+                   //}
+                    //}
                     // googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000,null);
                 } catch (Exception e) {
                     e.printStackTrace();

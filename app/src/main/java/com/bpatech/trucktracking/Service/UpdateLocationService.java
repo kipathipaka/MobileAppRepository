@@ -66,6 +66,7 @@ public class UpdateLocationService extends Service
     Request request;
     Handler mhandler;
     private Context context;
+    StringBuilder fullAddress;
     HttpResponse response;
     // The minimum time beetwen updates in milliseconds 15 * 60 * 1000.
     private static final long MIN_TIME_BW_UPDATES =20 * 60 * 1000;
@@ -226,11 +227,14 @@ public class UpdateLocationService extends Service
                 if (addressList != null && addressList.size() > 0) {
                     Address address = addressList.get(0);
 
-                  /*  StringBuilder sb = new StringBuilder();
+                   fullAddress = new StringBuilder();
+
                     for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                        sb.append(address.getAddressLine(i)).append("\n");
+                        if(address.getAddressLine(i)!=null) {
+                            fullAddress.append(address.getAddressLine(i)).append(",");
+                        }
                     }
-                    sb.append(address.getLocality()).append("\n");
+                    /*sb.append(address.getLocality()).append("\n");
                     sb.append(address.getPostalCode()).append("\n");
                     sb.append(address.getCountryName());*/
                     if (address.getSubLocality() == null || address.getLocality() == null) {
@@ -269,7 +273,8 @@ public class UpdateLocationService extends Service
                     //System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" + session.getPhoneno());
                     List<NameValuePair> updatelocationlist = new ArrayList<NameValuePair>();
                     updatelocationlist.add(new BasicNameValuePair("driver_phone_number", session.getPhoneno()));
-                    updatelocationlist.add(new BasicNameValuePair("location", locationVal));
+                    updatelocationlist.add(new BasicNameValuePair("location",locationVal));
+                   updatelocationlist.add(new BasicNameValuePair("fullAddress",fullAddress.toString()));
                     updatelocationlist.add(new BasicNameValuePair("latitude", latitude.toString()));
                     updatelocationlist.add(new BasicNameValuePair("longitude", longitude.toString()));
                     response = request.requestLocationServicePostType(

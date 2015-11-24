@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
+import com.bpatech.trucktracking.Fragment.CurrentTripFragment;
 import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
@@ -196,6 +197,14 @@ public class HomeActivity extends FragmentActivity  {
 			if(testfragment.getTag()!=null) {
 				if (testfragment.getTag().equalsIgnoreCase("BackCurrentTrip")) {
 					mgr.popBackStack();
+				}if(testfragment.getTag().equalsIgnoreCase("BackRefreshCurrentTrip")) {
+					CurrentTripFragment currentfrag=new CurrentTripFragment();
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers,currentfrag);
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
 				}
 			}else{
 				/*Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -237,5 +246,9 @@ public class HomeActivity extends FragmentActivity  {
 	public void onResume() {
 		super.onResume();
 	}
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 
+	}
 }

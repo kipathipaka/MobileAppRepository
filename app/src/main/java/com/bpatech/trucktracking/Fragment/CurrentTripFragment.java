@@ -97,6 +97,10 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 		progressBar.setProgress(10);
 		progressBar.setMax(100);
 		progressBar.setVisibility(View.INVISIBLE);
+		/*DateFormat dateFormat = new SimpleDateFormat("MMM,dd h:mm a");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+		Date date = new Date(System.currentTimeMillis());
+		System.out.println("+++++++++++++time  ++++++++++++++"+dateFormat.format(date).toString());*/
 		new GetMytripDetail().execute("", "", "");
 		txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
 		txt_contTitle.setText("Current Trips");

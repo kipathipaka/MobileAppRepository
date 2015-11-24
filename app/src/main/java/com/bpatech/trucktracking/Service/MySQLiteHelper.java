@@ -139,43 +139,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return exitphonenumber;
     }*/
 
-    private class UpdatuserStatus extends
-            AsyncTask<String, Void, String> {
-        @Override
-        protected void onPostExecute(String result) {
 
-            //progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        protected String doInBackground(String... params) {
-
-            try {
-                obj = new AddUserObjectParsing();
-                request= new Request();
-                user=new User();
-                session = new SessionManager(context);
-                List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
-                createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), "N", "N", "mathi"));
-                     HttpResponse response = request.requestPutType(ServiceConstants.UPDATE_USER,createuserlist, ServiceConstants.BASE_URL);
-                        responseStrng = ""+response.getStatusLine().getStatusCode();
-
-                        if (response.getStatusLine().getStatusCode() == 200) {
-
-
-                        }
-
-
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
-
-            }
-
-            return responseStrng;
-
-        }
-
-    }
 
 }

@@ -10,14 +10,18 @@ import java.util.List;
  */
 public class AddUserObjectParsing {
 
-    public List<NameValuePair> userCreationObject(String phone_number,String company_name,String active_status,String download_status,String user_name)
+    public List<NameValuePair> userCreationObject(String phone_number,String company_name,String latitude,String longitude,String locationVal,String fullAddress,String active_status,String download_status,String user_name)
     {
         // TODO Auto-generated method stub
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-        nameValuePairs.add(new BasicNameValuePair("phone_number",phone_number));
-        nameValuePairs.add(new BasicNameValuePair("Name",user_name));
-        nameValuePairs.add(new BasicNameValuePair("company_name",company_name));
+            nameValuePairs.add(new BasicNameValuePair("phone_number",phone_number));
+            nameValuePairs.add(new BasicNameValuePair("Name",user_name));
+            nameValuePairs.add(new BasicNameValuePair("company_name",company_name));
+            nameValuePairs.add(new BasicNameValuePair("latitude",latitude));
+            nameValuePairs.add(new BasicNameValuePair("longitude",longitude));
+            nameValuePairs.add(new BasicNameValuePair("location",locationVal));
+            nameValuePairs.add(new BasicNameValuePair("fullAddress",fullAddress));
             nameValuePairs.add(new BasicNameValuePair("is_active",active_status));
             nameValuePairs.add(new BasicNameValuePair("app_download_status",download_status));
 

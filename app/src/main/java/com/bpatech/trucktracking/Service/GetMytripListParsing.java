@@ -48,6 +48,7 @@ public class GetMytripListParsing {
                     mytrip.setLatitude(firstmytriparry.getString("latitude"));
                     mytrip.setLongitude(firstmytriparry.getString("longitude"));
                 }else{*/
+                mytrip.setFullAddress(driverarray.getString("fullAddress"));
                 mytrip.setLocation(driverarray.getString("location"));
                 mytrip.setLatitude(driverarray.getString("latitude"));
                 mytrip.setLongitude(driverarray.getString("longitude"));
