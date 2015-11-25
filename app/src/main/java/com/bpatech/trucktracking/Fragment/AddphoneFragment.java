@@ -47,7 +47,8 @@ public class AddphoneFragment extends Fragment {
 	TextView txt_contTitle;
 	RelativeLayout addPhoneLayout;
 	boolean checkdriverStatus = false;
-
+	JSONArray responsejSONArray;
+	List<String> driverphonenolist;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
@@ -171,60 +172,67 @@ public class AddphoneFragment extends Fragment {
 		protected String doInBackground(String... params) {
 
 			try {
-				List<String> driverphonenolist = new ArrayList<String>();
+				driverphonenolist = new ArrayList<String>();
 				//driverphonenolist.addAll(obj.getDriverPhone(session.getPhoneno()));
 				String get_driver_url= ServiceConstants.GET_DRIVER+session.getPhoneno();
 				HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);
 				responseStrng = ""+response.getStatusLine().getStatusCode();
 				if (response.getStatusLine().getStatusCode() == 200) {
-					JSONArray responsejSONArray = request.responseArrayParsing(response);
-					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
-					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
-					session.setDriverlist(driverphonenolist);
-					getActivity().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								//System.out.println("+++++++++++++++sizeeeeeeee+++++++++++++++"+session.getDriverlist().size());
-								if (session.getDriverlist() != null && session.getDriverlist().size() > 0) {
-									List<String> driverlist = new ArrayList<String>();
-									driverlist.addAll(session.getDriverlist());
-									for (int i = 0; i < driverlist.size(); i++) {
-										//System.out.println("+++++++++++++++sizeeeeeeee+++list++++++++++++"+driverlist.get(i).toString());
-										if (driverlist.get(i).toString().equalsIgnoreCase(phonenumber)) {
-											checkdriverStatus = true;
+					 responsejSONArray = request.responseArrayParsing(response);
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									checkdriverStatus=false;
+									if (responsejSONArray != null) {
+										GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
+										driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
+										session.setDriverlist(driverphonenolist);
+										//System.out.println("+++++++++++++++sizeeeeeeee+++++++++++++++"+session.getDriverlist().size());
+										if (session.getDriverlist() != null && session.getDriverlist().size() > 0) {
+											List<String> driverlist = new ArrayList<String>();
+											driverlist.addAll(session.getDriverlist());
+											for (int i = 0; i < driverlist.size(); i++) {
+												//System.out.println("+++++++++++++++sizeeeeeeee+++list++++++++++++"+driverlist.get(i).toString());
+												if (driverlist.get(i).toString().equalsIgnoreCase(phonenumber)) {
+													checkdriverStatus = true;
 
+												}
+											}
+										} else {
+											checkdriverStatus = false;
 										}
+									}else {
+										checkdriverStatus = false;
 									}
-								} else {
-									checkdriverStatus = false;
+									if (checkdriverStatus == false) {
+										String number = "+91" + phonenumber;
+										String owner_phone_no = session.getUsername();
+										String sms1 = ServiceConstants.MESSAGE_INVITE;
+										String sms2 = ServiceConstants.APP_NAME;
+										String sms3 = ServiceConstants.TEXT_MESSAGE_URL;
+										String smsmessage = owner_phone_no + " " + sms1 + " " + sms2 + " " + sms3;
+										SmsManager smsManager = SmsManager.getDefault();
+										smsManager.sendTextMessage(number, null, smsmessage, null, null);
+										Log.d("Sms", "sendSMS " + smsmessage);
+										Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
+												Toast.LENGTH_LONG).show();
+										new AddUserPhone().execute("", "", "");
+									} else {
+										Toast.makeText(getActivity().getApplicationContext(), "This Driver PhoneNumber Already Added",
+												Toast.LENGTH_LONG).show();
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
-								if(checkdriverStatus==false) {
-									String number = "+91" + phonenumber;
-									String owner_phone_no =session.getUsername();
-									String sms1= ServiceConstants.MESSAGE_INVITE;
-									String sms2=ServiceConstants.APP_NAME;
-									String sms3=ServiceConstants.TEXT_MESSAGE_URL;
-									String smsmessage=owner_phone_no+" "+sms1+" "+sms2+" "+sms3;
-									SmsManager smsManager = SmsManager.getDefault();
-									smsManager.sendTextMessage(number, null, smsmessage, null, null);
-									Log.d("Sms", "sendSMS " + smsmessage);
-									Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
-											Toast.LENGTH_LONG).show();
-									new AddUserPhone().execute("", "", "");
-								}else{
-									Toast.makeText(getActivity().getApplicationContext(), "This Driver PhoneNumber Already Added",
-											Toast.LENGTH_LONG).show();
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
 							}
-						}
-					});
+						});
+
 
 
 
 				}
+
 			} catch (Exception e) {
 
 				e.printStackTrace();

@@ -59,8 +59,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 
-public class CurrentTripFragment  extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-		GoogleApiClient.OnConnectionFailedListener {
+public class CurrentTripFragment  extends Fragment  {
 	private static Bundle b;
 	SessionManager session;
 	LinearLayout triplist_ll,footer_addtrip_ll;
@@ -72,8 +71,6 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 	ArrayList<AddTrip> currenttripdetails;
 	ListView listView;
 	View view;
-	private GoogleApiClient googleApiClient;
-	public static final int REQUEST_CHECK_SETTINGS =1000 ;
 	private static ProgressBar progressBar;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,65 +109,7 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 		listView = (ListView)view.findViewById(R.id.listview);
 		View footerLayout =view.findViewById(R.id.footer);
 		footer_addtrip_ll=(LinearLayout)footerLayout.findViewById(R.id.addtrip_ll);
-		if (googleApiClient == null) {
-			googleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
-					.addConnectionCallbacks(this)
-					.addOnConnectionFailedListener(this)
-					.addApi(LocationServices.API)
-					.build();
-			googleApiClient.connect();
 
-			LocationRequest locationRequest = LocationRequest.create();
-			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-			locationRequest.setInterval(30 * 1000);
-			locationRequest.setFastestInterval(5 * 1000);
-			LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-					.addLocationRequest(locationRequest);
-
-			// **************************
-			builder.setAlwaysShow(true); // this is the key ingredient
-			// **************************
-
-			PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi
-					.checkLocationSettings(googleApiClient, builder.build());
-			result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-
-
-				@Override
-				public void onResult(LocationSettingsResult result) {
-					final Status status = result.getStatus();
-					final LocationSettingsStates state = result
-							.getLocationSettingsStates();
-					switch (status.getStatusCode()) {
-						case LocationSettingsStatusCodes.SUCCESS:
-							// All location settings are satisfied. The client can
-							// initialize location
-							// requests here.
-							break;
-						case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-							// Location settings are not satisfied. But could be
-							// fixed by showing the user
-							// a dialog.
-							try {
-								// Show the dialog by calling
-								// startResolutionForResult(),
-								// and check the result in onActivityResult().
-								status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
-							} catch (IntentSender.SendIntentException e) {
-								// Ignore the error.
-							}
-							break;
-						case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-							// Location settings are not satisfied. However, we have
-							// no way to fix the
-							// settings so we won't show the dialog.
-							break;
-					}
-				}
-
-			});
-
-		}
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -201,20 +140,6 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 
 	}
 
-	@Override
-	public void onConnected(Bundle bundle) {
-
-	}
-
-	@Override
-	public void onConnectionSuspended(int i) {
-
-	}
-
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
-
-	}
 
 	private class Layoutclicklistener implements View.OnClickListener {
 
@@ -300,8 +225,10 @@ public class CurrentTripFragment  extends Fragment implements GoogleApiClient.Co
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONArray responsejSONArray = request.responseArrayParsing(response);
 					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
-					driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
-					session.setDriverlist(driverphonenolist);
+					if(responsejSONArray!=null) {
+						driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
+						session.setDriverlist(driverphonenolist);
+					}
 					/* not require*/
 					/*getActivity().runOnUiThread(new Runnable() {
 						@Override

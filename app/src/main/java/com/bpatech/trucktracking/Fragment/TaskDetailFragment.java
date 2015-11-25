@@ -69,6 +69,7 @@ public class TaskDetailFragment extends Fragment   {
     TableRow locationrow,lasttimerow;
     ImageButton whatsup,inbox;
     boolean startclick;
+    boolean driverdownloadstatus;
     String vechile_trip_no;
     private static MapView mapView;
     Request request;
@@ -104,7 +105,7 @@ public class TaskDetailFragment extends Fragment   {
         txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
         Startbtn = (Button)view.findViewById(R.id.startbtn);
         Startbtn.setVisibility(View.INVISIBLE);
-        Startbtn.setEnabled(false);
+       // Startbtn.setEnabled(false);
         inbox = (ImageButton) view.findViewById(R.id.inbox);
         inbox.setOnClickListener(new SendSmsButtonListener());
         whatsup=(ImageButton)view.findViewById(R.id.whatsup);
@@ -166,22 +167,27 @@ public class TaskDetailFragment extends Fragment   {
         @Override
         public void onClick(View v) {
             progressBar.setVisibility(View.VISIBLE);
+            if (driverdownloadstatus == true) {
+
+                if (startclick == true) {
+                    // mapDestroyOnDemand();
+                    // progressBar.setVisibility(View.VISIBLE);
+                    currenttripdetails = new ArrayList<AddTrip>();
+                    new UpdateEndTripdetail().execute("", "", "");
+
+                } else {
+
+                    // progressBar.setVisibility(View.VISIBLE);
+                    new UpdateStartTripdetail().execute("", "", "");
 
 
-            if(startclick==true){
-                // mapDestroyOnDemand();
-                // progressBar.setVisibility(View.VISIBLE);
-                currenttripdetails=new ArrayList<AddTrip>();
-                new UpdateEndTripdetail().execute("", "", "");
+                }
 
-            }else {
-
-                // progressBar.setVisibility(View.VISIBLE);
-                new UpdateStartTripdetail().execute("", "", "");
-
-
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Driver is not download the App",
+                        Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.INVISIBLE);
             }
-
         }
     }
     private class RefreshButtonListener implements View.OnClickListener {
@@ -399,6 +405,7 @@ public class TaskDetailFragment extends Fragment   {
                         @Override
                         public void run() {
                             try {
+                                driverdownloadstatus=false;
                                 if(session.getAddtripdetails()!=null && session.getAddtripdetails().size() > 0){
                                     List<AddTrip> currenttripdetailslist = new ArrayList<AddTrip>();
                                     currenttripdetailslist.addAll(session.getAddtripdetails());
@@ -418,7 +425,8 @@ public class TaskDetailFragment extends Fragment   {
                                                     if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         Startbtn.setText("End Tracking");
                                                         Startbtn.setVisibility(View.VISIBLE);
-                                                        Startbtn.setEnabled(true);
+                                                       // Startbtn.setEnabled(true);
+                                                        driverdownloadstatus=true;
                                                         Startbtn.setBackgroundColor(Color.RED);
                                                         mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
                                                         maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
@@ -435,16 +443,18 @@ public class TaskDetailFragment extends Fragment   {
                                                         //startclick = true;
                                                     }else{
                                                         Startbtn.setVisibility(View.VISIBLE);
-                                                        Startbtn.setEnabled(true);
+                                                        //Startbtn.setEnabled(true);
+                                                        driverdownloadstatus=true;
                                                         mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
                                                         maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
                                                         lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                         lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
                                                     }
                                                 }else{
-                                                   // Startbtn.setVisibility(View.GONE);
+                                                   //Startbtn.setVisibility(View.GONE);
                                                     Startbtn.setVisibility(View.VISIBLE);
-                                                    Startbtn.setEnabled(false);
+                                                    //Startbtn.setEnabled(false);
+                                                    driverdownloadstatus=false;
                                                     Startbtn.setBackgroundColor(R.color.gray);
                                                     mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
                                                     maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
@@ -454,10 +464,11 @@ public class TaskDetailFragment extends Fragment   {
                                                 if(currenttripdetailslist.get(i).isStartstatus()) {
                                                     if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         //Startbtn.setText("End Tracking");
-                                                       // Startbtn.setVisibility(View.GONE);
-                                                        Startbtn.setVisibility(View.VISIBLE);
-                                                        Startbtn.setEnabled(false);
-                                                        Startbtn.setBackgroundColor(R.color.gray);
+                                                       Startbtn.setVisibility(View.GONE);
+                                                       // Startbtn.setVisibility(View.VISIBLE);
+                                                        //Startbtn.setEnabled(false);
+                                                        //driverdownloadstatus=false;
+                                                        //Startbtn.setBackgroundColor(R.color.gray);
                                                         // Startbtn.setBackgroundColor(Color.RED);
                                                         mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
                                                         maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
@@ -472,20 +483,22 @@ public class TaskDetailFragment extends Fragment   {
                                                         lasttimerow.setVisibility(View.VISIBLE);
                                                         //startclick = true;
                                                     }else{
-                                                        //Startbtn.setVisibility(View.GONE);
-                                                        Startbtn.setVisibility(View.VISIBLE);
-                                                        Startbtn.setEnabled(false);
-                                                        Startbtn.setBackgroundColor(R.color.gray);
+                                                        Startbtn.setVisibility(View.GONE);
+                                                       // Startbtn.setVisibility(View.VISIBLE);
+                                                        //Startbtn.setEnabled(false);
+                                                        //driverdownloadstatus=false;
+                                                        //Startbtn.setBackgroundColor(R.color.gray);
                                                         mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
                                                         maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
                                                         lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                         lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
                                                     }
                                                 }else{
-                                                    //Startbtn.setVisibility(View.GONE);
-                                                    Startbtn.setVisibility(View.VISIBLE);
-                                                    Startbtn.setEnabled(false);
-                                                    Startbtn.setBackgroundColor(R.color.gray);
+                                                    Startbtn.setVisibility(View.GONE);
+                                                    //Startbtn.setVisibility(View.VISIBLE);
+                                                   // Startbtn.setEnabled(false);
+                                                    //driverdownloadstatus=false;
+                                                    //Startbtn.setBackgroundColor(R.color.gray);
                                                     mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
                                                     maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
                                                     lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();

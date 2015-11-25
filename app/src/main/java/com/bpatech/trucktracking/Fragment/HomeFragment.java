@@ -3,7 +3,9 @@ package com.bpatech.trucktracking.Fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,14 +22,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.AddTrip;
+import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
+import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class HomeFragment extends Fragment {
@@ -35,11 +44,13 @@ public class HomeFragment extends Fragment {
 	private Button nbtn;
 	private EditText phoneNo;
 	Request request;
-	String responseStrng;
+	HttpResponse response;
+	String responseStrng = null;
 	public ArrayList<AddTrip> currenttriplist;
 	public ArrayList<AddTrip> currenttripdetails;
 	ImageButton imageButtonopen;
 	ImageView carlogo;
+	User user;
 	ProgressBar progressBar,progressBar1;
 	TextView destination, truck, phoneno, txt_contTitle, triplistsize_view;
 	LinearLayout listlayout_ll, triplist_ll,footer_addtrip_ll;
@@ -57,6 +68,8 @@ public class HomeFragment extends Fragment {
 			progressBar.setProgress(10);
 			progressBar.setMax(100);
 			progressBar.setVisibility(View.INVISIBLE);
+		session = new SessionManager(getActivity().getApplicationContext());
+		request = new Request(getActivity());
 			txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
 			txt_contTitle.setText("Welcome");
 			carlogo=(ImageView)view.findViewById(R.id.car_logo);
@@ -71,7 +84,6 @@ public class HomeFragment extends Fragment {
 
 	private class MyButtonListener implements OnClickListener {
 
-
 		@Override
 		public void onClick(View v) {
 			System.out.println("enter if main");
@@ -85,20 +97,19 @@ try {
 		progressBar.setVisibility(View.INVISIBLE);
 
 	}  else if(phoneNo.getText().toString().length()==10){
-
-		session = new SessionManager(getActivity().getApplicationContext());
+		progressBar.setVisibility(View.VISIBLE);
 		String savephoneno = phoneNo.getText().toString();
 		System.out.println("phoneNo " + phoneNo);
 		session.setPhoneno(savephoneno);
-		DetailFragment detailfrag = new DetailFragment();
+		/*DetailFragment detailfrag = new DetailFragment();
 
 		FragmentManager fragmentmanager = getFragmentManager();
 		FragmentTransaction fragmenttransaction = fragmentmanager
 				.beginTransaction();
 		fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
 		fragmenttransaction.addToBackStack(null);
-		fragmenttransaction.commit();
-
+		fragmenttransaction.commit();*/
+		new CheckUserDetail().execute("", "", "");
 
 	}
 	else
@@ -116,14 +127,100 @@ try {
 }
 		}
 
-		int generateValue() {
-			Random random = new Random();
-			int otpno = random.nextInt(900000) + 100000;
-			return otpno;
-		}
 	}
+	private class CheckUserDetail extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+
+			progressBar.setVisibility(View.INVISIBLE);
+		}
+
+		protected String doInBackground(String... params) {
+
+			try {
+
+				//List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
+				//createuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),latitude.toString(),longitude.toString(),locationVal.toString(),fullAddress.toString(), "Y","Y", user.getUserName()));
+				String Getuser_url= ServiceConstants.GET_USER+session.getPhoneno();
+				response = request.requestGetType(Getuser_url,ServiceConstants.BASE_URL);
+				responseStrng = "" + response.getStatusLine().getStatusCode();
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONObject responsejson = request.responseParsing(response);
+
+				//	updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),latitude.toString(),longitude.toString(),locationVal.toString(),fullAddress.toString(),"Y","Y",user.getUserName()));
+					if(responsejson!=null) {
+						if(responsejson.getString("is_active").equalsIgnoreCase("Y") && responsejson.getString("app_download_status").equalsIgnoreCase("Y")) {
+							user=new User();
+							user.setPhone_no(session.getPhoneno());
+							user.setCompanyName(responsejson.getString("company_name"));
+							user.setUserName(responsejson.getString("name"));
+							InsertUser(user);
+							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
+						}else{
+							DetailFragment detailfrag = new DetailFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
+
+						}
+
+					}else{
+
+						DetailFragment detailfrag = new DetailFragment();
+
+						FragmentManager fragmentmanager = getFragmentManager();
+						FragmentTransaction fragmenttransaction = fragmentmanager
+								.beginTransaction();
+						fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
+						fragmenttransaction.addToBackStack(null);
+						fragmenttransaction.commit();
 
 
+
+					}
+
+				}else{
+
+					DetailFragment detailfrag = new DetailFragment();
+
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
+
+
+				}
+
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
+
+	}
+	void InsertUser(User user) {
+
+		db=new MySQLiteHelper(getActivity().getApplicationContext());
+		db.addUser(user);
+		Log.d("Insert: ", "Inserting ..");
+	}
 }
 
 

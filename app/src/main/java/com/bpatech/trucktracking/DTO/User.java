@@ -9,6 +9,7 @@ public class User {
     String companyName;
     String userName;
     String phone_no;
+   boolean userStaus;
 
     public User() {
     }
@@ -56,6 +57,5 @@ public class User {
     public void setPhone_no(String phone_no) {
         this.phone_no = phone_no;
     }
-
 
 }

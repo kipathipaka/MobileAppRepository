@@ -1,8 +1,10 @@
 package com.bpatech.trucktracking.Fragment;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -10,11 +12,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +43,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class DetailFragment extends Fragment implements LocationListener{
@@ -83,7 +89,7 @@ public class DetailFragment extends Fragment implements LocationListener{
 		request = new Request(getActivity());
 		user = new User();
 		session = new SessionManager(getActivity().getApplicationContext());
-		getLocation();
+		//getLocation();
 		debtn.setOnClickListener(new MyNextButtonListener());
 		return view;
 	}
@@ -110,9 +116,15 @@ public class DetailFragment extends Fragment implements LocationListener{
 					user.setCompanyName(companyname.getText().toString());
 					user.setUserName(username.getText().toString());
 					session.setUsername(username.getText().toString());
-					System.out.println("+++++++username+++++"+session.getUsername());
+					//System.out.println("+++++++username+++++"+session.getUsername());
 					InsertUser(user);
-					new AddUserDetail().execute("", "", "");
+					getLocation();
+					if(latitude.toString()==null || longitude.toString()== null) {
+						locationEnable_popup();
+						progressBar.setVisibility(View.INVISIBLE);
+					}else{
+						new AddUserDetail().execute("", "", "");
+					}
 				}
 
 
@@ -137,7 +149,7 @@ public class DetailFragment extends Fragment implements LocationListener{
 		@Override
 		protected void onPostExecute(String result) {
 
-			//progressBar.setVisibility(View.INVISIBLE);
+			progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
@@ -235,7 +247,7 @@ public class DetailFragment extends Fragment implements LocationListener{
 		} catch (Exception ex) {
 		}
 		if (!isGPSEnabled && !isNetworkEnabled) {
-
+locationEnable_popup();
 		} else {
 			if (isNetworkEnabled) {
 				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
@@ -243,8 +255,8 @@ public class DetailFragment extends Fragment implements LocationListener{
 					location = locationManager
 							.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 					UpdateLocation(location);
-					System.out.println("++++++++++++++++++++++++++++++++++location++++++++++++" +
-							"+++++++++++++++"+location.getLatitude()+""+location.getLongitude());
+					/*System.out.println("++++++++++++++++++++++++++++++++++location++++++++++++" +
+							"+++++++++++++++"+location.getLatitude()+""+location.getLongitude());*/
 				}
 			}
 			if (isGPSEnabled) {
@@ -253,8 +265,8 @@ public class DetailFragment extends Fragment implements LocationListener{
 					if (locationManager != null) {
 						location = locationManager
 								.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-						System.out.println("++++++++++++++++++++++++++++++++++location+++++++++++++++++++++" +
-								"++++++"+location.getLatitude()+""+location.getLongitude());
+						/*System.out.println("++++++++++++++++++++++++++++++++++location+++++++++++++++++++++" +
+								"++++++"+location.getLatitude()+""+location.getLongitude());*/
 						UpdateLocation(location);
 
 					}
@@ -318,4 +330,50 @@ public class DetailFragment extends Fragment implements LocationListener{
 			}
 		}
 	}
+	public void locationEnable_popup() {
+		LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+		View promptsView = inflater.inflate(R.layout.location_enable_popup, null);
+
+		final AlertDialog alertDialog = new AlertDialog.Builder(getActivity().getApplicationContext()).create();
+
+		alertDialog.setView(promptsView);
+
+		alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+		alertDialog.show();
+
+		Button textbutton = (Button) promptsView.findViewById(R.id.btnYes);
+
+		textbutton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				getActivity().getApplicationContext().startActivity(intent);
+				alertDialog.dismiss();
+
+			}
+
+		});
+		Button textbutton1=(Button)promptsView.findViewById(R.id.btnNo);
+		textbutton1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.dismiss();
+
+			}
+		});
+		final Timer timer2 = new Timer();
+		timer2.schedule(new TimerTask() {
+			public void run() {
+
+				alertDialog.dismiss();
+				timer2.cancel(); //this will cancel the timer of the system
+			}
+		}, 5000); // the timer will count 5 seconds....
+
+
+	}
+
+
 }
