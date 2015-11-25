@@ -428,8 +428,13 @@ public class TaskDetailFragment extends Fragment   {
                                                        // Startbtn.setEnabled(true);
                                                         driverdownloadstatus=true;
                                                         Startbtn.setBackgroundColor(Color.RED);
-                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        try {
+                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        } catch (NumberFormatException e) {
+                                                            // EditText EtPotential does not contain a valid double
+                                                            e.printStackTrace();
+                                                        }
                                                         lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                         if(currenttripdetailslist.get(i).getFullAddress().toString().equalsIgnoreCase("null") ) {
                                                             lastlocation.setText("");
@@ -445,8 +450,13 @@ public class TaskDetailFragment extends Fragment   {
                                                         Startbtn.setVisibility(View.VISIBLE);
                                                         //Startbtn.setEnabled(true);
                                                         driverdownloadstatus=true;
-                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        try {
+                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        } catch (NumberFormatException e) {
+                                                            // EditText EtPotential does not contain a valid double
+                                                            e.printStackTrace();
+                                                        }
                                                         lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                         lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
                                                     }
@@ -456,8 +466,13 @@ public class TaskDetailFragment extends Fragment   {
                                                     //Startbtn.setEnabled(false);
                                                     driverdownloadstatus=false;
                                                     Startbtn.setBackgroundColor(R.color.gray);
+                                                    try {
                                                     mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
                                                     maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                    } catch (NumberFormatException e) {
+                                                        // EditText EtPotential does not contain a valid double
+                                                        e.printStackTrace();
+                                                    }
                                                     lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                 }
                                             }else{
@@ -470,8 +485,13 @@ public class TaskDetailFragment extends Fragment   {
                                                         //driverdownloadstatus=false;
                                                         //Startbtn.setBackgroundColor(R.color.gray);
                                                         // Startbtn.setBackgroundColor(Color.RED);
-                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        try {
+                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        } catch (NumberFormatException e) {
+                                                            // EditText EtPotential does not contain a valid double
+                                                            e.printStackTrace();
+                                                        }
                                                         lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                         if(currenttripdetailslist.get(i).getFullAddress().toString().equalsIgnoreCase("null") ) {
                                                             lastlocation.setText("");
@@ -488,8 +508,13 @@ public class TaskDetailFragment extends Fragment   {
                                                         //Startbtn.setEnabled(false);
                                                         //driverdownloadstatus=false;
                                                         //Startbtn.setBackgroundColor(R.color.gray);
-                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        try {
+                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        } catch (NumberFormatException e) {
+                                                            // EditText EtPotential does not contain a valid double
+                                                            e.printStackTrace();
+                                                        }
                                                         lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                         lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
                                                     }
@@ -499,8 +524,13 @@ public class TaskDetailFragment extends Fragment   {
                                                    // Startbtn.setEnabled(false);
                                                     //driverdownloadstatus=false;
                                                     //Startbtn.setBackgroundColor(R.color.gray);
-                                                    mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                    maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                    try {
+                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
+                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                    } catch (NumberFormatException e) {
+                                                        // EditText EtPotential does not contain a valid double
+                                                        e.printStackTrace();
+                                                    }
                                                     lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
                                                 }
                                             }
@@ -560,6 +590,7 @@ public class TaskDetailFragment extends Fragment   {
                         Intent sendIntent = new Intent();
                         sendIntent.setAction(Intent.ACTION_SEND);
                         sendIntent.setType("text/plain");
+
                         sendIntent.setPackage("com.whatsapp");
                         final String edittext=whatsuptext.getText().toString();
                         sendIntent.putExtra(Intent.EXTRA_TEXT, edittext);
