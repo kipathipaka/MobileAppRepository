@@ -15,7 +15,9 @@ import com.bpatech.trucktracking.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CustomAdapter extends ArrayAdapter {
 	MapView mapView;
@@ -145,7 +147,7 @@ public class CustomAdapter extends ArrayAdapter {
 		//rideText.setText("#");
 		NowText.setText("Now :");
 		if(mList.get(position).getLocation().toString().equalsIgnoreCase("null") ) {
-			Nowval.setText("");
+			Nowval.setText("Not Available");
 		}else
 		{
 			if (mList.get(position).getLocation().toString().length() > 20) {
@@ -158,7 +160,13 @@ public class CustomAdapter extends ArrayAdapter {
 
 		UpdateText.setText("Update :");
 
-		UpdateVal.setText(mList.get(position).getLast_sync_time().toString());
+		if(mList.get(position).getLast_sync_time().toString().equalsIgnoreCase("null")) {
+			UpdateVal.setText("Not available");
+		}else{
+			UpdateVal.setText(mList.get(position).getLast_sync_time().toString());
+		}
+
+		//UpdateVal.setText(mList.get(position).getLast_sync_time().toString());
 	/*if(mList.get(position).getLast_sync_time().toString().equalsIgnoreCase("null")) {
 		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
 		Date date = new Date();
