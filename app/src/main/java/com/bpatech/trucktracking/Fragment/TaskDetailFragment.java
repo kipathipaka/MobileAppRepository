@@ -15,12 +15,15 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.telephony.SmsManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -55,6 +58,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -122,14 +127,46 @@ public class TaskDetailFragment extends Fragment   {
         locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
         locationrow.setVisibility(view.GONE);
         lasttimerow.setVisibility(view.GONE);
-        mapView = (MapView)view.findViewById(R.id.map_view);
-        mapView.onCreate(savedInstanceState);
-        googleMap=mapView.getMap();
         whatsup.setOnClickListener(new WhatsupButtonListener());
         refreshbutton.setOnClickListener(new RefreshButtonListener());
-        new GetTrackDetail().execute("", "", "");
+        mapView = (MapView)view.findViewById(R.id.map_view);
+        if (isGoogleMapsInstalled()==true){
+            mapView.onCreate(savedInstanceState);
+            googleMap = mapView.getMap();
+            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+            {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    DisplayMapFragment displayMapFragment= new DisplayMapFragment();
+                    if(mapLatitude==null || maplongitude==null) {
+                        latitude=latLng.latitude;
+                        longitude=latLng.longitude;
+                    }else {
+                        latitude = mapLatitude;
+                        longitude = maplongitude;
+                    }
+                    Bundle bundle=new Bundle();
+                    bundle.putDouble("latitude",latitude);
+                    bundle.putDouble("longitude",longitude);
+                    displayMapFragment.setArguments(bundle);
+                    FragmentManager fragmentmanager = getFragmentManager();
+                    FragmentTransaction fragmenttransaction = fragmentmanager
+                            .beginTransaction();
+                    fragmenttransaction.replace(R.id.viewers, displayMapFragment,"BackCurrentTrip");
+                    fragmenttransaction.addToBackStack(null);
+                    fragmenttransaction.commit();
 
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+                }
+            });
+        }else{
+            Toast.makeText(getActivity().getApplicationContext(), "Please... Install Google Maps",
+                    Toast.LENGTH_LONG).show();
+            /*View rootView = inflater.inflate(R.layout.location_enable_popup, container, false);
+            getDialog().setTitle("Simple Dialog");
+            return rootView;*/
+        }
+
+        /*googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
         {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -153,9 +190,9 @@ public class TaskDetailFragment extends Fragment   {
                 fragmenttransaction.commit();
 
             }
-        });
+        });*/
 
-
+        new GetTrackDetail().execute("", "", "");
 
 
         Startbtn.setOnClickListener(new StartTrackButtonListener());
@@ -590,10 +627,9 @@ public class TaskDetailFragment extends Fragment   {
                         Intent sendIntent = new Intent();
                         sendIntent.setAction(Intent.ACTION_SEND);
                         sendIntent.setType("text/plain");
-
                         sendIntent.setPackage("com.whatsapp");
                         final String edittext=whatsuptext.getText().toString();
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, edittext);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml("I've found a trip in Voyajo website that might be interested you, http://www.voyajo.com/viewTrip.aspx?trip=" + "13"));
                         startActivity(Intent.createChooser(sendIntent, "share with"));
                         // TODO Auto-generated method stub
                         dialog.dismiss();
@@ -652,7 +688,7 @@ public class TaskDetailFragment extends Fragment   {
     public void Load_map(){
         //mapView.onCreate(b);
         // googleMap=mapView.getMap();
-        if (isGoogleMapsInstalled()==true) {
+
             if (googleMap != null) {
                 googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -682,14 +718,6 @@ public class TaskDetailFragment extends Fragment   {
                     e.printStackTrace();
                 }
             }
-        }else{
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Install Google Maps");
-            builder.setCancelable(false);
-            builder.setPositiveButton("Install", getGoogleMapsListener());
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
 
 
     }
@@ -716,13 +744,57 @@ public class TaskDetailFragment extends Fragment   {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+                Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=com.google.android.apps.maps"));
                 getActivity().getApplicationContext().startActivity(intent);
 
                 //Finish the activity so they can't circumvent the check
                 //finish();
             }
         };
+    }
+    public void locationEnable_popup() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity().getWindow().getContext());
+        View promptsView = inflater.inflate(R.layout.location_enable_popup, null);
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity().getWindow().getContext()).create();
+
+        alertDialog.setView(promptsView);
+
+        alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        alertDialog.show();
+
+        Button textbutton = (Button) promptsView.findViewById(R.id.btnYes);
+
+        textbutton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getActivity().startActivity(intent);
+                alertDialog.dismiss();
+
+            }
+
+        });
+        Button textbutton1 = (Button) promptsView.findViewById(R.id.btnNo);
+        textbutton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+
+            }
+        });
+       /* final Timer timer2 = new Timer();
+        timer2.schedule(new TimerTask() {
+            public void run() {
+
+                alertDialog.dismiss();
+                timer2.cancel(); //this will cancel the timer of the system
+            }
+        }, 5000); // the timer will count 5 seconds....
+*/
+
     }
 
 }

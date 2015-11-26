@@ -155,6 +155,7 @@ try {
 							user.setPhone_no(session.getPhoneno());
 							user.setCompanyName(responsejson.getString("company_name"));
 							user.setUserName(responsejson.getString("name"));
+							session.setUsername(responsejson.getString("name"));
 							InsertUser(user);
 							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 							FragmentManager fragmentmanager = getFragmentManager();

@@ -324,10 +324,7 @@ public class Request {
 
     public HttpResponse responseValidation(HttpResponse response) {
 
-       if (response.getStatusLine().getStatusCode() == 404) {
-            //networkIssue();
-        } else if (response.getStatusLine().getStatusCode() == 999
-                || response.getStatusLine().getStatusCode() == 500 ) {
+       if (response.getStatusLine().getStatusCode()!= 200) {
             networkIssue();
         }
 

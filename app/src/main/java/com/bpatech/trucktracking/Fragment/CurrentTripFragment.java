@@ -7,7 +7,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
@@ -35,28 +34,11 @@ import com.bpatech.trucktracking.Util.CustomAdapter;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-
-
 import org.apache.http.HttpResponse;
 import org.json.JSONArray;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+
 
 
 public class CurrentTripFragment  extends Fragment  {
@@ -272,27 +254,6 @@ public class CurrentTripFragment  extends Fragment  {
 		}
 
 	}
-	/*@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		//final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
-		switch (requestCode) {
-			case REQUEST_CHECK_SETTINGS:
-				switch (resultCode) {
-					case Activity.RESULT_OK:
-						// All required changes were successfully made
-						if (googleApiClient.isConnected() ) {
-							//startLocationUpdates();
-						}
-						break;
-					case Activity.RESULT_CANCELED:
-						// The user was asked to change settings, but chose not to
-						break;
-					default:
-						break;
-				}
-				break;
-		}
-	}*/
 	@Override
 	public void onResume() {
 		super.onResume();

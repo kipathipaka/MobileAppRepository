@@ -237,10 +237,10 @@ public class UpdateLocationService extends Service
                     /*sb.append(address.getLocality()).append("\n");
                     sb.append(address.getPostalCode()).append("\n");
                     sb.append(address.getCountryName());*/
-                    if (address.getSubLocality() == null || address.getLocality() == null) {
+                    if ( address.getLocality() == null) {
                         locationVal = null;
                     } else {
-                        locationVal = address.getSubLocality().toString() + "," + address.getLocality().toString();
+                        locationVal = address.getLocality().toString();
                         //Toast.makeText(getApplicationContext(), locationVal, Toast.LENGTH_SHORT).show();
                         new UpdateLocationApi().execute("", "", "");
                     }

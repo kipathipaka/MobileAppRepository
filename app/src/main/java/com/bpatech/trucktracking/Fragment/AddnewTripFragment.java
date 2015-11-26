@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class AddnewTripFragment extends Fragment {
 	HttpResponse response;
 	AddUserObjectParsing obj;
 	String source = "chennai";
+	RelativeLayout addnewtripLayout;
 	List dropdowndriverphonenolist;
 	ArrayList<AddTrip> currenttripdetails;
 	AddTrip addtrip;
@@ -69,6 +71,7 @@ public class AddnewTripFragment extends Fragment {
 		progressBar.setVisibility(View.VISIBLE);
 		txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
 		txt_contTitle.setText("Add Trips");
+		addnewtripLayout = (RelativeLayout) view.findViewById(R.id.addnewtrip_layout);
 		addbtn = (Button) view.findViewById(R.id.addbtn);
 		editdestination = (EditText) view.findViewById(R.id.editdestination);
 		editride = (EditText) view.findViewById(R.id.edittruckno);
@@ -83,10 +86,16 @@ public class AddnewTripFragment extends Fragment {
 		new GetdriverPhonelist().execute("", "", "");
 		//addItemsOnSpinner2();
 		addbtn.setOnClickListener(new MyaddButtonListener());
-
+		addnewtripLayout.setOnClickListener(new AddNewtripLayoutclicklistener());
 		return view;
 	}
+	private class AddNewtripLayoutclicklistener implements View.OnClickListener {
 
+		@Override
+		public void onClick(View v) {
+
+		}
+	}
 	private class MyaddButtonListener implements OnClickListener {
 
 
