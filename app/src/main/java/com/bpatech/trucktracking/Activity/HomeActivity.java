@@ -56,6 +56,7 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 		int phonecount = db.getUserCount();
 		//System.out.println("********************phonecount************************** sync call end ..." + phonecount);
 		  if (phonecount > 0) {
+
 			  setContentView(R.layout.currenttrip_fragment);
 
 		  }else{
