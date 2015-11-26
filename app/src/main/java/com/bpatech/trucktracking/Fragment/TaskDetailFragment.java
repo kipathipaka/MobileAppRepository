@@ -629,7 +629,7 @@ public class TaskDetailFragment extends Fragment   {
                         sendIntent.setType("text/plain");
                         sendIntent.setPackage("com.whatsapp");
                         final String edittext=whatsuptext.getText().toString();
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml("I've found a trip in Voyajo website that might be interested you, http://www.voyajo.com/viewTrip.aspx?trip=" + "13"));
+                        sendIntent.putExtra(Intent.EXTRA_TEXT,edittext);
                         startActivity(Intent.createChooser(sendIntent, "share with"));
                         // TODO Auto-generated method stub
                         dialog.dismiss();
