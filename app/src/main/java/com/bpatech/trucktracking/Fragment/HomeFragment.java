@@ -34,10 +34,8 @@ import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+
 
 public class HomeFragment extends Fragment {
 	MySQLiteHelper db;

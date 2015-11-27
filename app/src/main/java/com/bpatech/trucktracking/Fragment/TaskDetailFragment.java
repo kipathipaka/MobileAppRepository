@@ -686,9 +686,6 @@ public class TaskDetailFragment extends Fragment   {
     }
 
     public void Load_map(){
-        //mapView.onCreate(b);
-        // googleMap=mapView.getMap();
-
             if (googleMap != null) {
                 googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 

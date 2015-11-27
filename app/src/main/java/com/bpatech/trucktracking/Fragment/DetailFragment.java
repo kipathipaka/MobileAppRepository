@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -49,12 +50,12 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class DetailFragment extends Fragment implements LocationListener{
+public class DetailFragment extends Fragment implements LocationListener {
 	MySQLiteHelper db;
 	public Button debtn;
 	AddUserObjectParsing obj;
 	Request request;
-	public EditText companyname,username;
+	public EditText companyname, username;
 	User user;
 	ProgressBar progressBar;
 	SessionManager session;
@@ -66,24 +67,24 @@ public class DetailFragment extends Fragment implements LocationListener{
 	Location location;
 	Double latitude;
 	Double longitude;
-	String locationVal;
-	StringBuilder fullAddress;
+	String locationVal =null;
+	String fullAddress = null;
 	boolean isGPSEnabled = false;
 
 	// flag for network status
 	boolean isNetworkEnabled = false;
 
-	boolean canGetLocation = false;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.companydetail_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-		debtn=(Button)view.findViewById(R.id.detbtn);
-		companyname=(EditText)view.findViewById(R.id.editcompanynamee);
-		username=(EditText)view.findViewById(R.id.edityourname);
-		progressBar=(ProgressBar)view.findViewById(R.id.progressBar1);
+		debtn = (Button) view.findViewById(R.id.detbtn);
+		companyname = (EditText) view.findViewById(R.id.editcompanynamee);
+		username = (EditText) view.findViewById(R.id.edityourname);
+		progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
 		progressBar.setProgress(10);
 		progressBar.setMax(100);
 		progressBar.setVisibility(View.INVISIBLE);
@@ -91,10 +92,12 @@ public class DetailFragment extends Fragment implements LocationListener{
 		request = new Request(getActivity());
 		user = new User();
 		session = new SessionManager(getActivity().getApplicationContext());
-		//getLocation();
+		getLocation();
 		debtn.setOnClickListener(new MyNextButtonListener());
 		return view;
 	}
+
+
 
 	private class MyNextButtonListener implements OnClickListener {
 
@@ -103,7 +106,7 @@ public class DetailFragment extends Fragment implements LocationListener{
 		public void onClick(View v) {
 			try {
 				progressBar.setVisibility(View.VISIBLE);
-				currenttripdetails=new ArrayList<AddTrip>();
+				currenttripdetails = new ArrayList<AddTrip>();
 				InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
 				inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				if (companyname.getText().toString().trim().equalsIgnoreCase("") || username.getText().toString().trim().equalsIgnoreCase("")) {
@@ -118,13 +121,9 @@ public class DetailFragment extends Fragment implements LocationListener{
 					session.setUsername(username.getText().toString());
 					//System.out.println("+++++++username+++++"+session.getUsername());
 					//InsertUser(user);
-					getLocation();
-					if(latitude.toString()==null || longitude.toString()== null) {
-						locationEnable_popup();
+					//getLocation();
+					new AddUserDetail().execute("", "", "");
 
-					}else{
-						new AddUserDetail().execute("", "", "");
-					}
 				}
 
 
@@ -139,7 +138,7 @@ public class DetailFragment extends Fragment implements LocationListener{
 
 	void InsertUser(User user) {
 
-		db=new MySQLiteHelper(getActivity().getApplicationContext());
+		db = new MySQLiteHelper(getActivity().getApplicationContext());
 		db.addUser(user);
 		Log.d("Insert: ", "Inserting ..");
 	}
@@ -155,70 +154,83 @@ public class DetailFragment extends Fragment implements LocationListener{
 		protected String doInBackground(String... params) {
 
 			try {
+				List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 				List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
-				createuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),latitude.toString(),longitude.toString(),locationVal.toString(),fullAddress.toString(), "Y","Y", user.getUserName()));
-				String Getuser_url=ServiceConstants.GET_USER+ session.getPhoneno();
-				response = request.requestGetType(Getuser_url, ServiceConstants.BASE_URL);
-				if (response.getStatusLine().getStatusCode() == 200) {
-					JSONObject responsejson = request.responseParsing(response);
-					String Updateuser_url=ServiceConstants.UPDATE_USER+ session.getPhoneno();
-					List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
-					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),latitude.toString(),longitude.toString(),locationVal.toString(),fullAddress.toString(),"Y","Y",user.getUserName()));
-					if(responsejson!=null) {
-						response = request.requestPutType(ServiceConstants.UPDATE_USER,updateuserlist,ServiceConstants.BASE_URL);
-						responseStrng = ""+response.getStatusLine().getStatusCode();
-						if (response.getStatusLine().getStatusCode() == 200) {
-							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
-							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							startActivity(intent);*/
-							InsertUser(user);
-							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-							FragmentManager fragmentmanager = getFragmentManager();
-							FragmentTransaction fragmenttransaction = fragmentmanager
-									.beginTransaction();
-							fragmenttransaction.replace(R.id.viewers,currenttripfrag);
-							fragmenttransaction.addToBackStack(null);
-							fragmenttransaction.commit();
-
-						}
-
-					}else{
-						response = request.requestPostType(
-								ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
-						responseStrng = ""+response.getStatusLine().getStatusCode();
-						if (response.getStatusLine().getStatusCode() == 200) {
-							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
-							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							startActivity(intent);*/
-							InsertUser(user);
-							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-							FragmentManager fragmentmanager = getFragmentManager();
-							FragmentTransaction fragmenttransaction = fragmentmanager
-									.beginTransaction();
-							fragmenttransaction.replace(R.id.viewers,currenttripfrag);
-							fragmenttransaction.addToBackStack(null);
-							fragmenttransaction.commit();
-						}
-					}
-				}else{
-					response = request.requestPostType(
-							ServiceConstants.CREATE_USER, createuserlist,ServiceConstants.BASE_URL);
-					responseStrng = ""+response.getStatusLine().getStatusCode();
+				if(fullAddress!=null || locationVal!=null) {
+					//createuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y", user.getUserName()));
+					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress, "Y", "Y", user.getUserName()));
+					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress, "Y", "Y", user.getUserName()));
+				}else {
+					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null", "null", "Y", "Y", user.getUserName()));
+					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null","null", "Y", "Y", user.getUserName()));
+				}
+					String Getuser_url = ServiceConstants.GET_USER + session.getPhoneno();
+					response = request.requestGetType(Getuser_url, ServiceConstants.BASE_URL);
 					if (response.getStatusLine().getStatusCode() == 200) {
+						JSONObject responsejson = request.responseParsing(response);
+						String Updateuser_url = ServiceConstants.UPDATE_USER + session.getPhoneno();
+						/*List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
+						if(fullAddress!=null || locationVal!=null) {
+							//updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y",user.getUserName()));
+							updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress.toString(), "Y", "Y", user.getUserName()));
+						}else {
+							updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null", "null", "Y", "Y", user.getUserName()));
+						}*/
+							if (responsejson != null) {
+							response = request.requestPutType(ServiceConstants.UPDATE_USER, updateuserlist, ServiceConstants.BASE_URL);
+							responseStrng = "" + response.getStatusLine().getStatusCode();
+							if (response.getStatusLine().getStatusCode() == 200) {
+							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							startActivity(intent);*/
+								InsertUser(user);
+								CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+								FragmentManager fragmentmanager = getFragmentManager();
+								FragmentTransaction fragmenttransaction = fragmentmanager
+										.beginTransaction();
+								fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+								fragmenttransaction.addToBackStack(null);
+								fragmenttransaction.commit();
+
+							}
+
+						} else {
+							response = request.requestPostType(
+									ServiceConstants.CREATE_USER, createuserlist, ServiceConstants.BASE_URL);
+							responseStrng = "" + response.getStatusLine().getStatusCode();
+							if (response.getStatusLine().getStatusCode() == 200) {
+							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							startActivity(intent);*/
+								InsertUser(user);
+								CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+								FragmentManager fragmentmanager = getFragmentManager();
+								FragmentTransaction fragmenttransaction = fragmentmanager
+										.beginTransaction();
+								fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+								fragmenttransaction.addToBackStack(null);
+								fragmenttransaction.commit();
+							}
+						}
+					} else {
+						response = request.requestPostType(
+								ServiceConstants.CREATE_USER, createuserlist, ServiceConstants.BASE_URL);
+						responseStrng = "" + response.getStatusLine().getStatusCode();
+						if (response.getStatusLine().getStatusCode() == 200) {
 						/*Intent intent = new Intent(getActivity(), HomeActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(intent);*/
-						InsertUser(user);
-						CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-						FragmentManager fragmentmanager = getFragmentManager();
-						FragmentTransaction fragmenttransaction = fragmentmanager
-								.beginTransaction();
-						fragmenttransaction.replace(R.id.viewers,currenttripfrag);
-						fragmenttransaction.addToBackStack(null);
-						fragmenttransaction.commit();
+							InsertUser(user);
+							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
 
+						}
 					}
-				}
 
 			} catch (Exception e) {
 
@@ -233,9 +245,10 @@ public class DetailFragment extends Fragment implements LocationListener{
 	}
 
 	public void getLocation() {
-			locationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-		if(locationManager!=null) {
-			//Toast.makeText(getActivity().getApplicationContext(), locationManager.toString(), Toast.LENGTH_SHORT).show();
+		//Toast.makeText(getActivity().getApplicationContext(), "Enter get location method..", Toast.LENGTH_SHORT).show();
+		locationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+		if (locationManager != null) {
+		//	Toast.makeText(getActivity().getApplicationContext(), "location manager checking..." + locationManager.toString(), Toast.LENGTH_SHORT).show();
 			try {
 				isGPSEnabled = locationManager
 						.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -250,18 +263,20 @@ public class DetailFragment extends Fragment implements LocationListener{
 			}
 			if (!isGPSEnabled && !isNetworkEnabled) {
 				locationEnable_popup();
-				//Toast.makeText(getActivity().getApplicationContext(),"test location", Toast.LENGTH_SHORT).show();
 			} else {
 				if (isNetworkEnabled) {
-					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-					if (locationManager != null) {
-						location = locationManager
-								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-						UpdateLocation(location);
-					/*System.out.println("++++++++++++++++++++++++++++++++++location++++++++++++" +
-							"+++++++++++++++"+location.getLatitude()+""+location.getLongitude());*/
-					} else {
-						Toast.makeText(getActivity().getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
+					if (location == null) {
+						locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+						if (locationManager != null) {
+							location = locationManager
+									.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+							//Toast.makeText(getActivity().getApplicationContext(), "Location value....." + "latitude" + String.valueOf(location.getLatitude()) + "longitude" + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
+							if(location!=null) {
+								UpdateLocation(location);
+							}
+						} else {
+							Toast.makeText(getActivity().getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
+						}
 					}
 				}
 				if (isGPSEnabled) {
@@ -270,9 +285,9 @@ public class DetailFragment extends Fragment implements LocationListener{
 						if (locationManager != null) {
 							location = locationManager
 									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-						/*System.out.println("++++++++++++++++++++++++++++++++++location+++++++++++++++++++++" +
-								"++++++"+location.getLatitude()+""+location.getLongitude());*/
-							UpdateLocation(location);
+							if(location!=null) {
+								UpdateLocation(location);
+							}
 
 						} else {
 							Toast.makeText(getActivity().getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
@@ -280,62 +295,64 @@ public class DetailFragment extends Fragment implements LocationListener{
 					}
 				}
 			}
-		}else{
+		} else {
 			locationEnable_popup();
 		}
 
 
-	}
-	@Override
-	public void onLocationChanged(Location location) {
+}
 
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-
-	}
 	public void UpdateLocation(Location updateLocation) {
 		if (updateLocation != null) {
 			latitude = updateLocation.getLatitude();
 			longitude = updateLocation.getLongitude();
-			Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
-			try {
-				List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
-				if (addressList != null && addressList.size() > 0) {
-					Address address = addressList.get(0);
-					fullAddress = new StringBuilder();
-                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-						if(address.getAddressLine(i)!=null) {
-							fullAddress.append(address.getAddressLine(i)).append(",");
-						}
-                    }
+			Geocoder geocoder = new Geocoder(getActivity().getApplicationContext());
+			if(geocoder!=null) {
+				try {
+					List<Address> addressList = geocoder.getFromLocation(latitude,longitude,1);
+					if (addressList != null && addressList.size() > 0) {
+						Address address = addressList.get(0);
+						//fullAddress = new StringBuilder();
+						//Toast.makeText(getActivity().getApplicationContext(), "address......" + address, Toast.LENGTH_LONG).show();
+						/*if (address.getMaxAddressLineIndex() > 0) {
+							//Toast.makeText(getActivity().getApplicationContext(), "address..if loop...." + address.getMaxAddressLineIndex(), Toast.LENGTH_SHORT).show();
+							for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+								//Toast.makeText(getActivity().getApplicationContext(), "address..for loop...." + address.getMaxAddressLineIndex(), Toast.LENGTH_SHORT).show();
+								if (address.getAddressLine(i) != null) {
+									//Toast.makeText(getActivity().getApplicationContext(), "address.for ...if  loop...." + address.getAddressLine(i), Toast.LENGTH_SHORT).show();
+									//fullAddress.append(address.getAddressLine(i)).append(",");
+								}
+							}
+						}*/
                   /*  sb.append(address.getLocality()).append("\n");
                     sb.append(address.getPostalCode()).append("\n");
                     sb.append(address.getCountryName());*/
-					if (address.getSubLocality() == null || address.getLocality() == null) {
-						locationVal = null;
-					} else {
-						locationVal = address.getLocality().toString();
-						//Toast.makeText(getActivity().getApplicationContext(), fullAddress.toString(), Toast.LENGTH_SHORT).show();
-						//new UpdateLocationApi().execute("", "", "");
+						if (address.getSubLocality() == null) {
+							if (address.getLocality() == null) {
+								locationVal = "null";
+								fullAddress = "null";
+								Toast.makeText(getActivity().getApplicationContext(), "no address value", Toast.LENGTH_SHORT).show();
+							} else {
+								fullAddress = address.getLocality().toString();
+								locationVal = address.getLocality().toString();
+							}
+						} else {
+							 if (address.getLocality() == null) {
+								 fullAddress = address.getSubLocality().toString();
+								locationVal = address.getSubLocality().toString();
+							} else {
+								 fullAddress = address.getSubLocality().toString() + "," + address.getLocality().toString();
+								 locationVal = address.getLocality().toString();
+						}
+
+						}
+						//Toast.makeText(getActivity().getApplicationContext(), "fulladdress.."+fullAddress+".....location"+locationVal, Toast.LENGTH_SHORT).show();
 					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+
 				}
-
-
-			} catch (IOException e) {
-				e.printStackTrace();
-
 			}
 		}
 	}
@@ -372,47 +389,28 @@ public class DetailFragment extends Fragment implements LocationListener{
 				progressBar.setVisibility(View.INVISIBLE);
 			}
 		});
-		/*final Timer timer2 = new Timer();
-		timer2.schedule(new TimerTask() {
-			public void run() {
-
-				alertDialog.dismiss();
-				timer2.cancel(); //this will cancel the timer of the system
-			}
-		}, 5000); // the timer will count 5 seconds....*/
 
 
 	}
 
-	public boolean isGoogleMapsInstalled()
-	{
-
-		int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity().getApplicationContext());
-		if(result != ConnectionResult.SUCCESS) {
-			return false;
-		}else{
-			return true;
-		}
-
-		//ApplicationInfo info = getContext().getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0);
-
-
+	@Override
+	public void onLocationChanged(Location location) {
 
 	}
 
-	public DialogInterface.OnClickListener getGoogleMapsListener()
-	{
-		return new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
-				getActivity().getApplicationContext().startActivity(intent);
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
 
-				//Finish the activity so they can't circumvent the check
-				//finish();
-			}
-		};
 	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+
+	}
+
 }

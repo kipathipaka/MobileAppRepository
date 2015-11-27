@@ -21,7 +21,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.ServiceConstants;
@@ -66,7 +68,7 @@ public class UpdateLocationService extends Service
     Request request;
     Handler mhandler;
     private Context context;
-    StringBuilder fullAddress;
+    String fullAddress;
     HttpResponse response;
     // The minimum time beetwen updates in milliseconds 15 * 60 * 1000.
     private static final long MIN_TIME_BW_UPDATES =20 * 60 * 1000;
@@ -123,13 +125,13 @@ public class UpdateLocationService extends Service
             String provider = locationManager.getBestProvider(crta, true);
             System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*/
             if (!isGPSEnabled && !isNetworkEnabled) {
-                locationEnable_popup();
-               /* Intent intent = new Intent(this.getApplicationContext(),HomeActivity.class);
+               // locationEnable_popup();
+                Intent intent = new Intent(this.getApplicationContext(),HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);*/
+                getApplicationContext().startActivity(intent);
                 //Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
             } else {
-                this.canGetLocation = true;
+              this.canGetLocation = true;
                 if (isNetworkEnabled) {
                     //System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++++++++++++++++++++++++"+isNetworkEnabled);
                     locationManager.requestLocationUpdates(
@@ -227,23 +229,37 @@ public class UpdateLocationService extends Service
                 if (addressList != null && addressList.size() > 0) {
                     Address address = addressList.get(0);
 
-                   fullAddress = new StringBuilder();
+                //   fullAddress = new StringBuilder();
 
-                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                   /* for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
                         if(address.getAddressLine(i)!=null) {
                             fullAddress.append(address.getAddressLine(i)).append(",");
                         }
-                    }
+                    }*/
                     /*sb.append(address.getLocality()).append("\n");
                     sb.append(address.getPostalCode()).append("\n");
                     sb.append(address.getCountryName());*/
-                    if ( address.getLocality() == null) {
-                        locationVal = null;
+                    if (address.getSubLocality() == null) {
+                        if (address.getLocality() == null) {
+                            locationVal = "null";
+                            fullAddress = "null";
+                        } else {
+                            fullAddress = address.getLocality().toString();
+                            locationVal = address.getLocality().toString();
+                        }
                     } else {
-                        locationVal = address.getLocality().toString();
-                        //Toast.makeText(getApplicationContext(), locationVal, Toast.LENGTH_SHORT).show();
-                        new UpdateLocationApi().execute("", "", "");
+                        if (address.getLocality() == null) {
+                            fullAddress = address.getSubLocality().toString();
+                            locationVal = address.getSubLocality().toString();
+                        } else {
+                            fullAddress = address.getSubLocality().toString() + "," + address.getLocality().toString();
+                            locationVal = address.getLocality().toString();
+                        }
+
                     }
+
+                        new UpdateLocationApi().execute("", "", "");
+
                 }
 
 
@@ -267,7 +283,7 @@ public class UpdateLocationService extends Service
             try {
                 //  System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" +
                 //session.getPhoneno()+latitude.toString()+longitude.toString());
-                if (session.getPhoneno() == null || latitude.toString() == null || longitude.toString() == null || locationVal.toString() == null) {
+                if (session.getPhoneno() == null || String.valueOf(latitude) == null || String.valueOf(longitude) == null || locationVal.toString() == null) {
                     responsevalue = "noResult";
                 } else {
                     //System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" + session.getPhoneno());

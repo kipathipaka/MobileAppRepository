@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -45,6 +46,7 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	private Button nbtn;
 	private EditText phoneno;
 	SessionManager session;
+	Location mLastLocation;
 	public static final String MyPREFERENCES = "MyPrefs" ;
 	private GoogleApiClient googleApiClient;
 	public static final int REQUEST_CHECK_SETTINGS =1000 ;
@@ -259,6 +261,14 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	}
 	@Override
 	public void onConnected(Bundle bundle) {
+		/*Toast.makeText(this.getApplicationContext(),"enter location connected method" , Toast.LENGTH_LONG).show();
+		mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+				googleApiClient);
+		if (mLastLocation != null) {
+			Toast.makeText(this.getApplicationContext(),"Latitude and longtitude......"+String.valueOf(mLastLocation.getLatitude())+String.valueOf(mLastLocation.getLongitude()) , Toast.LENGTH_LONG).show();
+			*//*mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
+			mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));*//*
+		}*/
 
 	}
 
