@@ -53,7 +53,7 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	public static final String MyPREFERENCES = "MyPrefs";
 	private GoogleApiClient googleApiClient;
 	public static final int REQUEST_CHECK_SETTINGS = 1000;
-	private int m_interval = 10000; // 5 seconds by default, can be changed later
+	private int m_interval =3 * 60 * 1000; // 5 seconds by default, can be changed later
 	private int counter=5;
 	private Handler m_handler;
 	LocationRequest locationRequest;
@@ -208,10 +208,12 @@ private	Runnable m_statusChecker = new Runnable()
 						// All required changes were successfully made
 						if (googleApiClient.isConnected()) {
 							//startLocationUpdates();
-
+							//System.out.println("++++++++++++++++++++connected++++++++++++++++++..");
+							m_handler.postDelayed(m_statusChecker, m_interval);
 						}
 						break;
 					case Activity.RESULT_CANCELED:
+						//System.out.println("++++++++++++++++++++cancel++++++++++++++++++..");
 						if(counter>0) {
 							m_handler.postDelayed(m_statusChecker, m_interval);
 						}
@@ -301,13 +303,16 @@ public void Enable_location_popup()
 						// All location settings are satisfied. The client can
 						// initialize location
 						// requests here.
-						System.out.println("++++++++++++++++++++successs++++++++++++++++++..");
+						counter=5;
+						m_handler.postDelayed(m_statusChecker,m_interval);
 						break;
 					case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
 						// Location settings are not satisfied. But could be
 						// fixed by showing the user
 						// a dialog.
 						try {
+							//System.out.println("++++++++++++++++++++Resolution++++++++++++++++++..");
+							//m_handler.postDelayed(m_statusChecker,0);
 							// Show the dialog by calling
 							// startResolutionForResult(),
 							// and check the result in onActivityResult().
@@ -317,6 +322,7 @@ public void Enable_location_popup()
 						}
 						break;
 					case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+						//System.out.println("++++++++++++++++++++change+++unavailable+++++++++++++++..");
 						// Location settings are not satisfied. However, we have
 						// no way to fix the
 						// settings so we won't show the dialog.
