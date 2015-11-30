@@ -36,9 +36,14 @@ import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
 import org.json.JSONArray;
-import java.util.ArrayList;
-import java.util.List;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import java.util.List;
+import java.util.TimeZone;
 
 
 public class CurrentTripFragment  extends Fragment  {
@@ -67,7 +72,7 @@ public class CurrentTripFragment  extends Fragment  {
 		//boolean isWorking = (PendingIntent.getBroadcast(getActivity(), 1001, intentR, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
 		//Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
 		//System.out.println("********************************isWorking************** sync call end ..."+isWorking);
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+60 * 1000,20 * 60 * 1000,
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10 * 60 * 1000,20 * 60 * 1000,
 				pendingIntent);
 		session = new SessionManager(getActivity());
 		request= new Request(getActivity());
@@ -78,7 +83,8 @@ public class CurrentTripFragment  extends Fragment  {
 		progressBar.setVisibility(View.INVISIBLE);
 		/*DateFormat dateFormat = new SimpleDateFormat("MMM,dd h:mm a");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
-		Date date = new Date(System.currentTimeMillis());
+		//Date date = new Date("");
+		Date date = new Date(Long.parseLong("1448877941000"));
 		System.out.println("+++++++++++++time  ++++++++++++++"+dateFormat.format(date).toString());*/
 		new GetMytripDetail().execute("", "", "");
 		txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);

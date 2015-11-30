@@ -70,9 +70,9 @@ public class TaskDetailFragment extends Fragment   {
     protected Context context;
     TextView truck, place, phone, txt_contTitle,customer_company,
             customer_name,customer_phone_no,lastlocation,updatetime;
-    Button Startbtn,refreshbutton;
+    Button Startbtn,refreshbutton,whatsup;
     TableRow locationrow,lasttimerow;
-    ImageButton whatsup,inbox;
+    ImageButton inbox;
     boolean startclick;
     boolean driverdownloadstatus;
     String vechile_trip_no;
@@ -113,7 +113,7 @@ public class TaskDetailFragment extends Fragment   {
        // Startbtn.setEnabled(false);
         inbox = (ImageButton) view.findViewById(R.id.inbox);
         inbox.setOnClickListener(new SendSmsButtonListener());
-        whatsup=(ImageButton)view.findViewById(R.id.whatsup);
+        whatsup=(Button)view.findViewById(R.id.whatsup);
         refreshbutton=(Button)view.findViewById(R.id.refreshbtn);
         truck = (TextView) view.findViewById(R.id.truckvalu);
         place = (TextView) view.findViewById(R.id.tovalue);
@@ -127,7 +127,7 @@ public class TaskDetailFragment extends Fragment   {
         locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
         locationrow.setVisibility(view.GONE);
         lasttimerow.setVisibility(view.GONE);
-        whatsup.setOnClickListener(new WhatsupButtonListener());
+        whatsup.setOnClickListener(new ShareButtonListener());
         refreshbutton.setOnClickListener(new RefreshButtonListener());
         mapView = (MapView)view.findViewById(R.id.map_view);
         if (isGoogleMapsInstalled()==true){
@@ -242,26 +242,26 @@ public class TaskDetailFragment extends Fragment   {
             fragmenttransaction.commit();
         }
     }
-    private class WhatsupButtonListener implements View.OnClickListener {
+    private class ShareButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
-            if (isWhatsappInstalled) {
-                whats_up_dialog();
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT)
-                        .show();
-                Uri uri = Uri.parse("market://details?id=com.whatsapp");
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(goToMarket);
-            }
-
-
+           // boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            String name=session.getUsername();
+            final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+            final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+            final String sms3= ServiceConstants.MESSAGE_SENDING_END;
+            final String message = name+sms1 + sms2 + sms3;
+          //  final String edittext=whatsuptext.getText().toString();
+            sendIntent.putExtra(Intent.EXTRA_TEXT,message);
+            startActivity(Intent.createChooser(sendIntent, "Share Via"));
         }
     }
 
-    private boolean whatsappInstalledOrNot(String uri) {
+  /*  private boolean whatsappInstalledOrNot(String uri) {
         PackageManager pm = getActivity().getPackageManager();
         boolean app_installed = false;
         try {
@@ -271,7 +271,7 @@ public class TaskDetailFragment extends Fragment   {
             app_installed = false;
         }
         return app_installed;
-    }
+    }*/
     private class SendSmsButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -598,7 +598,7 @@ public class TaskDetailFragment extends Fragment   {
 
         }
     }
-    public void whats_up_dialog() {
+   /* public void whats_up_dialog() {
         ((getActivity())).runOnUiThread(new Runnable() {
             public void run() {
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -639,7 +639,7 @@ public class TaskDetailFragment extends Fragment   {
                 });
             }
         });
-    }
+    }*/
     public void sms_dailog()
     {
         (getActivity()).runOnUiThread(new Runnable() {
@@ -655,10 +655,11 @@ public class TaskDetailFragment extends Fragment   {
                 final EditText phnenum=(EditText) promptsView.findViewById(R.id.phonenum);
                 phnenum.setText(num);
                 message=(EditText)promptsView.findViewById(R.id.edittexview1);
+                String name=session.getUsername();
                 final String sms1=ServiceConstants.MESSAGE_SENDING_START;
                 final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
                 final String sms3= ServiceConstants.MESSAGE_SENDING_END;
-                final String sms = sms1 + sms2 + sms3;
+                final String sms = name+sms1 + sms2 + sms3;
                 System.out.println("trip_id" + trip_id);
                 message.setText(sms);
                 dialog.setContentView(promptsView);

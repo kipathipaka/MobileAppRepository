@@ -100,7 +100,7 @@ public class AddphoneFragment extends Fragment {
 					progressBar.setVisibility(View.INVISIBLE);
 				}
 				else if (edityournum.getText().toString().length() == 10) {
-					progressBar.setVisibility(View.INVISIBLE);
+					progressBar.setVisibility(View.VISIBLE);
 					phonenumber = edityournum.getText().toString();
 		/*String number="+91"+phonenumber;
 		String smsmessage = ServiceConstants.MESSAGE_FOR_ADDPHONE;

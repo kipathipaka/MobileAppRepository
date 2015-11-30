@@ -262,7 +262,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 			} catch (Exception ex) {
 			}
 			if (!isGPSEnabled && !isNetworkEnabled) {
-				locationEnable_popup();
+				//locationEnable_popup();
 			} else {
 				if (isNetworkEnabled) {
 					if (location == null) {
@@ -296,7 +296,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 				}
 			}
 		} else {
-			locationEnable_popup();
+			//locationEnable_popup();
 		}
 
 
@@ -306,14 +306,19 @@ public class DetailFragment extends Fragment implements LocationListener {
 		if (updateLocation != null) {
 			latitude = updateLocation.getLatitude();
 			longitude = updateLocation.getLongitude();
-			Geocoder geocoder = new Geocoder(getActivity().getApplicationContext());
+
+			Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(),Locale.getDefault());
+			//System.out.println("++++++++++++++++++++++++++++++++++address+address++List++++++++++++++++++++++++");
 			if(geocoder!=null) {
 				try {
 					List<Address> addressList = geocoder.getFromLocation(latitude,longitude,1);
+
 					if (addressList != null && addressList.size() > 0) {
+						//System.out.println("++++++++++++++++++++++++++++++++++address+address++List++++++++++++++++++++++++"+addressList);
 						Address address = addressList.get(0);
 						//fullAddress = new StringBuilder();
-						//Toast.makeText(getActivity().getApplicationContext(), "address......" + address, Toast.LENGTH_LONG).show();
+						//System.out.println("++++++++++++++++++++++++++++++++++address+address++++++++++++++++++++++++++"+address);
+						//Toast.makeText(getActivity().getApplicationContext(), "address......" +addressList, Toast.LENGTH_LONG).show();
 						/*if (address.getMaxAddressLineIndex() > 0) {
 							//Toast.makeText(getActivity().getApplicationContext(), "address..if loop...." + address.getMaxAddressLineIndex(), Toast.LENGTH_SHORT).show();
 							for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
@@ -346,6 +351,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 						}
 
 						}
+						//System.out.println("++++++++++++++++++++++++++++++++++fulladdress+++++++++++++++++++++++++++"+fullAddress);
 						//Toast.makeText(getActivity().getApplicationContext(), "fulladdress.."+fullAddress+".....location"+locationVal, Toast.LENGTH_SHORT).show();
 					}
 

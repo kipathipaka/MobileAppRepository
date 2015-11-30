@@ -25,7 +25,7 @@ public class ServiceConstants {
     public static final String CUURENT_TRIP_TRUCK= "Truck";
     public static final String CUURENT_TRIP_PHONE= "phone";
     public static final String APP_CRASH_ADMIN_MAILID ="anitha@bpatech.com";
-    public static final String PREF_NAME = "VehicleTracking";
+    public static final String PREF_NAME = "Truck India";
     public static final String TASK_DETAIL_TITLE = " Trip Details";
     public static final String TASK_DETAIL_ENDPAGE = "Startclick";
     public static final String ADD_TRIP_CUSTOMER= "Customer";
@@ -35,7 +35,7 @@ public class ServiceConstants {
     public static final String ADD_TRIP_SOURCE = "source";
     public static final String MESSAGE_FOR_ADDPHONE="Owner has added u as Driver";
     public static final String MESSAGE_FOR_CUSTOMER="You have added as Driver";
-    public static  String MESSAGE_SENDING_START="Welcome,\n To know your Truck current location Click below link";
+    public static  String MESSAGE_SENDING_START=" has shared a truck location via Truck India. Please click here\";";
     public static String MESSAGE_URL="\nhttp://52.88.194.128:2020/vehicletracking-spring/Home.html";
     public static String MESSAGE_SENDING_END="\nThank You";
     public static String TEXT_MESSAGE="hi, Welcome to vehicleTracking";

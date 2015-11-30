@@ -7,9 +7,12 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Configuration;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +29,7 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
 import com.bpatech.trucktracking.Util.SessionManager;
+import com.crittercism.app.Crittercism;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -39,32 +43,29 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 public class HomeActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks,
-		GoogleApiClient.OnConnectionFailedListener{
-
+		GoogleApiClient.OnConnectionFailedListener {
 
 	MySQLiteHelper db;
 	private Button nbtn;
 	private EditText phoneno;
 	SessionManager session;
 	Location mLastLocation;
-	public static final String MyPREFERENCES = "MyPrefs" ;
+	public static final String MyPREFERENCES = "MyPrefs";
 	private GoogleApiClient googleApiClient;
-	public static final int REQUEST_CHECK_SETTINGS =1000 ;
+	public static final int REQUEST_CHECK_SETTINGS = 1000;
+	private int m_interval = 10000; // 5 seconds by default, can be changed later
+	private int counter=5;
+	private Handler m_handler;
+	LocationRequest locationRequest;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
+		Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
 		db = new MySQLiteHelper(this.getApplicationContext());
 		int phonecount = db.getUserCount();
-		//System.out.println("********************phonecount************************** sync call end ..." + phonecount);
-		  if (phonecount > 0) {
+		m_handler = new Handler();
+		m_handler.postDelayed(m_statusChecker,0);
 
-			  setContentView(R.layout.currenttrip_fragment);
-
-		  }else{
-			  setContentView(R.layout.home_fragment);
-		  }
-		if (googleApiClient == null) {
 			googleApiClient = new GoogleApiClient.Builder(this)
 					.addConnectionCallbacks(this)
 					.addOnConnectionFailedListener(this)
@@ -72,65 +73,31 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 					.build();
 			googleApiClient.connect();
 
-			LocationRequest locationRequest = LocationRequest.create();
+			locationRequest = LocationRequest.create();
 			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
-			LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-					.addLocationRequest(locationRequest);
+		//System.out.println("********************phonecount************************** sync call end ..." + phonecount);
+		if (phonecount > 0) {
 
-			// **************************
-			builder.setAlwaysShow(true); // this is the key ingredient
-			// **************************
+			setContentView(R.layout.currenttrip_fragment);
 
-			PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi
-					.checkLocationSettings(googleApiClient, builder.build());
-			result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-
-
-				@Override
-				public void onResult(LocationSettingsResult result) {
-					final Status status = result.getStatus();
-					final LocationSettingsStates state = result
-							.getLocationSettingsStates();
-					switch (status.getStatusCode()) {
-						case LocationSettingsStatusCodes.SUCCESS:
-							// All location settings are satisfied. The client can
-							// initialize location
-							// requests here.
-							break;
-						case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-							// Location settings are not satisfied. But could be
-							// fixed by showing the user
-							// a dialog.
-							try {
-								// Show the dialog by calling
-								// startResolutionForResult(),
-								// and check the result in onActivityResult().
-								status.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS);
-							} catch (IntentSender.SendIntentException e) {
-								// Ignore the error.
-							}
-							break;
-						case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-							// Location settings are not satisfied. However, we have
-							// no way to fix the
-							// settings so we won't show the dialog.
-							break;
-					}
-				}
-
-			});
-
-		}
-			/*AlarmManager alarmManager=(AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-			Intent intentR = new Intent(getApplicationContext(), UpdateLocationReceiver.class);
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intentR, 0);
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60 * 1000,
-					pendingIntent);*/
+		} else {
+			setContentView(R.layout.home_fragment);
 		}
 
 
+	}
+
+private	Runnable m_statusChecker = new Runnable()
+	{
+		@Override
+		public void run() {
+			//System.out.println("+++++++++++++++++counter 1..."+counter);
+			Enable_location_popup(); //this function can change value of m_interval.
+             counter--;
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,12 +120,11 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	}
 
 
-
 	public void addtripclick(View v) {
-		if(session.getDriverlist()!=null && session.getDriverlist().size() > 0){
+		if (session.getDriverlist() != null && session.getDriverlist().size() > 0) {
 			AddnewTripFragment addtripfragment = new AddnewTripFragment();
 			pageRedirection(addtripfragment);
-		}else{
+		} else {
 			Toast.makeText(this.getApplicationContext(), "Add at least one driver!",
 					Toast.LENGTH_LONG).show();
 		}
@@ -172,8 +138,9 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 		//addphonefragment.sett
 		pageRedirection(addphonefragment);
 	}
-	public void addinviteclick(View v){
-		InviteFragment invitefragment=new InviteFragment();
+
+	public void addinviteclick(View v) {
+		InviteFragment invitefragment = new InviteFragment();
 		pageRedirection(invitefragment);
 	}
 
@@ -182,7 +149,7 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 		FragmentManager fragmentmanager = getFragmentManager();
 		FragmentTransaction fragmenttransaction = fragmentmanager
 				.beginTransaction();
-		fragmenttransaction.replace(R.id.viewers, fragment,"BackCurrentTrip");
+		fragmenttransaction.replace(R.id.viewers, fragment, "BackCurrentTrip");
 		fragmenttransaction.addToBackStack(null);
 		fragmenttransaction.commit();
 	}
@@ -191,9 +158,9 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
- FragmentManager mgr = getFragmentManager();
+		FragmentManager mgr = getFragmentManager();
 
-		System.out.println("*****************home***mgr*********************** ..." + mgr.getBackStackEntryCount());
+		//System.out.println("*****************home***mgr*********************** ..." + mgr.getBackStackEntryCount());
 		if (mgr.getBackStackEntryCount() == 0) {
 			/*Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.addCategory(Intent.CATEGORY_HOME);
@@ -201,20 +168,21 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 			startActivity(intent);*/
 			super.onBackPressed();
 		} else {
-			Fragment testfragment=mgr.findFragmentById(R.id.viewers);
-			if(testfragment.getTag()!=null) {
+			Fragment testfragment = mgr.findFragmentById(R.id.viewers);
+			if (testfragment.getTag() != null) {
 				if (testfragment.getTag().equalsIgnoreCase("BackCurrentTrip")) {
 					mgr.popBackStack();
-				}if(testfragment.getTag().equalsIgnoreCase("BackRefreshCurrentTrip")) {
-					CurrentTripFragment currentfrag=new CurrentTripFragment();
+				}
+				if (testfragment.getTag().equalsIgnoreCase("BackRefreshCurrentTrip")) {
+					CurrentTripFragment currentfrag = new CurrentTripFragment();
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
 							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers,currentfrag);
+					fragmenttransaction.replace(R.id.viewers, currentfrag);
 					fragmenttransaction.addToBackStack(null);
 					fragmenttransaction.commit();
 				}
-			}else{
+			} else {
 				/*Intent intent = new Intent(Intent.ACTION_MAIN);
 				intent.addCategory(Intent.CATEGORY_HOME);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -224,10 +192,12 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 		}
 
 	}
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		//final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
@@ -236,11 +206,15 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 				switch (resultCode) {
 					case Activity.RESULT_OK:
 						// All required changes were successfully made
-						if (googleApiClient.isConnected() ) {
+						if (googleApiClient.isConnected()) {
 							//startLocationUpdates();
+
 						}
 						break;
 					case Activity.RESULT_CANCELED:
+						if(counter>0) {
+							m_handler.postDelayed(m_statusChecker, m_interval);
+						}
 						// The user was asked to change settings, but chose not to
 						break;
 					default:
@@ -254,23 +228,42 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	public void onResume() {
 		super.onResume();
 	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
 	}
+
 	@Override
 	public void onConnected(Bundle bundle) {
-		/*Toast.makeText(this.getApplicationContext(),"enter location connected method" , Toast.LENGTH_LONG).show();
-		mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+		//Toast.makeText(this.getApplicationContext(), "enter location connected method", Toast.LENGTH_LONG).show();
+		/*mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
 				googleApiClient);
 		if (mLastLocation != null) {
-			Toast.makeText(this.getApplicationContext(),"Latitude and longtitude......"+String.valueOf(mLastLocation.getLatitude())+String.valueOf(mLastLocation.getLongitude()) , Toast.LENGTH_LONG).show();
-			*//*mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
-			mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));*//*
-		}*/
+			//System.out.println("+++++++++++++++++++++++++++++++++Latitude and longitude++++++++++++++++++++++++++" + String.valueOf(mLastLocation.getLatitude())+"------"+String.valueOf(mLastLocation.getLongitude()));
+			//Toast.makeText(this.getApplicationContext(), "Latitude and longtitude......" + String.valueOf(mLastLocation.getLatitude()) + String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_LONG).show();
+			//mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
+			//mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+			Geocoder geocoder = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+			if (geocoder != null) {
+				try {
+					List<Address> addressList = geocoder.getFromLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude(), 1);
+					if (addressList != null && addressList.size() > 0) {
+						Address address = addressList.get(0);
 
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+
+				}
+			}
+		}
+
+*/
 	}
+
 
 	@Override
 	public void onConnectionSuspended(int i) {
@@ -281,4 +274,58 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	public void onConnectionFailed(ConnectionResult connectionResult) {
 
 	}
+
+
+public void Enable_location_popup()
+{
+	if (googleApiClient != null) {
+		LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+				.addLocationRequest(locationRequest);
+
+		// **************************
+		builder.setAlwaysShow(true); // this is the key ingredient
+		// **************************
+
+		PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi
+				.checkLocationSettings(googleApiClient, builder.build());
+		result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+
+
+			@Override
+			public void onResult(LocationSettingsResult result) {
+				final Status status = result.getStatus();
+				final LocationSettingsStates state = result
+						.getLocationSettingsStates();
+				switch (status.getStatusCode()) {
+					case LocationSettingsStatusCodes.SUCCESS:
+						// All location settings are satisfied. The client can
+						// initialize location
+						// requests here.
+						System.out.println("++++++++++++++++++++successs++++++++++++++++++..");
+						break;
+					case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+						// Location settings are not satisfied. But could be
+						// fixed by showing the user
+						// a dialog.
+						try {
+							// Show the dialog by calling
+							// startResolutionForResult(),
+							// and check the result in onActivityResult().
+							status.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS);
+						} catch (IntentSender.SendIntentException e) {
+							// Ignore the error.
+						}
+						break;
+					case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+						// Location settings are not satisfied. However, we have
+						// no way to fix the
+						// settings so we won't show the dialog.
+						break;
+				}
+			}
+
+		});
+
+	}
+}
 }

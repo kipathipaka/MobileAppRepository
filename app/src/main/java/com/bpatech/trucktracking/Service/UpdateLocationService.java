@@ -66,7 +66,6 @@ public class UpdateLocationService extends Service
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10
     String userphoneno;
     Request request;
-    Handler mhandler;
     private Context context;
     String fullAddress;
     HttpResponse response;
@@ -76,7 +75,6 @@ public class UpdateLocationService extends Service
 
     @Override
     public void onCreate() {
-        mhandler = new Handler();
         request = new Request(getApplicationContext());
         session = new SessionManager(getApplicationContext());
         db = new MySQLiteHelper(getApplicationContext());

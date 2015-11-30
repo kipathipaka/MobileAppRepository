@@ -71,7 +71,7 @@ public class GetMytripListParsing {
                     mytrip.setLast_sync_time("Not Available");
                 }else {
                     DateFormat dateFormat1 = new SimpleDateFormat("MMM dd,h:mm a");
-                    dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));//GMT+5:30
+                    dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
                     //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
                     Date date = new Date(Long.parseLong(driverarray.getString("last_sync_date_time").toString()));
                     mytrip.setLast_sync_time(dateFormat1.format(date).toString());
