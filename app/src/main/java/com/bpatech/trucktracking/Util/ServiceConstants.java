@@ -35,8 +35,9 @@ public class ServiceConstants {
     public static final String ADD_TRIP_SOURCE = "source";
     public static final String MESSAGE_FOR_ADDPHONE="Owner has added u as Driver";
     public static final String MESSAGE_FOR_CUSTOMER="You have added as Driver";
-    public static  String MESSAGE_SENDING_START=" has shared a truck location via Truck India. Please click here\";";
-    public static String MESSAGE_URL="\nhttp://52.88.194.128:2020/vehicletracking-spring/Home.html";
+    public static  String MESSAGE_SENDING_START=" has shared a truck location via Truck India. Please click here.\n";
+    //public static String MESSAGE_URL="\nhttp://52.88.194.128:2020/vehicletracking-spring/Home.html";
+    public static String MESSAGE_URL="\nhttp://ec2-52-88-194-128.us-west-2.compute.amazonaws.com:2020/vehicletracking-spring/api/web/";
     public static String MESSAGE_SENDING_END="\nThank You";
     public static String TEXT_MESSAGE="hi, Welcome to vehicleTracking";
     public static String MESSAGE_INVITE="has shared truck location app";

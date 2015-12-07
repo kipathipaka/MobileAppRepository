@@ -20,6 +20,7 @@ public class AddTrip {
 	String update_time;
 	String create_time;
 	String last_sync_time;
+	String trip_url;
 
 	public AddTrip()
 	{
@@ -28,7 +29,7 @@ public class AddTrip {
 	public AddTrip(int vehicle_trip_id,String destination, String truckno, String driver_phone_no,
 				   String customer_company, String customer_name, String customer_phoneno,String source,
 				   boolean startstatus,String start_end_Trip,String latitude, String location, String longitude, String update_time,
-						   String create_time,String last_sync_time,String fullAddress) {
+						   String create_time,String last_sync_time,String fullAddress,String trip_url) {
 		this.vehicle_trip_id = vehicle_trip_id;
 		this.destination = destination;
 		this.truckno = truckno;
@@ -46,6 +47,7 @@ public class AddTrip {
 		this.create_time = create_time;
 		this.last_sync_time = last_sync_time;
 		this.fullAddress=fullAddress;
+		this.trip_url = trip_url;
 	}
 	public String getDestination() {
 		return destination;
@@ -170,5 +172,11 @@ public class AddTrip {
 	}
 	public void setOwner_phone_no(String owner_phone_no) {
 		this.owner_phone_no = owner_phone_no;
+	}
+	public String getTrip_url() {
+		return trip_url;
+	}
+	public void setTrip_url(String trip_url) {
+		this.trip_url = trip_url;
 	}
 }

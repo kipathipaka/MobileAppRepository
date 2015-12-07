@@ -39,6 +39,7 @@ import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+import com.bpatech.trucktracking.Util.URLShortner;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,6 +54,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,6 +81,7 @@ public class TaskDetailFragment extends Fragment   {
     String vechile_trip_no;
     private static MapView mapView;
     Request request;
+    URLShortner shorturl;
     String responseStrng;
     ProgressBar progressBar;
     SessionManager session;
@@ -91,6 +95,7 @@ public class TaskDetailFragment extends Fragment   {
     Double maplongitude;
     ArrayList<AddTrip> currenttripdetails;
     int trip_id;
+    String trip_url;
     private static Bundle b;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +106,7 @@ public class TaskDetailFragment extends Fragment   {
       taskdetail = this.getArguments();
         session = new SessionManager(getActivity().getApplicationContext());
         request= new Request(getActivity());
+        shorturl = new URLShortner();
         vechile_trip_no=taskdetail.getString(ServiceConstants.VECHILE_TRIP_ID);
         progressBar=(ProgressBar)view.findViewById(R.id.taskdetailprogresbar);
         progressBar.setProgress(10);
@@ -193,7 +199,7 @@ public class TaskDetailFragment extends Fragment   {
         });*/
 
         new GetTrackDetail().execute("", "", "");
-
+        new GetShortURL().execute("", "", "");
 
         Startbtn.setOnClickListener(new StartTrackButtonListener());
         return view;
@@ -252,7 +258,9 @@ public class TaskDetailFragment extends Fragment   {
             sendIntent.setType("text/plain");
             String name=session.getUsername();
             final String sms1=ServiceConstants.MESSAGE_SENDING_START;
-            final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+            //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+            final String sms2=trip_url;
+            //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
             final String sms3= ServiceConstants.MESSAGE_SENDING_END;
             final String message = name+sms1 + sms2 + sms3;
           //  final String edittext=whatsuptext.getText().toString();
@@ -376,6 +384,37 @@ public class TaskDetailFragment extends Fragment   {
 
         }
     }
+    private class GetShortURL extends
+            AsyncTask<String, Void, String> {
+        @Override
+        protected void onPostExecute(String result) {
+
+        }
+
+        protected String doInBackground(String... params) {
+
+            try {
+                System.out.println("trip_id. in shorturl asycn task....."+trip_id);
+                if(trip_id!=0){
+                    String id = Integer.toString(trip_id);
+                    JSONObject obj = shorturl.getJSONFromUrl(id);
+                    //trip_url = obj.getString("id");
+                    System.out.println("response......"+obj);
+                    System.out.println("trip_url......"+trip_url);
+                }
+
+
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+            return responseStrng;
+
+        }
+    }
 
     private class UpdateEndTripdetail extends
             AsyncTask<String, Void, String> {
@@ -450,7 +489,8 @@ public class TaskDetailFragment extends Fragment   {
 
                                         if(currenttripdetailslist.get(i).getVehicle_trip_id()== Integer.parseInt(vechile_trip_no)){
                                             trip_id=currenttripdetailslist.get(i).getVehicle_trip_id();
-                                            System.out.println(trip_id);
+                                            trip_url=currenttripdetailslist.get(i).getTrip_url();
+                                            System.out.println(trip_url);
                                             place.setText(currenttripdetailslist.get(i).getDestination());
                                             truck.setText(currenttripdetailslist.get(i).getTruckno());
                                             phone.setText(currenttripdetailslist.get(i).getDriver_phone_no());
@@ -657,7 +697,9 @@ public class TaskDetailFragment extends Fragment   {
                 message=(EditText)promptsView.findViewById(R.id.edittexview1);
                 String name=session.getUsername();
                 final String sms1=ServiceConstants.MESSAGE_SENDING_START;
-                final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+                //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+                final String sms2=trip_url;
+                //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
                 final String sms3= ServiceConstants.MESSAGE_SENDING_END;
                 final String sms = name+sms1 + sms2 + sms3;
                 System.out.println("trip_id" + trip_id);

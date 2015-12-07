@@ -158,7 +158,7 @@ public class CustomAdapter extends ArrayAdapter {
 			}
 		}
 
-		UpdateText.setText("Update :");
+		UpdateText.setText("Time :");
 
 		if(mList.get(position).getLast_sync_time().toString().equalsIgnoreCase("null")) {
 			UpdateVal.setText("Not available");

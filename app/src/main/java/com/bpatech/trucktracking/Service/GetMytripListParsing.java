@@ -29,6 +29,7 @@ public class GetMytripListParsing {
                 mytrip.setCreate_time(firstmytriparry.getString("created_on"));
                 mytrip.setUpdate_time(firstmytriparry.getString("updated_on"));
                 mytrip.setStart_end_Trip(firstmytriparry.getString("travel_status"));
+                mytrip.setTrip_url(firstmytriparry.getString("trip_url"));
                 JSONObject vehiclearray = firstmytriparry
                         .getJSONObject("vehicle");
                 mytrip.setTruckno(vehiclearray.getString("vehicle_registration_number"));
