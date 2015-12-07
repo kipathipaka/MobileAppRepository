@@ -398,6 +398,8 @@
                          android:layout_column="2"
                          android:layout_marginLeft="1dp"
                          android:layout_marginTop="0dp"
+                         android:linksClickable="true"
+                         android:autoLink="phone"
                          style="@style/codefont2"  />
 
                  </TableRow>

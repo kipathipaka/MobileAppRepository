@@ -106,7 +106,7 @@ public class AddnewTripFragment extends Fragment {
 
 				InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
 				inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-				if (editdestination.getText().toString().trim().equalsIgnoreCase("") || editride.getText().toString().trim().equalsIgnoreCase("") ||
+				/*if (editdestination.getText().toString().trim().equalsIgnoreCase("") || editride.getText().toString().trim().equalsIgnoreCase("") ||
 						String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Choose Phone number")
 						|| String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Add Phone number")
 						|| customer_company.getText().toString().trim().equalsIgnoreCase("") ||
@@ -115,7 +115,42 @@ public class AddnewTripFragment extends Fragment {
 							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 
-				} else if (String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim()) ||
+				}*/
+				/*if(String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Choose Phone number")
+						|| String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Add Phone number")||
+						customer_phoneno.getText().toString().trim().equalsIgnoreCase("")) {
+					Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
+							Toast.LENGTH_LONG).show();
+					progressBar.setVisibility(View.INVISIBLE);
+				}*/
+					if(String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Choose Phone number")||
+							String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Add Phone number")){
+						Toast.makeText(getActivity().getApplicationContext(), "Please Choose Driver?",
+								Toast.LENGTH_LONG).show();
+						phonespinner.requestFocus();
+						progressBar.setVisibility(View.INVISIBLE);
+						return;
+					}
+					if(customer_phoneno.getText().toString().trim().equalsIgnoreCase(""))
+					{
+						Toast.makeText(getActivity().getApplicationContext(), "Please enter Customer Phone Number?",
+								Toast.LENGTH_LONG).show();
+						//customer_phoneno.setFocusableInTouchMode(true);
+						customer_phoneno.requestFocus();
+						progressBar.setVisibility(View.INVISIBLE);
+						return;
+					}
+
+				if(editride.getText().toString().trim().equalsIgnoreCase(""))
+				{
+
+					Toast.makeText(getActivity().getApplicationContext(), "Please enter Truck Number?",
+							Toast.LENGTH_LONG).show();
+					editride.requestFocus();
+					progressBar.setVisibility(View.INVISIBLE);
+                       return;
+				}
+				else if (String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim()) ||
 						String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase(session.getPhoneno().toString().trim()) ||
 						session.getPhoneno().toString().trim().equalsIgnoreCase(customer_phoneno.getText().toString().trim())) {
 					Toast.makeText(getActivity().getApplicationContext(), "Entered Owner phonenumber,Customer phone number and driver phone are same.. Please Check ",
@@ -131,13 +166,13 @@ public class AddnewTripFragment extends Fragment {
 					addtrip.setSource(source);
 					new AddTripDetail().execute("", "", "");
 				} else {
-					Toast.makeText(getActivity().getApplicationContext(), "enter the valid phone number!",
+					Toast.makeText(getActivity().getApplicationContext(), "Please enter the valid phone number?",
 							Toast.LENGTH_LONG).show();
 					progressBar.setVisibility(View.INVISIBLE);
 				}
 			} catch (Exception e) {
-				Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-						Toast.LENGTH_LONG).show();
+				//Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
+						//Toast.LENGTH_LONG).show();
 				progressBar.setVisibility(View.INVISIBLE);
 				e.printStackTrace();
 			}
