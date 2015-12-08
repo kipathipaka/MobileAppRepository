@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -78,6 +79,7 @@ public class TaskDetailFragment extends Fragment   {
     ImageButton inbox;
     boolean startclick;
     boolean driverdownloadstatus;
+    LinearLayout strBtnLayout;
     String vechile_trip_no;
     private static MapView mapView;
     Request request;
@@ -116,6 +118,8 @@ public class TaskDetailFragment extends Fragment   {
         txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
         Startbtn = (Button)view.findViewById(R.id.startbtn);
         Startbtn.setVisibility(View.INVISIBLE);
+        strBtnLayout = (LinearLayout)view.findViewById(R.id.buttn_ll);
+
        // Startbtn.setEnabled(false);
         inbox = (ImageButton) view.findViewById(R.id.inbox);
         inbox.setOnClickListener(new SendSmsButtonListener());
@@ -199,7 +203,7 @@ public class TaskDetailFragment extends Fragment   {
         });*/
 
         new GetTrackDetail().execute("", "", "");
-        new GetShortURL().execute("", "", "");
+        //new GetShortURL().execute("", "", "");
 
         Startbtn.setOnClickListener(new StartTrackButtonListener());
         return view;
@@ -557,6 +561,7 @@ public class TaskDetailFragment extends Fragment   {
                                                     if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         //Startbtn.setText("End Tracking");
                                                        Startbtn.setVisibility(View.GONE);
+                                                        strBtnLayout.setVisibility(View.GONE);
                                                        // Startbtn.setVisibility(View.VISIBLE);
                                                         //Startbtn.setEnabled(false);
                                                         //driverdownloadstatus=false;
@@ -581,6 +586,7 @@ public class TaskDetailFragment extends Fragment   {
                                                         //startclick = true;
                                                     }else{
                                                         Startbtn.setVisibility(View.GONE);
+                                                        strBtnLayout.setVisibility(View.GONE);
                                                        // Startbtn.setVisibility(View.VISIBLE);
                                                         //Startbtn.setEnabled(false);
                                                         //driverdownloadstatus=false;
@@ -597,6 +603,7 @@ public class TaskDetailFragment extends Fragment   {
                                                     }
                                                 }else{
                                                     Startbtn.setVisibility(View.GONE);
+                                                    strBtnLayout.setVisibility(View.GONE);
                                                     //Startbtn.setVisibility(View.VISIBLE);
                                                    // Startbtn.setEnabled(false);
                                                     //driverdownloadstatus=false;
