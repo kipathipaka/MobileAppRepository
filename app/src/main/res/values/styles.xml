@@ -39,7 +39,7 @@
     <style name="sharebutton">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/thirty_pt</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:background">@color/darkskyblue</item>
     </style>
     <style name="marginlayouts">
