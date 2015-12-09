@@ -106,6 +106,11 @@ public class TaskDetailFragment extends Fragment   {
         View view = inflater.inflate(R.layout.taskdetail_layout, container, false);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
       taskdetail = this.getArguments();
+       // System.out.println("++++++++++++taskdetail+++++++++++++++"+taskdetail);
+        if(taskdetail==null){
+            taskdetail=getActivity().getIntent().getExtras();
+            //System.out.println("++++++++++++taskdetail+++++++++++++++"+taskdetail);
+        }
         session = new SessionManager(getActivity().getApplicationContext());
         request= new Request(getActivity());
         shorturl = new URLShortner();
@@ -471,58 +476,61 @@ public class TaskDetailFragment extends Fragment   {
 
             try {
                 //progressBar.setVisibility(View.VISIBLE);
-                String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
-                HttpResponse response = request.requestGetType(Gettrip_url, ServiceConstants.BASE_URL);
-
+                //Integer.parseInt(vechile_trip_no)
+                String Gettrip_url = ServiceConstants.TRACK_TRIP+Integer.parseInt(vechile_trip_no);
+                HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
+                System.out.println("++++++++session++size+++++++++++++++"+Gettrip_url);
                 responseStrng = "" + response.getStatusLine().getStatusCode();
                 if (response.getStatusLine().getStatusCode() == 200) {
-                    JSONArray responsejSONArray = request.responseArrayParsing(response);
+                    JSONObject responsejSONObject = request.responseParsing(response);
+                    //System.out.println("++++++++++responsejSONArray++++++++++++++"+responsejSONObject);
                     GetMytripListParsing mytripListParsing = new GetMytripListParsing();
                     List<AddTrip> mytripdetailslist = new ArrayList<AddTrip>();
-                    mytripdetailslist.addAll(mytripListParsing.getmytriplist(responsejSONArray));
+                    mytripdetailslist.addAll(mytripListParsing.Gettrip(responsejSONObject));
                     session.setAddtripdetails(mytripdetailslist);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 driverdownloadstatus=false;
+                              //  System.out.println("++++++++session++size+++++++++++++++"+session.getAddtripdetails().size());
                                 if(session.getAddtripdetails()!=null && session.getAddtripdetails().size() > 0){
                                     List<AddTrip> currenttripdetailslist = new ArrayList<AddTrip>();
                                     currenttripdetailslist.addAll(session.getAddtripdetails());
-                                    for(int i=0;i< currenttripdetailslist.size();i++){
-
-                                        if(currenttripdetailslist.get(i).getVehicle_trip_id()== Integer.parseInt(vechile_trip_no)){
-                                            trip_id=currenttripdetailslist.get(i).getVehicle_trip_id();
-                                            trip_url=currenttripdetailslist.get(i).getTrip_url();
-                                            System.out.println(trip_url);
-                                            place.setText(currenttripdetailslist.get(i).getDestination());
-                                            truck.setText(currenttripdetailslist.get(i).getTruckno());
-                                            phone.setText(currenttripdetailslist.get(i).getDriver_phone_no());
-                                            customer_company.setText(currenttripdetailslist.get(i).getCustomer_company());
-                                            customer_name.setText(currenttripdetailslist.get(i).getCustomer_name());
-                                            customer_phone_no.setText(currenttripdetailslist.get(i).getCustomer_phoneno());
-                                            if(currenttripdetailslist.get(i).getOwner_phone_no().equalsIgnoreCase(session.getPhoneno())){
-                                                if(currenttripdetailslist.get(i).isStartstatus()) {
-                                                    if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
+                                  //  for(int i=0;i< currenttripdetailslist.size();i++){
+                                   // System.out.println("++++++++session++size+++++++++++++++"+currenttripdetailslist.get(0).getVehicle_trip_id());
+                                       // if(currenttripdetailslist.get(0).getVehicle_trip_id()== Integer.parseInt(vechile_trip_no)){
+                                            trip_id=currenttripdetailslist.get(0).getVehicle_trip_id();
+                                            trip_url=currenttripdetailslist.get(0).getTrip_url();
+                                           // System.out.println("++++++++session++size+++++++++++++++"+trip_url);
+                                            place.setText(currenttripdetailslist.get(0).getDestination());
+                                            truck.setText(currenttripdetailslist.get(0).getTruckno());
+                                            phone.setText(currenttripdetailslist.get(0).getDriver_phone_no());
+                                            customer_company.setText(currenttripdetailslist.get(0).getCustomer_company());
+                                            customer_name.setText(currenttripdetailslist.get(0).getCustomer_name());
+                                            customer_phone_no.setText(currenttripdetailslist.get(0).getCustomer_phoneno());
+                                            if(currenttripdetailslist.get(0).getOwner_phone_no().equalsIgnoreCase(session.getPhoneno())){
+                                                if(currenttripdetailslist.get(0).isStartstatus()) {
+                                                    if(currenttripdetailslist.get(0).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         Startbtn.setText("End Tracking");
                                                         Startbtn.setVisibility(View.VISIBLE);
                                                        // Startbtn.setEnabled(true);
                                                         driverdownloadstatus=true;
                                                         Startbtn.setBackgroundColor(Color.RED);
                                                         try {
-                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(0).getLatitude().toString());
+                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(0).getLongitude().toString());
                                                         } catch (NumberFormatException e) {
                                                             // EditText EtPotential does not contain a valid double
                                                             e.printStackTrace();
                                                         }
-                                                        lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
-                                                        if(currenttripdetailslist.get(i).getFullAddress().toString().equalsIgnoreCase("null") ) {
+                                                        lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
+                                                        if(currenttripdetailslist.get(0).getFullAddress().toString().equalsIgnoreCase("null") ) {
                                                             lastlocation.setText("");
                                                         }else {
-                                                            lastlocation.setText(currenttripdetailslist.get(i).getFullAddress().toString());
+                                                            lastlocation.setText(currenttripdetailslist.get(0).getFullAddress().toString());
                                                         }
-                                                        updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
+                                                        updatetime.setText(currenttripdetailslist.get(0).getLast_sync_time().toString());
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
                                                         startclick = true;
@@ -532,14 +540,14 @@ public class TaskDetailFragment extends Fragment   {
                                                         //Startbtn.setEnabled(true);
                                                         driverdownloadstatus=true;
                                                         try {
-                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(0).getLatitude().toString());
+                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(0).getLongitude().toString());
                                                         } catch (NumberFormatException e) {
                                                             // EditText EtPotential does not contain a valid double
                                                             e.printStackTrace();
                                                         }
-                                                        lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
-                                                        lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
+                                                        lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
+                                                        lastupdate_time=currenttripdetailslist.get(0).getLast_sync_time().toString();
                                                     }
                                                 }else{
                                                    //Startbtn.setVisibility(View.GONE);
@@ -548,17 +556,17 @@ public class TaskDetailFragment extends Fragment   {
                                                     driverdownloadstatus=false;
                                                     Startbtn.setBackgroundColor(R.color.gray);
                                                     try {
-                                                    mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                    maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                    mapLatitude=Double.parseDouble(currenttripdetailslist.get(0).getLatitude().toString());
+                                                    maplongitude=Double.parseDouble(currenttripdetailslist.get(0).getLongitude().toString());
                                                     } catch (NumberFormatException e) {
                                                         // EditText EtPotential does not contain a valid double
                                                         e.printStackTrace();
                                                     }
-                                                    lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
+                                                    lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
                                                 }
                                             }else{
-                                                if(currenttripdetailslist.get(i).isStartstatus()) {
-                                                    if(currenttripdetailslist.get(i).getStart_end_Trip().equalsIgnoreCase("STR")){
+                                                if(currenttripdetailslist.get(0).isStartstatus()) {
+                                                    if(currenttripdetailslist.get(0).getStart_end_Trip().equalsIgnoreCase("STR")){
                                                         //Startbtn.setText("End Tracking");
                                                        Startbtn.setVisibility(View.GONE);
                                                         strBtnLayout.setVisibility(View.GONE);
@@ -568,19 +576,19 @@ public class TaskDetailFragment extends Fragment   {
                                                         //Startbtn.setBackgroundColor(R.color.gray);
                                                         // Startbtn.setBackgroundColor(Color.RED);
                                                         try {
-                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(0).getLatitude().toString());
+                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(0).getLongitude().toString());
                                                         } catch (NumberFormatException e) {
                                                             // EditText EtPotential does not contain a valid double
                                                             e.printStackTrace();
                                                         }
-                                                        lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
-                                                        if(currenttripdetailslist.get(i).getFullAddress().toString().equalsIgnoreCase("null") ) {
+                                                        lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
+                                                        if(currenttripdetailslist.get(0).getFullAddress().toString().equalsIgnoreCase("null") ) {
                                                             lastlocation.setText("");
                                                         }else {
-                                                            lastlocation.setText(currenttripdetailslist.get(i).getFullAddress().toString());
+                                                            lastlocation.setText(currenttripdetailslist.get(0).getFullAddress().toString());
                                                         }
-                                                        updatetime.setText(currenttripdetailslist.get(i).getLast_sync_time().toString());
+                                                        updatetime.setText(currenttripdetailslist.get(0).getLast_sync_time().toString());
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
                                                         //startclick = true;
@@ -592,14 +600,14 @@ public class TaskDetailFragment extends Fragment   {
                                                         //driverdownloadstatus=false;
                                                         //Startbtn.setBackgroundColor(R.color.gray);
                                                         try {
-                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                            mapLatitude=Double.parseDouble(currenttripdetailslist.get(0).getLatitude().toString());
+                                                            maplongitude=Double.parseDouble(currenttripdetailslist.get(0).getLongitude().toString());
                                                         } catch (NumberFormatException e) {
                                                             // EditText EtPotential does not contain a valid double
                                                             e.printStackTrace();
                                                         }
-                                                        lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
-                                                        lastupdate_time=currenttripdetailslist.get(i).getLast_sync_time().toString();
+                                                        lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
+                                                        lastupdate_time=currenttripdetailslist.get(0).getLast_sync_time().toString();
                                                     }
                                                 }else{
                                                     Startbtn.setVisibility(View.GONE);
@@ -609,19 +617,14 @@ public class TaskDetailFragment extends Fragment   {
                                                     //driverdownloadstatus=false;
                                                     //Startbtn.setBackgroundColor(R.color.gray);
                                                     try {
-                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(i).getLatitude().toString());
-                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(i).getLongitude().toString());
+                                                        mapLatitude=Double.parseDouble(currenttripdetailslist.get(0).getLatitude().toString());
+                                                        maplongitude=Double.parseDouble(currenttripdetailslist.get(0).getLongitude().toString());
                                                     } catch (NumberFormatException e) {
                                                         // EditText EtPotential does not contain a valid double
                                                         e.printStackTrace();
                                                     }
-                                                    lastlocationtxt=currenttripdetailslist.get(i).getFullAddress().toString();
+                                                    lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
                                                 }
-                                            }
-
-
-                                        }
-
 
                                     }
                                     Load_map();
