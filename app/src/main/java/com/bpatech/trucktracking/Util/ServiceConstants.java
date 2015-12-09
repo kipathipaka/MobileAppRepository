@@ -42,6 +42,6 @@ public class ServiceConstants {
     public static String MESSAGE_SENDING_END="\nThank You";
     public static String TEXT_MESSAGE="hi, Welcome to vehicleTracking";
     public static String MESSAGE_INVITE="has shared truck location app";
-    public static String APP_NAME="Vehicle Tracking.";
+    public static String APP_NAME="Truck India.";
     public static String TEXT_MESSAGE_URL="Download here WWW.google.com.";
 }
