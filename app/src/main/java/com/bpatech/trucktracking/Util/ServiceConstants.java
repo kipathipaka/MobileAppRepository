@@ -16,6 +16,7 @@ public class ServiceConstants {
     public static final String GET_DRIVER="/api/drivers/";
     public static final String GET_USER="/api/user/";
     public static final String GET_TRIP="/api/trip/mytrips/";
+    public static final String TRACK_TRIP="/api/trip/";
     public static final String START_TRIP="/api/trip/startTrip";
     public static final String END_TRIP="/api/trip/endTrip";
     public static final String UPDATE_USER="/api/user/updateUser";

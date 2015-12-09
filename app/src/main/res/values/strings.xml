@@ -44,6 +44,9 @@
     <!--add driver label-->
     <string name="driver_page_label">Enter Phone Number of Driver you want to track</string>
     <string name="driver_page_label_hint">e.g:9543492022</string>
+    <string name="title_activity_web">back to Truck India</string>
+
+    <string name="hello_world">Hello world!</string>
 
 
 

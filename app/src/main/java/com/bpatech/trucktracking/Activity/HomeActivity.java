@@ -57,12 +57,19 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	private int counter=5;
 	private Handler m_handler;
 	LocationRequest locationRequest;
+	Bundle tripdetailbundle;
+	String trip_id=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
 		db = new MySQLiteHelper(this.getApplicationContext());
 		int phonecount = db.getUserCount();
+		tripdetailbundle = getIntent().getExtras();
+		System.out.println("********************phonecount************************** sync call end ..." + tripdetailbundle);
+		if(tripdetailbundle!=null) {
+			trip_id = tripdetailbundle.getString("vechile_trip_id");
+		}
 		m_handler = new Handler();
 		m_handler.postDelayed(m_statusChecker,0);
 
@@ -78,11 +85,13 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
 		//System.out.println("********************phonecount************************** sync call end ..." + phonecount);
-		if (phonecount > 0) {
+		if (phonecount > 0 && trip_id==null) {
 
 			setContentView(R.layout.currenttrip_fragment);
 
-		} else {
+		} else if(phonecount > 0 && trip_id!=null){
+			setContentView(R.layout.tripdetail_fragment);
+		}else{
 			setContentView(R.layout.home_fragment);
 		}
 
@@ -162,11 +171,11 @@ private	Runnable m_statusChecker = new Runnable()
 
 		//System.out.println("*****************home***mgr*********************** ..." + mgr.getBackStackEntryCount());
 		if (mgr.getBackStackEntryCount() == 0) {
-			/*Intent intent = new Intent(Intent.ACTION_MAIN);
+			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.addCategory(Intent.CATEGORY_HOME);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);*/
-			super.onBackPressed();
+			startActivity(intent);
+			//super.onBackPressed();
 		} else {
 			Fragment testfragment = mgr.findFragmentById(R.id.viewers);
 			if (testfragment.getTag() != null) {
