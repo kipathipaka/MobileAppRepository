@@ -57,7 +57,9 @@ public class CurrentTripFragment  extends Fragment  {
 	ArrayList<AddTrip> currenttriplist;
 	ArrayList<AddTrip> currenttripdetails;
 	ListView listView;
+	Bundle taskdetail;
 	View view;
+	String trip_id;
 	private static ProgressBar progressBar;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +67,7 @@ public class CurrentTripFragment  extends Fragment  {
 		b= savedInstanceState;
 		 view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		session = new SessionManager(getActivity());
 		AlarmManager alarmManager=(AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		Intent intentR = new Intent( getActivity().getApplicationContext(), UpdateLocationReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity().getApplicationContext(), 0, intentR, 0);
@@ -74,7 +77,25 @@ public class CurrentTripFragment  extends Fragment  {
 		//System.out.println("********************************isWorking************** sync call end ..."+isWorking);
 		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10 * 60 * 1000,20 * 60 * 1000,
 				pendingIntent);
-		session = new SessionManager(getActivity());
+			/*taskdetail=getActivity().getIntent().getExtras();
+		if(taskdetail!=null) {*/
+
+			if(session.getVechil_trip_id()!=null) {
+				trip_id = session.getVechil_trip_id();
+				TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
+				session.setVechil_trip_id(null);
+				Bundle bundle = new Bundle();
+				bundle.putString(ServiceConstants.VECHILE_TRIP_ID, trip_id);
+				taskdetailfrag.setArguments(bundle);
+				FragmentManager fragmentmanager = getFragmentManager();
+				FragmentTransaction fragmenttransaction = fragmentmanager
+						.beginTransaction();
+				fragmenttransaction.replace(R.id.viewers, taskdetailfrag, "BackCurrentTrip");
+				fragmenttransaction.addToBackStack(null);
+				fragmenttransaction.commit();
+			}
+
+
 		request= new Request(getActivity());
 		currenttripdetails=new ArrayList<AddTrip>();
 		progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar);

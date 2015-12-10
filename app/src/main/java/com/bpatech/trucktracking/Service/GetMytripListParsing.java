@@ -21,7 +21,6 @@ public class GetMytripListParsing {
         List<AddTrip>  mytriplist = new ArrayList<AddTrip>();
         AddTrip mytrip;
         try {
-            System.out.println("+++++++++++list in parsing+++++++"+commentsArray.length());
             for (int i = 0; i < commentsArray.length(); i++) {
                 mytrip = new AddTrip();
                 JSONObject firstmytriparry = commentsArray.getJSONObject(i);
@@ -92,12 +91,8 @@ public class GetMytripListParsing {
         List<AddTrip>  mytriplist = new ArrayList<AddTrip>();
         AddTrip mytrip;
         try {
-            //System.out.println("+++++++++++list in parsing+++++++"+commentsArray.length());
                 mytrip = new AddTrip();
-               // JSONObject firstmytriparry = commentsArray.getJSONObject(i);
                 mytrip.setVehicle_trip_id(tripobject.getInt("vehicle_trip_header_id"));
-
-                //System.out.println("+++++++++++list in parsing+++++++"+tripobject.getInt("vehicle_trip_header_id"));
                 mytrip.setDestination(tripobject.getString("destination_station"));
                 mytrip.setCreate_time(tripobject.getString("created_on"));
                 mytrip.setUpdate_time(tripobject.getString("updated_on"));

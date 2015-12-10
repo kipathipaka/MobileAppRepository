@@ -42,6 +42,8 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
+import java.util.List;
+
 public class HomeActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks,
 		GoogleApiClient.OnConnectionFailedListener {
 
@@ -57,19 +59,13 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	private int counter=5;
 	private Handler m_handler;
 	LocationRequest locationRequest;
-	Bundle tripdetailbundle;
-	String trip_id=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
 		db = new MySQLiteHelper(this.getApplicationContext());
 		int phonecount = db.getUserCount();
-		tripdetailbundle = getIntent().getExtras();
-		System.out.println("********************phonecount************************** sync call end ..." + tripdetailbundle);
-		if(tripdetailbundle!=null) {
-			trip_id = tripdetailbundle.getString("vechile_trip_id");
-		}
+session=new SessionManager(this.getApplicationContext());
 		m_handler = new Handler();
 		m_handler.postDelayed(m_statusChecker,0);
 
@@ -84,16 +80,35 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
-		//System.out.println("********************phonecount************************** sync call end ..." + phonecount);
-		if (phonecount > 0 && trip_id==null) {
+		Intent i = getIntent();
+		final String action = i.getAction();
+		if (Intent.ACTION_VIEW.equals(action)) {
+			final List<String> segments = i.getData().getPathSegments();
+			if (segments.size() > 0) {
+				String tripid = segments.get(segments.size() - 1);
+				session.setVechil_trip_id(tripid);
+				if (phonecount > 0) {
+					setContentView(R.layout.currenttrip_fragment);
+
+				}
+			}
+		}else{
+		if(phonecount>0){
+		setContentView(R.layout.currenttrip_fragment);
+			}else{
+			setContentView(R.layout.home_fragment);
+			}
+		}
+
+		/*if (phonecount > 0 && trip_id==null) {
 
 			setContentView(R.layout.currenttrip_fragment);
 
 		} else if(phonecount > 0 && trip_id!=null){
-			setContentView(R.layout.tripdetail_fragment);
+			setContentView(R.layout.currenttrip_fragment);
 		}else{
 			setContentView(R.layout.home_fragment);
-		}
+		}*/
 
 
 	}
@@ -171,11 +186,11 @@ private	Runnable m_statusChecker = new Runnable()
 
 		//System.out.println("*****************home***mgr*********************** ..." + mgr.getBackStackEntryCount());
 		if (mgr.getBackStackEntryCount() == 0) {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-			//super.onBackPressed();
+			//Intent intent = new Intent(Intent.ACTION_MAIN);
+			//intent.addCategory(Intent.CATEGORY_HOME);
+			//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			//startActivity(intent);
+			super.onBackPressed();
 		} else {
 			Fragment testfragment = mgr.findFragmentById(R.id.viewers);
 			if (testfragment.getTag() != null) {
@@ -192,10 +207,10 @@ private	Runnable m_statusChecker = new Runnable()
 					fragmenttransaction.commit();
 				}
 			} else {
-				/*Intent intent = new Intent(Intent.ACTION_MAIN);
-				intent.addCategory(Intent.CATEGORY_HOME);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);*/
+				//Intent intent = new Intent(Intent.ACTION_MAIN);
+				//intent.addCategory(Intent.CATEGORY_HOME);
+				//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				//startActivity(intent);
 				super.onBackPressed();
 			}
 		}

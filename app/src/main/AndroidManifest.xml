@@ -33,20 +33,11 @@
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation">
             <intent-filter>
+
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
-        </activity>
-       <!-- <activity android:name=".Activity.HomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>-->
-        <activity android:name=".Activity.CrashActivity" android:label="CrashActivity"/>
-        <activity
-            android:name=".Activity.WebActivity"
-            android:label="@string/title_activity_web" >
             <intent-filter>
                 <data
                     android:host="ec2-52-88-194-128.us-west-2.compute.amazonaws.com"
@@ -59,9 +50,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.VIEW" />
-            </intent-filter>
-        </activity>
 
+                </intent-filter>
+        </activity>
+       <!-- <activity android:name=".Activity.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>-->
+        <activity android:name=".Activity.CrashActivity" android:label="CrashActivity"/>
         <receiver
             android:name=".Service.UpdateLocationReceiver"
             android:exported="false">

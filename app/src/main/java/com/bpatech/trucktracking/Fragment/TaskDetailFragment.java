@@ -107,10 +107,10 @@ public class TaskDetailFragment extends Fragment   {
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
       taskdetail = this.getArguments();
        // System.out.println("++++++++++++taskdetail+++++++++++++++"+taskdetail);
-        if(taskdetail==null){
+        /*if(taskdetail==null){
             taskdetail=getActivity().getIntent().getExtras();
             //System.out.println("++++++++++++taskdetail+++++++++++++++"+taskdetail);
-        }
+        }*/
         session = new SessionManager(getActivity().getApplicationContext());
         request= new Request(getActivity());
         shorturl = new URLShortner();

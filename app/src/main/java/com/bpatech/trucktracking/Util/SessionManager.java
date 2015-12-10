@@ -39,6 +39,8 @@ public class SessionManager {
     public static final String KEY_Username = "username";
 
     // Email address (make variable public to access from outside)
+
+    public static final String KEY_VEHICLE_TRIP_ID = "vehicle_trip_id";
     public static final String KEY_otpno = "otpno";
     public static List<AddTrip> addtripdetails;
     public static List<AddTrip> currenttripdetails = new ArrayList<AddTrip>();
@@ -92,8 +94,17 @@ public class SessionManager {
         editor.commit();
     }
     public String getUsername() {
-
         return pref.getString(KEY_Username, null);
+    }
+
+    public void setVechil_trip_id(String trip_id) {
+
+        editor.putString(KEY_VEHICLE_TRIP_ID, trip_id);
+        editor.commit();
+    }
+    public String getVechil_trip_id() {
+
+        return pref.getString(KEY_VEHICLE_TRIP_ID, null);
     }
     public void setOTPno(int otp) {
         editor.putInt(KEY_otpno, otp);

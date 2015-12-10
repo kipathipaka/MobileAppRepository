@@ -110,7 +110,6 @@ public class Request {
             if (internetStatus == true) {
                 serverUrl = BASE_URL+Url;
                 HttpClient client = new DefaultHttpClient();
-                System.out.println("++++++++++++serverUrl++++++++++"+serverUrl);
                 HttpGet request = new HttpGet(serverUrl);
                 response = client.execute(request);
             } else {
