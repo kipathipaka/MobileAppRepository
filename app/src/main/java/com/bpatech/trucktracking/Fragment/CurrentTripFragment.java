@@ -185,7 +185,8 @@ public class CurrentTripFragment  extends Fragment  {
 						@Override
 						public void run() {
 							try {
-								String triplisttext = "Available (" + SessionManager.getAddtripdetails().size() + ")";
+
+								String triplisttext =session.getUsername()+"-"+session.getPhoneno();
 								triplistsize_view.setText(triplisttext);
 								triplist_ll.setVisibility(View.VISIBLE);
 								ArrayList<AddTrip> currenttripdetailslist = new ArrayList<AddTrip>();

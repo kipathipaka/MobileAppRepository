@@ -22,14 +22,18 @@ public class AddTrip {
 	String last_sync_time;
 	String trip_url;
 
+
+
+	String last_ping_Datetime;
+
 	public AddTrip()
 	{
-		
+
 	}
 	public AddTrip(int vehicle_trip_id,String destination, String truckno, String driver_phone_no,
 				   String customer_company, String customer_name, String customer_phoneno,String source,
 				   boolean startstatus,String start_end_Trip,String latitude, String location, String longitude, String update_time,
-						   String create_time,String last_sync_time,String fullAddress,String trip_url) {
+				   String create_time,String last_sync_time,String fullAddress,String trip_url,String last_ping_Datetime) {
 		this.vehicle_trip_id = vehicle_trip_id;
 		this.destination = destination;
 		this.truckno = truckno;
@@ -48,6 +52,7 @@ public class AddTrip {
 		this.last_sync_time = last_sync_time;
 		this.fullAddress=fullAddress;
 		this.trip_url = trip_url;
+		this.last_ping_Datetime = last_ping_Datetime;
 	}
 	public String getDestination() {
 		return destination;
@@ -178,5 +183,12 @@ public class AddTrip {
 	}
 	public void setTrip_url(String trip_url) {
 		this.trip_url = trip_url;
+	}
+	public String getLast_ping_Datetime() {
+		return last_ping_Datetime;
+	}
+
+	public void setLast_ping_Datetime(String last_ping_Datetime) {
+		this.last_ping_Datetime = last_ping_Datetime;
 	}
 }

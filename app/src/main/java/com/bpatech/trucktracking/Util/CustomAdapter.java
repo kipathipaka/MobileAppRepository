@@ -15,9 +15,7 @@ import com.bpatech.trucktracking.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class CustomAdapter extends ArrayAdapter {
 	MapView mapView;
@@ -178,7 +176,12 @@ public class CustomAdapter extends ArrayAdapter {
 		UpdateVal.setText(dateFormat1.format(date).toString());
 	}*/
 		Rideno.setText("#"+mList.get(position).getTruckno() );
-		Destination.setText( mList.get(position).getDestination() );
+		if( mList.get(position).getDestination().toString().equalsIgnoreCase("null")) {
+			Destination.setText("Not available");
+		}else{
+			Destination.setText( mList.get(position).getDestination());
+		}
+		//Destination.setText( mList.get(position).getDestination() );
 		phoneno.setText( mList.get(position).getDriver_phone_no());
 
 		vechile_trip_id.setText(String.valueOf(mList.get(position).getVehicle_trip_id()));

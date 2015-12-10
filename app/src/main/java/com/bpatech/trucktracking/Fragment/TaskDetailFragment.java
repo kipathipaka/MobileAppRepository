@@ -58,10 +58,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -73,9 +75,9 @@ public class TaskDetailFragment extends Fragment   {
 
     protected Context context;
     TextView truck, place, phone, txt_contTitle,customer_company,
-            customer_name,customer_phone_no,lastlocation,updatetime;
+            customer_name,customer_phone_no,lastlocation,updatetime,text_message;;
     Button Startbtn,refreshbutton,whatsup;
-    TableRow locationrow,lasttimerow;
+    TableRow locationrow,lasttimerow,textmessagerow;
     ImageButton inbox;
     boolean startclick;
     boolean driverdownloadstatus;
@@ -98,6 +100,8 @@ public class TaskDetailFragment extends Fragment   {
     ArrayList<AddTrip> currenttripdetails;
     int trip_id;
     String trip_url;
+    boolean pingNotReceived= false;
+    String pingDiff;
     private static Bundle b;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,6 +137,8 @@ public class TaskDetailFragment extends Fragment   {
         truck = (TextView) view.findViewById(R.id.truckvalu);
         place = (TextView) view.findViewById(R.id.tovalue);
         phone = (TextView) view.findViewById(R.id.phoneno);
+        text_message=(TextView)view.findViewById(R.id.Text_message_value);
+        textmessagerow=(TableRow)view.findViewById(R.id.textmessage_row);
         customer_company = (TextView) view.findViewById(R.id.customer_company_val);
         customer_name = (TextView) view.findViewById(R.id.customenameval);
         customer_phone_no = (TextView) view.findViewById(R.id.customephonenoval);
@@ -352,6 +358,7 @@ public class TaskDetailFragment extends Fragment   {
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+        System.gc();
     }
 
     private class UpdateStartTripdetail extends
@@ -481,8 +488,7 @@ public class TaskDetailFragment extends Fragment   {
                 responseStrng = "" + response.getStatusLine().getStatusCode();
                 if (response.getStatusLine().getStatusCode() == 200) {
                     JSONObject responsejSONObject = request.responseParsing(response);
-                    //System.out.println("++++++++++responsejSONArray++++++++++++++"+responsejSONObject);
-                    GetMytripListParsing mytripListParsing = new GetMytripListParsing();
+                     GetMytripListParsing mytripListParsing = new GetMytripListParsing();
                     List<AddTrip> mytripdetailslist = new ArrayList<AddTrip>();
                     mytripdetailslist.addAll(mytripListParsing.Gettrip(responsejSONObject));
                     session.setAddtripdetails(mytripdetailslist);
@@ -496,7 +502,12 @@ public class TaskDetailFragment extends Fragment   {
                                     currenttripdetailslist.addAll(session.getAddtripdetails());
                                             trip_id=currenttripdetailslist.get(0).getVehicle_trip_id();
                                             trip_url=currenttripdetailslist.get(0).getTrip_url();
-                                            place.setText(currenttripdetailslist.get(0).getDestination());
+                                         if( currenttripdetailslist.get(0).getDestination().toString().equalsIgnoreCase("null")) {
+                                          place.setText("Not available");
+                                             }else{
+                                         place.setText(currenttripdetailslist.get(0).getDestination());
+                                            }
+                                           // place.setText(currenttripdetailslist.get(0).getDestination());
                                             truck.setText(currenttripdetailslist.get(0).getTruckno());
                                             phone.setText(currenttripdetailslist.get(0).getDriver_phone_no());
                                             customer_company.setText(currenttripdetailslist.get(0).getCustomer_company());
@@ -520,16 +531,23 @@ public class TaskDetailFragment extends Fragment   {
                                                         lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
                                                         if(currenttripdetailslist.get(0).getFullAddress().toString().equalsIgnoreCase("null") ) {
                                                             lastlocation.setText("");
+                                                            textmessagerow.setVisibility(View.GONE);
                                                         }else {
                                                             lastlocation.setText(currenttripdetailslist.get(0).getFullAddress().toString());
                                                         }
                                                         updatetime.setText(currenttripdetailslist.get(0).getLast_sync_time().toString());
+                                                        String diffDate=makeDecisonPing(currenttripdetailslist.get(0).getLast_ping_Datetime().toString());
+                                                        String ping_message=ServiceConstants.PING_DIFFERENCE_MESSAGE+""+diffDate;
+                                                        text_message.setText(ping_message);
+                                                        text_message.setTextColor(getResources().getColor(R.color.red));
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
                                                         startclick = true;
                                                         //startclick = true;
                                                     }else{
                                                         Startbtn.setVisibility(View.VISIBLE);
+                                                        textmessagerow.setVisibility(View.GONE);
+
                                                         //Startbtn.setEnabled(true);
                                                         driverdownloadstatus=true;
                                                         try {
@@ -545,6 +563,8 @@ public class TaskDetailFragment extends Fragment   {
                                                 }else{
                                                    //Startbtn.setVisibility(View.GONE);
                                                     Startbtn.setVisibility(View.VISIBLE);
+                                                    textmessagerow.setVisibility(View.GONE);
+
                                                     //Startbtn.setEnabled(false);
                                                     driverdownloadstatus=false;
                                                     Startbtn.setBackgroundColor(R.color.gray);
@@ -578,16 +598,22 @@ public class TaskDetailFragment extends Fragment   {
                                                         lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
                                                         if(currenttripdetailslist.get(0).getFullAddress().toString().equalsIgnoreCase("null") ) {
                                                             lastlocation.setText("");
+                                                            textmessagerow.setVisibility(View.GONE);
                                                         }else {
                                                             lastlocation.setText(currenttripdetailslist.get(0).getFullAddress().toString());
                                                         }
                                                         updatetime.setText(currenttripdetailslist.get(0).getLast_sync_time().toString());
+                                                        String diffDate=makeDecisonPing(currenttripdetailslist.get(0).getLast_ping_Datetime().toString());
+                                                       String ping_message=ServiceConstants.PING_DIFFERENCE_MESSAGE+""+diffDate;
+                                                        text_message.setText(ping_message);
+                                                        text_message.setTextColor(getResources().getColor(R.color.red));
                                                         locationrow.setVisibility(View.VISIBLE);
                                                         lasttimerow.setVisibility(View.VISIBLE);
                                                         //startclick = true;
                                                     }else{
                                                         Startbtn.setVisibility(View.GONE);
                                                         strBtnLayout.setVisibility(View.GONE);
+                                                        textmessagerow.setVisibility(View.GONE);
                                                        // Startbtn.setVisibility(View.VISIBLE);
                                                         //Startbtn.setEnabled(false);
                                                         //driverdownloadstatus=false;
@@ -605,6 +631,7 @@ public class TaskDetailFragment extends Fragment   {
                                                 }else{
                                                     Startbtn.setVisibility(View.GONE);
                                                     strBtnLayout.setVisibility(View.GONE);
+                                                    textmessagerow.setVisibility(View.GONE);
                                                     //Startbtn.setVisibility(View.VISIBLE);
                                                    // Startbtn.setEnabled(false);
                                                     //driverdownloadstatus=false;
@@ -772,6 +799,7 @@ public class TaskDetailFragment extends Fragment   {
         if(result != ConnectionResult.SUCCESS) {
             return false;
         }else{
+            System.gc();
             return true;
         }
 
@@ -839,5 +867,81 @@ public class TaskDetailFragment extends Fragment   {
 */
 
     }
+    private String makeDecisonPing(String lastpingtime){
+        Date lastPingDate = getDate(lastpingtime);
+        Date currentDate = getCurrentDate();
+        String diffDate = getLastPingDifference(lastPingDate,currentDate);
+        // System.out.println("+***************///////////+make decision"+diffDate);
+        return diffDate;
+    }
+    private Date getCurrentDate(){
 
+        DateFormat dateFormat1 = new SimpleDateFormat("yyyy MMM dd,h:mm a");
+        dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
+        //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
+        Date date = new Date(System.currentTimeMillis());
+        return date;
+    }
+    private Date getDate(String convertingDate){
+        Date date =null;
+        try{
+            DateFormat dateFormat1 = new SimpleDateFormat("yyyy MMM dd,h:mm a");
+            dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
+
+            date = dateFormat1.parse(convertingDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+    public String getLastPingDifference(Date startDate, Date endDate){
+
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        System.out.println("startDate : " + startDate);
+        System.out.println("endDate : "+ endDate);
+        System.out.println("different : " + different);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+        if(elapsedDays > 0){
+            pingNotReceived = true;
+            text_message.setVisibility(View.VISIBLE);
+            pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+
+        }else if(elapsedHours > 0){
+            pingNotReceived = true;
+            text_message.setVisibility(View.VISIBLE);
+            pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+        }
+
+        else if(elapsedMinutes > 20){
+            pingNotReceived = true;
+            text_message.setVisibility(View.VISIBLE);
+            pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+        }
+        else {
+            text_message.setVisibility(View.GONE);
+        }
+
+        System.out.printf(
+                "%d days, %d hours, %d minutes, %d seconds%n",
+                elapsedDays,
+                elapsedHours, elapsedMinutes, elapsedSeconds);
+        return pingDiff;
+    }
 }
