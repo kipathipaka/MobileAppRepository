@@ -25,7 +25,6 @@ public class GetMytripListParsing {
                 mytrip = new AddTrip();
                 JSONObject firstmytriparry = commentsArray.getJSONObject(i);
                 mytrip.setVehicle_trip_id(firstmytriparry.getInt("vehicle_trip_header_id"));
-                System.out.println("+++++++++++list in parsing+++++++"+firstmytriparry.getInt("vehicle_trip_header_id"));
                 mytrip.setDestination(firstmytriparry.getString("destination_station"));
                 mytrip.setCreate_time(firstmytriparry.getString("created_on"));
                 mytrip.setUpdate_time(firstmytriparry.getString("updated_on"));

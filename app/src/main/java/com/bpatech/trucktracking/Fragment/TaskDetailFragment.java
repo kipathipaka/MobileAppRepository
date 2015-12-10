@@ -476,10 +476,8 @@ public class TaskDetailFragment extends Fragment   {
 
             try {
                 //progressBar.setVisibility(View.VISIBLE);
-                //Integer.parseInt(vechile_trip_no)
                 String Gettrip_url = ServiceConstants.TRACK_TRIP+Integer.parseInt(vechile_trip_no);
                 HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
-                System.out.println("++++++++session++size+++++++++++++++"+Gettrip_url);
                 responseStrng = "" + response.getStatusLine().getStatusCode();
                 if (response.getStatusLine().getStatusCode() == 200) {
                     JSONObject responsejSONObject = request.responseParsing(response);
@@ -493,16 +491,11 @@ public class TaskDetailFragment extends Fragment   {
                         public void run() {
                             try {
                                 driverdownloadstatus=false;
-                              //  System.out.println("++++++++session++size+++++++++++++++"+session.getAddtripdetails().size());
                                 if(session.getAddtripdetails()!=null && session.getAddtripdetails().size() > 0){
                                     List<AddTrip> currenttripdetailslist = new ArrayList<AddTrip>();
                                     currenttripdetailslist.addAll(session.getAddtripdetails());
-                                  //  for(int i=0;i< currenttripdetailslist.size();i++){
-                                   // System.out.println("++++++++session++size+++++++++++++++"+currenttripdetailslist.get(0).getVehicle_trip_id());
-                                       // if(currenttripdetailslist.get(0).getVehicle_trip_id()== Integer.parseInt(vechile_trip_no)){
                                             trip_id=currenttripdetailslist.get(0).getVehicle_trip_id();
                                             trip_url=currenttripdetailslist.get(0).getTrip_url();
-                                           // System.out.println("++++++++session++size+++++++++++++++"+trip_url);
                                             place.setText(currenttripdetailslist.get(0).getDestination());
                                             truck.setText(currenttripdetailslist.get(0).getTruckno());
                                             phone.setText(currenttripdetailslist.get(0).getDriver_phone_no());
