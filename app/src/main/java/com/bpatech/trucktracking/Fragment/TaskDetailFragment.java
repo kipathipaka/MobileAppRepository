@@ -537,7 +537,7 @@ public class TaskDetailFragment extends Fragment   {
                                                         }
                                                         updatetime.setText(currenttripdetailslist.get(0).getLast_sync_time().toString());
                                                         String diffDate=makeDecisonPing(currenttripdetailslist.get(0).getLast_ping_Datetime().toString());
-                                                        String ping_message=ServiceConstants.PING_DIFFERENCE_MESSAGE+""+diffDate;
+                                                        String ping_message=ServiceConstants.PING_DIFFERENCE_MESSAGE+" "+diffDate;
                                                         text_message.setText(ping_message);
                                                         text_message.setTextColor(getResources().getColor(R.color.red));
                                                         locationrow.setVisibility(View.VISIBLE);
@@ -604,7 +604,7 @@ public class TaskDetailFragment extends Fragment   {
                                                         }
                                                         updatetime.setText(currenttripdetailslist.get(0).getLast_sync_time().toString());
                                                         String diffDate=makeDecisonPing(currenttripdetailslist.get(0).getLast_ping_Datetime().toString());
-                                                       String ping_message=ServiceConstants.PING_DIFFERENCE_MESSAGE+""+diffDate;
+                                                       String ping_message=ServiceConstants.PING_DIFFERENCE_MESSAGE+" "+diffDate;
                                                         text_message.setText(ping_message);
                                                         text_message.setTextColor(getResources().getColor(R.color.red));
                                                         locationrow.setVisibility(View.VISIBLE);
@@ -870,7 +870,7 @@ public class TaskDetailFragment extends Fragment   {
     private String makeDecisonPing(String lastpingtime){
         Date lastPingDate = getDate(lastpingtime);
         Date currentDate = getCurrentDate();
-        String diffDate = getLastPingDifference(lastPingDate,currentDate);
+        String diffDate = getLastPingDifference(lastPingDate, currentDate);
         // System.out.println("+***************///////////+make decision"+diffDate);
         return diffDate;
     }
@@ -921,18 +921,21 @@ public class TaskDetailFragment extends Fragment   {
         if(elapsedDays > 0){
             pingNotReceived = true;
             text_message.setVisibility(View.VISIBLE);
-            pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+            //pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+            pingDiff = getLapsedDateMessage(elapsedDays,elapsedHours,elapsedMinutes);
 
         }else if(elapsedHours > 0){
             pingNotReceived = true;
             text_message.setVisibility(View.VISIBLE);
-            pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+            //pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+            pingDiff = getLapsedDateMessage(elapsedDays,elapsedHours,elapsedMinutes);
         }
 
         else if(elapsedMinutes > 20){
             pingNotReceived = true;
             text_message.setVisibility(View.VISIBLE);
-            pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+           // pingDiff=elapsedDays+"days,"+elapsedHours+" H:"+elapsedMinutes+" Mins";
+            pingDiff = getLapsedDateMessage(elapsedDays,elapsedHours,elapsedMinutes);
         }
         else {
             text_message.setVisibility(View.GONE);
@@ -943,5 +946,19 @@ public class TaskDetailFragment extends Fragment   {
                 elapsedDays,
                 elapsedHours, elapsedMinutes, elapsedSeconds);
         return pingDiff;
+    }
+    private String getLapsedDateMessage(long days,long hours,long mins){
+        String return_messsage= null;
+        String day_m="";String hours_m="";String mins_m="";
+        if(days>0){
+            day_m =  days+"days,";
+        }else if(hours>0){
+            hours_m = hours+" H:";
+        }else if(mins>0){
+            mins_m = mins+" Mins";
+        }
+        return_messsage = day_m+hours_m+mins_m;
+        return return_messsage;
+
     }
 }
