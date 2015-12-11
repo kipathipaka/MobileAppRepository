@@ -48,7 +48,7 @@ public class InviteFragment extends Fragment
         String phone =session.getUsername();
         if(session.getMessagelist()!=null) {
             if (session.getMessagelist().size() > 0) {
-                invite_message = session.getMessagelist().get(0).getInvite_message();
+                invite_message = phone + " " +session.getMessagelist().get(0).getInvite_message();
 
             } else {
                 String sms1 = ServiceConstants.MESSAGE_INVITE;

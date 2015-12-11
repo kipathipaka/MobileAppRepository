@@ -149,17 +149,7 @@ public class TaskDetailFragment extends Fragment   {
         locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
         locationrow.setVisibility(view.GONE);
         lasttimerow.setVisibility(view.GONE);
-        String name=session.getUsername();
-        if(session.getMessagelist().size()>0){
-            Share_msg=session.getMessagelist().get(0).getShare_message();
-        }else{
-            final String sms1=ServiceConstants.MESSAGE_SENDING_START;
-            //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
-            final String sms2=trip_url;
-            //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
-            final String sms3= ServiceConstants.MESSAGE_SENDING_END;
-            Share_msg = name+sms1 + sms2 + sms3;
-        }
+
         whatsup.setOnClickListener(new ShareButtonListener());
         refreshbutton.setOnClickListener(new RefreshButtonListener());
         mapView = (MapView)view.findViewById(R.id.map_view);
@@ -283,6 +273,7 @@ public class TaskDetailFragment extends Fragment   {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("text/plain");
+            prepareMessage();
             /*String name=session.getUsername();
             if(session.getMessagelist().size()>0){
                 Share_msg=session.getMessagelist().get(0).getShare_message();
@@ -747,13 +738,8 @@ public class TaskDetailFragment extends Fragment   {
                 final EditText phnenum = (EditText) promptsView.findViewById(R.id.phonenum);
                 phnenum.setText(num);
                 message = (EditText) promptsView.findViewById(R.id.edittexview1);
-               /* String name = session.getUsername();
-                final String sms1 = ServiceConstants.MESSAGE_SENDING_START;
-                //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
-                final String sms2 = trip_url;
-                //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
-                final String sms3 = ServiceConstants.MESSAGE_SENDING_END;
-                final String sms = name + sms1 + sms2 + sms3;*/
+                prepareMessage();
+
                 System.out.println("trip_id" + trip_id);
                 message.setText(Share_msg);
                 dialog.setContentView(promptsView);
@@ -982,5 +968,18 @@ public class TaskDetailFragment extends Fragment   {
         return_messsage = day_m+hours_m+mins_m;
         return return_messsage;
 
+    }
+    private void prepareMessage(){
+        String name=session.getUsername();
+        if(session.getMessagelist().size()>0){
+            Share_msg=name+" "+session.getMessagelist().get(0).getShare_message()+" "+trip_url+" "+ServiceConstants.MESSAGE_SENDING_END;
+        }else{
+            final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+            //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+            final String sms2=trip_url;
+            //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
+            final String sms3= ServiceConstants.MESSAGE_SENDING_END;
+            Share_msg = name+sms1 + sms2 + sms3;
+        }
     }
 }
