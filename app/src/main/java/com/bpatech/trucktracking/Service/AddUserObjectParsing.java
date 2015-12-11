@@ -48,6 +48,23 @@ public class AddUserObjectParsing {
         return nameValuePairs;
 
     }
+    public List<NameValuePair> SaveTripId(String trip_id ,String owner_phone_number)
+    {
+        // TODO Auto-generated method stub
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        try {
+            nameValuePairs.add(new BasicNameValuePair("vehicleTripId",trip_id));
+            nameValuePairs.add(new BasicNameValuePair("phone_number",owner_phone_number));
+
+
+
+        } catch (Exception e) {
+            //TODO
+            e.printStackTrace();
+        }
+        return nameValuePairs;
+
+    }
     public List<NameValuePair> getDriverPhone(String owner_phone_number)
     {
         // TODO Auto-generated method stub

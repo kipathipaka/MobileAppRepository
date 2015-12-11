@@ -11,6 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -25,9 +26,13 @@ import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
 import com.bpatech.trucktracking.Fragment.CurrentTripFragment;
 import com.bpatech.trucktracking.Fragment.InviteFragment;
+import com.bpatech.trucktracking.Fragment.TaskDetailFragment;
 import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
+import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
+import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 import com.crittercism.app.Crittercism;
 import com.google.android.gms.common.ConnectionResult;
@@ -42,6 +47,10 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks,
@@ -58,14 +67,21 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	private int m_interval =3 * 60 * 1000; // 5 seconds by default, can be changed later
 	private int counter=5;
 	private Handler m_handler;
+	Request request;
+	AddUserObjectParsing obj;
+	String responseStrng;
+	String trip_id;
+	int phonecount;
 	LocationRequest locationRequest;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
 		db = new MySQLiteHelper(this.getApplicationContext());
-		int phonecount = db.getUserCount();
+		 phonecount = db.getUserCount();
 session=new SessionManager(this.getApplicationContext());
+		obj = new AddUserObjectParsing();
+		request= new Request(this);
 		m_handler = new Handler();
 		m_handler.postDelayed(m_statusChecker,0);
 
@@ -85,11 +101,10 @@ session=new SessionManager(this.getApplicationContext());
 		if (Intent.ACTION_VIEW.equals(action)) {
 			final List<String> segments = i.getData().getPathSegments();
 			if (segments.size() > 0) {
-				String tripid = segments.get(segments.size() - 1);
-				session.setVechil_trip_id(tripid);
+				 trip_id = segments.get(segments.size() - 1);
+				session.setVechil_trip_id(trip_id);
 				if (phonecount > 0) {
 					setContentView(R.layout.currenttrip_fragment);
-
 				}
 			}
 		}else{
@@ -99,17 +114,6 @@ session=new SessionManager(this.getApplicationContext());
 			setContentView(R.layout.home_fragment);
 			}
 		}
-
-		/*if (phonecount > 0 && trip_id==null) {
-
-			setContentView(R.layout.currenttrip_fragment);
-
-		} else if(phonecount > 0 && trip_id!=null){
-			setContentView(R.layout.currenttrip_fragment);
-		}else{
-			setContentView(R.layout.home_fragment);
-		}*/
-
 
 	}
 
@@ -196,7 +200,7 @@ private	Runnable m_statusChecker = new Runnable()
 			if (testfragment.getTag() != null) {
 				if (testfragment.getTag().equalsIgnoreCase("BackCurrentTrip")) {
 					mgr.popBackStack();
-				}
+				}else
 				if (testfragment.getTag().equalsIgnoreCase("BackRefreshCurrentTrip")) {
 					CurrentTripFragment currentfrag = new CurrentTripFragment();
 					FragmentManager fragmentmanager = getFragmentManager();
@@ -358,4 +362,6 @@ public void Enable_location_popup()
 
 	}
 }
+
+
 }

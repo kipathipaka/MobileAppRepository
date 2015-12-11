@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.GetMytripListParsing;
 import com.bpatech.trucktracking.Service.Request;
@@ -35,6 +36,7 @@ import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 
 import java.sql.Date;
@@ -60,6 +62,7 @@ public class CurrentTripFragment  extends Fragment  {
 	Bundle taskdetail;
 	View view;
 	String trip_id;
+	AddUserObjectParsing obj;
 	private static ProgressBar progressBar;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,6 +71,7 @@ public class CurrentTripFragment  extends Fragment  {
 		 view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
 		session = new SessionManager(getActivity());
+		obj = new AddUserObjectParsing();
 		AlarmManager alarmManager=(AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		Intent intentR = new Intent( getActivity().getApplicationContext(), UpdateLocationReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity().getApplicationContext(), 0, intentR, 0);
@@ -75,14 +79,14 @@ public class CurrentTripFragment  extends Fragment  {
 		//boolean isWorking = (PendingIntent.getBroadcast(getActivity(), 1001, intentR, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
 		//Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
 		//System.out.println("********************************isWorking************** sync call end ..."+isWorking);
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10 * 60 * 1000,20 * 60 * 1000,
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10 * 60 * 1000, 20 * 60 * 1000,
 				pendingIntent);
-			/*taskdetail=getActivity().getIntent().getExtras();
-		if(taskdetail!=null) {*/
-
+		request= new Request(getActivity());
 			if(session.getVechil_trip_id()!=null) {
 				trip_id = session.getVechil_trip_id();
-				TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
+				session.setVechil_trip_id(null);
+				new SaveVechileTripId().execute("", "", "");
+				/*TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
 				session.setVechil_trip_id(null);
 				Bundle bundle = new Bundle();
 				bundle.putString(ServiceConstants.VECHILE_TRIP_ID, trip_id);
@@ -90,9 +94,9 @@ public class CurrentTripFragment  extends Fragment  {
 				FragmentManager fragmentmanager = getFragmentManager();
 				FragmentTransaction fragmenttransaction = fragmentmanager
 						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, taskdetailfrag, "BackCurrentTrip");
+				fragmenttransaction.replace(R.id.viewers, taskdetailfrag, "BackFromShareTrip");
 				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
+				fragmenttransaction.commit();*/
 			}
 
 
@@ -265,6 +269,51 @@ public class CurrentTripFragment  extends Fragment  {
 						}
 					});*/
 
+
+
+				}
+
+
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
+
+	}
+	private class SaveVechileTripId extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+
+
+		}
+
+		protected String doInBackground(String... params) {
+
+			try {
+				List<NameValuePair> savetripiddetails = new ArrayList<NameValuePair>();
+				savetripiddetails.addAll(obj.SaveTripId(trip_id,session.getPhoneno()));
+				String get_driver_url= ServiceConstants.SAVE_TRIP_ID_URL;
+				HttpResponse response = request.requestPostType(get_driver_url, savetripiddetails, ServiceConstants.BASE_URL);
+				//System.out.println("++++++++++++++++++++++++response.getStatusLine().getStatusCode()+++++++++++++++"+response.getStatusLine().getStatusCode());
+				responseStrng = ""+response.getStatusLine().getStatusCode();
+				if (response.getStatusLine().getStatusCode() == 200) {
+					TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
+					Bundle bundle = new Bundle();
+					bundle.putString(ServiceConstants.VECHILE_TRIP_ID, trip_id);
+					taskdetailfrag.setArguments(bundle);
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers, taskdetailfrag, "BackRefreshCurrentTrip");
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
 
 
 				}

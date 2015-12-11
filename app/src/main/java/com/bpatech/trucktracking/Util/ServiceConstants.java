@@ -11,6 +11,7 @@ public class ServiceConstants {
     public static final String BASE_URL= "http://52.88.194.128:2020/vehicletracking-spring";
     public static final String UPDATE_LOCATION="/api/trip/trackTrip";
     public static final String CREATE_USER="/api/user/addUser";
+    public static final String SAVE_TRIP_ID_URL="/api/sharedTrip/addSharedTrip";
     public static final String ADD_DRIVER_PHONE="/api/drivers/addDriverPhone";
     public static final String ADD_TRIP="/api/trip/addTrip";
     public static final String GET_DRIVER="/api/drivers/";
