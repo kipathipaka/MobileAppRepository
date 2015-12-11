@@ -102,6 +102,7 @@ public class TaskDetailFragment extends Fragment   {
     String trip_url;
     boolean pingNotReceived= false;
     String pingDiff;
+    String Share_msg;
     private static Bundle b;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,6 +149,17 @@ public class TaskDetailFragment extends Fragment   {
         locationrow=(TableRow)view.findViewById(R.id.last_locationrow);
         locationrow.setVisibility(view.GONE);
         lasttimerow.setVisibility(view.GONE);
+        String name=session.getUsername();
+        if(session.getMessagelist().size()>0){
+            Share_msg=session.getMessagelist().get(0).getShare_message();
+        }else{
+            final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+            //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+            final String sms2=trip_url;
+            //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
+            final String sms3= ServiceConstants.MESSAGE_SENDING_END;
+            Share_msg = name+sms1 + sms2 + sms3;
+        }
         whatsup.setOnClickListener(new ShareButtonListener());
         refreshbutton.setOnClickListener(new RefreshButtonListener());
         mapView = (MapView)view.findViewById(R.id.map_view);
@@ -271,15 +283,25 @@ public class TaskDetailFragment extends Fragment   {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("text/plain");
-            String name=session.getUsername();
-            final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+            /*String name=session.getUsername();
+            if(session.getMessagelist().size()>0){
+                Share_msg=session.getMessagelist().get(0).getShare_message();
+            }else{
+                final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+                //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
+                final String sms2=trip_url;
+                //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
+                final String sms3= ServiceConstants.MESSAGE_SENDING_END;
+                Share_msg = name+sms1 + sms2 + sms3;
+            }*/
+            /*final String sms1=ServiceConstants.MESSAGE_SENDING_START;
             //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
             final String sms2=trip_url;
             //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
             final String sms3= ServiceConstants.MESSAGE_SENDING_END;
             final String message = name+sms1 + sms2 + sms3;
-          //  final String edittext=whatsuptext.getText().toString();
-            sendIntent.putExtra(Intent.EXTRA_TEXT,message);
+          //  final String edittext=whatsuptext.getText().toString();*/
+            sendIntent.putExtra(Intent.EXTRA_TEXT,Share_msg);
             startActivity(Intent.createChooser(sendIntent, "Share Via"));
         }
     }
@@ -717,23 +739,23 @@ public class TaskDetailFragment extends Fragment   {
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
                 final View promptsView = inflater.inflate(R.layout.send_sms_popup, null);
            /*     EditText e1=*/
-                final String num=customer_phone_no.getText().toString();
+                final String num = customer_phone_no.getText().toString();
 
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 //promptsView.setBackgroundResource(R.color.white);
-                final EditText phnenum=(EditText) promptsView.findViewById(R.id.phonenum);
+                final EditText phnenum = (EditText) promptsView.findViewById(R.id.phonenum);
                 phnenum.setText(num);
-                message=(EditText)promptsView.findViewById(R.id.edittexview1);
-                String name=session.getUsername();
-                final String sms1=ServiceConstants.MESSAGE_SENDING_START;
+                message = (EditText) promptsView.findViewById(R.id.edittexview1);
+               /* String name = session.getUsername();
+                final String sms1 = ServiceConstants.MESSAGE_SENDING_START;
                 //final String sms2=ServiceConstants.MESSAGE_URL+"?"+"trip="+trip_id;
-                final String sms2=trip_url;
+                final String sms2 = trip_url;
                 //final String sms2=ServiceConstants.MESSAGE_URL+trip_id;
-                final String sms3= ServiceConstants.MESSAGE_SENDING_END;
-                final String sms = name+sms1 + sms2 + sms3;
+                final String sms3 = ServiceConstants.MESSAGE_SENDING_END;
+                final String sms = name + sms1 + sms2 + sms3;*/
                 System.out.println("trip_id" + trip_id);
-                message.setText(sms);
+                message.setText(Share_msg);
                 dialog.setContentView(promptsView);
                 dialog.show();
 
@@ -743,13 +765,13 @@ public class TaskDetailFragment extends Fragment   {
                     @Override
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
-                        String number="+91"+num;
+                        String number = "+91" + num;
                         SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(number, null,message.getText().toString(), null, null);
-                        Log.d("sms", "sms text is" + sms);
+                        smsManager.sendTextMessage(number, null, message.getText().toString(), null, null);
+                        Log.d("sms", "sms text is" + Share_msg);
 
                         dialog.dismiss();
-                        Toast.makeText(getActivity().getApplicationContext(), "sms sent to" +number,Toast.LENGTH_SHORT)
+                        Toast.makeText(getActivity().getApplicationContext(), "sms sent to" + number, Toast.LENGTH_SHORT)
                                 .show();
                     }
 

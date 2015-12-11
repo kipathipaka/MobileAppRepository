@@ -9,6 +9,7 @@ import android.content.SharedPreferences.Editor;
 
 import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
+import com.bpatech.trucktracking.DTO.MessageDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class SessionManager {
     public static List<AddTrip> addtripdetails;
     public static List<AddTrip> currenttripdetails = new ArrayList<AddTrip>();
     public static List<String> driverlist;
+    public static List<MessageDTO> messagelist;
     public static String currentLoggedPage;
 
     public SessionManager(Context context){
@@ -113,7 +115,7 @@ public class SessionManager {
 
     public int getOTPno() {
 
-        return pref.getInt(KEY_otpno,0);
+        return pref.getInt(KEY_otpno, 0);
     }
 
 
@@ -169,6 +171,13 @@ public class SessionManager {
     }
     public static List<String> getDriverlist() {
         return driverlist;
+    }
+    public static void setMessagelist(List<MessageDTO> messagelist) {
+
+        SessionManager.messagelist=messagelist;
+    }
+    public static List<MessageDTO> getMessagelist() {
+        return messagelist;
     }
 
 }

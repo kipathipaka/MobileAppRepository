@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bpatech.trucktracking.DTO.MessageDTO;
 import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
 import com.bpatech.trucktracking.Fragment.CurrentTripFragment;
@@ -29,6 +30,7 @@ import com.bpatech.trucktracking.Fragment.InviteFragment;
 import com.bpatech.trucktracking.Fragment.TaskDetailFragment;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
+import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
@@ -49,6 +51,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +99,9 @@ session=new SessionManager(this.getApplicationContext());
 			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
+		if(session.getMessagelist()==null) {
+			new GetandStroeMessages().execute("", "", "");
+		}
 		Intent i = getIntent();
 		final String action = i.getAction();
 		if (Intent.ACTION_VIEW.equals(action)) {
@@ -363,5 +369,40 @@ public void Enable_location_popup()
 	}
 }
 
+	private class GetandStroeMessages extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
 
+		}
+
+		protected String doInBackground(String... params) {
+
+			try {
+				List<MessageDTO> messageDTOList = new ArrayList<MessageDTO>();
+				String get_driver_url = ServiceConstants.GET_MESSAGE_URL;
+				HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);
+				responseStrng = "" + response.getStatusLine().getStatusCode();
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONObject responsejSONoject = request.responseParsing(response);
+					GetDriverListParsing getDriverListParsing = new GetDriverListParsing();
+					messageDTOList.addAll(getDriverListParsing.MessageDTOList(responsejSONoject));
+					session.setMessagelist(messageDTOList);
+
+				}
+
+
+
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responseStrng;
+
+		}
+
+	}
 }

@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
+import com.bpatech.trucktracking.DTO.MessageDTO;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
@@ -38,6 +39,7 @@ import com.bpatech.trucktracking.Util.SessionManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -226,7 +228,6 @@ public class CurrentTripFragment  extends Fragment  {
 		@Override
 		protected void onPostExecute(String result) {
 
-
 		}
 
 		protected String doInBackground(String... params) {
@@ -243,12 +244,13 @@ public class CurrentTripFragment  extends Fragment  {
 						driverphonenolist.addAll(getDriverListParsing.driverPhonenumberlist(responsejSONArray));
 						session.setDriverlist(driverphonenolist);
 					}
-					/* not require*/
+
 					/*getActivity().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							try {
-								if(session.getDriverlist()!=null && session.getDriverlist().size() > 0){
+								new GetandStroeMessages().execute("", "", "");
+								*//*if(session.getDriverlist()!=null && session.getDriverlist().size() > 0){
 									footer_addtrip_ll.setEnabled(true);
 									for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
 										View child = footer_addtrip_ll.getChildAt(i);
@@ -262,14 +264,14 @@ public class CurrentTripFragment  extends Fragment  {
 										child.setEnabled(false);
 									}
 
-								}
+								}*//*
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}
-					});*/
+					});
 
-
+*/
 
 				}
 

@@ -30,6 +30,7 @@ public class InviteFragment extends Fragment
     EditText phonenum,edittexview1;
     TextView txt_contTitle;
     SessionManager session;
+    String invite_message=null;
     RelativeLayout inviteLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,11 +46,18 @@ public class InviteFragment extends Fragment
         inviteLayout = (RelativeLayout) view.findViewById(R.id.invite_layout);
         edittexview1=(EditText)view.findViewById(R.id.edittexview1);
         String phone =session.getUsername();
-        String sms1= ServiceConstants.MESSAGE_INVITE;
-        String sms2=ServiceConstants.APP_NAME;
-        String sms3=ServiceConstants.TEXT_MESSAGE_URL;
-        String sms=phone+" "+sms1+" "+sms2+" "+sms3;
-        edittexview1.setText(sms);
+        if(session.getMessagelist()!=null) {
+            if (session.getMessagelist().size() > 0) {
+                invite_message = session.getMessagelist().get(0).getInvite_message();
+
+            } else {
+                String sms1 = ServiceConstants.MESSAGE_INVITE;
+                String sms2 = ServiceConstants.APP_NAME;
+                String sms3 = ServiceConstants.TEXT_MESSAGE_URL;
+                invite_message = phone + " " + sms1 + " " + sms2 + " " + sms3;
+            }
+        }
+        edittexview1.setText(invite_message);
         inviteLayout.setOnClickListener(new InviteLayoutclicklistener());
         sndbtn.setOnClickListener(new MyaddButtonListener());
         return view;

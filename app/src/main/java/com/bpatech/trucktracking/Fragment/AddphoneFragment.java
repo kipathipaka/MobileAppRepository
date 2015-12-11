@@ -48,6 +48,8 @@ public class AddphoneFragment extends Fragment {
 	RelativeLayout addPhoneLayout;
 	boolean checkdriverStatus = false;
 	JSONArray responsejSONArray;
+	String add_Driver_Message;
+	String number;
 	List<String> driverphonenolist;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -206,15 +208,27 @@ public class AddphoneFragment extends Fragment {
 										checkdriverStatus = false;
 									}
 									if (checkdriverStatus == false) {
-										String number = "+91" + phonenumber;
+										if(session.getMessagelist().size()>0){
+											number = "+91" + phonenumber;
+											add_Driver_Message=session.getMessagelist().get(0).getAdd_driver_message();
+											//edittexview1.setText(invite_message);
+										}else{
+											 number = "+91" + phonenumber;
+											String owner_phone_no = session.getUsername();
+											String sms1 = ServiceConstants.MESSAGE_INVITE;
+											String sms2 = ServiceConstants.APP_NAME;
+											String sms3 = ServiceConstants.TEXT_MESSAGE_URL;
+											 add_Driver_Message = owner_phone_no + " " + sms1 + " " + sms2 + " " + sms3;
+										}
+										/*String number = "+91" + phonenumber;
 										String owner_phone_no = session.getUsername();
 										String sms1 = ServiceConstants.MESSAGE_INVITE;
 										String sms2 = ServiceConstants.APP_NAME;
 										String sms3 = ServiceConstants.TEXT_MESSAGE_URL;
-										String smsmessage = owner_phone_no + " " + sms1 + " " + sms2 + " " + sms3;
+										String smsmessage = owner_phone_no + " " + sms1 + " " + sms2 + " " + sms3;*/
 										SmsManager smsManager = SmsManager.getDefault();
-										smsManager.sendTextMessage(number, null, smsmessage, null, null);
-										Log.d("Sms", "sendSMS " + smsmessage);
+										smsManager.sendTextMessage(number, null, add_Driver_Message, null, null);
+										Log.d("Sms", "sendSMS " + add_Driver_Message);
 										Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
 												Toast.LENGTH_LONG).show();
 										new AddUserPhone().execute("", "", "");
