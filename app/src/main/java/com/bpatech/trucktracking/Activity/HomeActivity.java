@@ -259,10 +259,14 @@ private	Runnable m_statusChecker = new Runnable()
 				break;
 		}
 	}
-
+	public void onStart()
+	{
+		super.onStart();
+	}
 	@Override
 	public void onResume() {
 		super.onResume();
+		Toast.makeText(this.getApplicationContext(),"onresume activity",Toast.LENGTH_LONG);
 	}
 
 	@Override

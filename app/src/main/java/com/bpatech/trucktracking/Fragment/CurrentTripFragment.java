@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
@@ -101,13 +102,12 @@ public class CurrentTripFragment  extends Fragment  {
 				fragmenttransaction.commit();*/
 			}
 
-
 		request= new Request(getActivity());
 		currenttripdetails=new ArrayList<AddTrip>();
 		progressBar=(ProgressBar)view.findViewById(R.id.listprogresbar);
 		progressBar.setProgress(10);
 		progressBar.setMax(100);
-		progressBar.setVisibility(View.INVISIBLE);
+		progressBar.setVisibility(View.VISIBLE);
 		/*DateFormat dateFormat = new SimpleDateFormat("MMM,dd h:mm a");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
 		//Date date = new Date("");
@@ -192,7 +192,7 @@ public class CurrentTripFragment  extends Fragment  {
 						public void run() {
 							try {
 
-								String triplisttext =session.getUsername()+"-"+session.getPhoneno();
+								String triplisttext ="My Account : "+session.getUsername()+" - "+session.getPhoneno();
 								triplistsize_view.setText(triplisttext);
 								triplist_ll.setVisibility(View.VISIBLE);
 								ArrayList<AddTrip> currenttripdetailslist = new ArrayList<AddTrip>();
@@ -336,6 +336,7 @@ public class CurrentTripFragment  extends Fragment  {
 	@Override
 	public void onResume() {
 		super.onResume();
+
 	}
 
 }
