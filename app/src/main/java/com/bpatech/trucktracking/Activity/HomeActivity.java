@@ -82,7 +82,7 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 		Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
 		db = new MySQLiteHelper(this.getApplicationContext());
 		 phonecount = db.getUserCount();
-session=new SessionManager(this.getApplicationContext());
+         session=new SessionManager(this.getApplicationContext());
 		obj = new AddUserObjectParsing();
 		request= new Request(this);
 		m_handler = new Handler();
@@ -99,9 +99,8 @@ session=new SessionManager(this.getApplicationContext());
 			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
-		if(session.getMessagelist()==null) {
+
 			new GetandStroeMessages().execute("", "", "");
-		}
 		Intent i = getIntent();
 		final String action = i.getAction();
 		if (Intent.ACTION_VIEW.equals(action)) {
@@ -383,6 +382,7 @@ public void Enable_location_popup()
 		protected String doInBackground(String... params) {
 
 			try {
+				//System.out.println("++++++++++++++message++++++apil call++++++++++++++++++..");
 				List<MessageDTO> messageDTOList = new ArrayList<MessageDTO>();
 				String get_driver_url = ServiceConstants.GET_MESSAGE_URL;
 				HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);

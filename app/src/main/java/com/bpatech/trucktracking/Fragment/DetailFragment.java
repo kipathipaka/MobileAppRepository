@@ -156,11 +156,13 @@ public class DetailFragment extends Fragment implements LocationListener {
 			try {
 				List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 				List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
-				if(fullAddress!=null || locationVal!=null) {
+				if(fullAddress!=null || locationVal!=null ) {
+					//System.out.println("+++++++++++++++if+++++++++++");
 					//createuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y", user.getUserName()));
 					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress, "Y", "Y", user.getUserName()));
 					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress, "Y", "Y", user.getUserName()));
 				}else {
+					//System.out.println("+++++++++++++++else+++++++++++");
 					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null", "null", "Y", "Y", user.getUserName()));
 					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null","null", "Y", "Y", user.getUserName()));
 				}
@@ -262,7 +264,12 @@ public class DetailFragment extends Fragment implements LocationListener {
 			} catch (Exception ex) {
 			}
 			if (!isGPSEnabled && !isNetworkEnabled) {
-				//locationEnable_popup();
+				//System.out.println("++++++++++++++++++++++++++++++++++enable location++++++++++++++++++++++++");
+				//locationVal = "null";
+				//fullAddress = "null";
+				location = null;
+				UpdateLocation(location);
+
 			} else {
 				if (isNetworkEnabled) {
 					if (location == null) {
@@ -295,8 +302,6 @@ public class DetailFragment extends Fragment implements LocationListener {
 					}
 				}
 			}
-		} else {
-			//locationEnable_popup();
 		}
 
 
@@ -360,6 +365,11 @@ public class DetailFragment extends Fragment implements LocationListener {
 
 				}
 			}
+		}else{
+			locationVal=null;
+			fullAddress=null;
+			latitude=0.0;
+			longitude=0.0;
 		}
 	}
 	public void locationEnable_popup() {
