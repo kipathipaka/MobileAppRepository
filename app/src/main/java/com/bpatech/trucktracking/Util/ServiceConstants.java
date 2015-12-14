@@ -46,5 +46,5 @@ public class ServiceConstants {
     public static String MESSAGE_INVITE="has shared truck location app";
     public static String APP_NAME="Truck India.";
     public static String TEXT_MESSAGE_URL="Download here WWW.google.com.";
-    public static String PING_DIFFERENCE_MESSAGE="Driver is not reachable from";
+    public static String PING_DIFFERENCE_MESSAGE="Driver is not reachable for";
 }

@@ -244,7 +244,7 @@ public class TaskDetailFragment extends Fragment   {
                 }
 
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Driver is not download the App",
+                Toast.makeText(getActivity().getApplicationContext(), "Driver has not downloaded the app",
                         Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.INVISIBLE);
             }
@@ -959,11 +959,11 @@ public class TaskDetailFragment extends Fragment   {
         String return_messsage= null;
         String day_m="";String hours_m="";String mins_m="";
         if(days>0){
-            day_m =  days+"days,";
+            day_m =  +days+"days";
         }else if(hours>0){
-            hours_m = hours+" H:";
+            hours_m = hours+" hours ";
         }else if(mins>0){
-            mins_m = mins+" Mins";
+            mins_m = mins+" mins";
         }
         return_messsage = day_m+hours_m+mins_m;
         return return_messsage;
