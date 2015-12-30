@@ -168,7 +168,6 @@ private	Runnable m_statusChecker = new Runnable()
 		return super.onOptionsItemSelected(item);
 	}
 
-
 	public void addtripclick(View v) {
 		if (session.getDriverlist() != null && session.getDriverlist().size() > 0) {
 			AddnewTripFragment addtripfragment = new AddnewTripFragment();
