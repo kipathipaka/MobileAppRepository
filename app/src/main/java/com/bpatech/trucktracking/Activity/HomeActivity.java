@@ -1,23 +1,24 @@
 package com.bpatech.trucktracking.Activity;
-
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Configuration;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,16 +28,13 @@ import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
 import com.bpatech.trucktracking.Fragment.CurrentTripFragment;
 import com.bpatech.trucktracking.Fragment.InviteFragment;
-import com.bpatech.trucktracking.Fragment.TaskDetailFragment;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
-import com.bpatech.trucktracking.Service.UpdateLocationReceiver;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
-import com.crittercism.app.Crittercism;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -50,7 +48,6 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -75,11 +72,19 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	String responseStrng;
 	String trip_id;
 	int phonecount;
+	private Context myContext;
 	LocationRequest locationRequest;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
+		//Crittercism.initialize(getApplicationContext(), "5653ff028d4d8c0a00d08333");
+
+	/*	if(savedInstanceState!=null)
+		{
+			System.out.println("++++++++++++++++++++++++++++++++++++++++++ERROR++++++++++"+savedInstanceState.toString());
+			System.out.println("++++++++++++++++++++++++++++++++++++++++++ERROR+++size+++++++"+savedInstanceState.size());
+			System.out.println("++++++++++++++++++++++++++++++++++++++++++bunddle data++++++++++"+savedInstanceState.getBundle(ServiceConstants.VECHILE_TRIP_ID));
+		}*/
 		db = new MySQLiteHelper(this.getApplicationContext());
 		 phonecount = db.getUserCount();
          session=new SessionManager(this.getApplicationContext());
@@ -99,7 +104,7 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
-
+System.out.println("+++++++++++++++++++++++++++++++++Home onCreate+++++++++++++++++++++++");
 			new GetandStroeMessages().execute("", "", "");
 		Intent i = getIntent();
 		final String action = i.getAction();
@@ -114,9 +119,20 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 			}
 		}else{
 		if(phonecount>0){
-		setContentView(R.layout.currenttrip_fragment);
+			try {
+				System.out.println("+++++++++++++++++++++++++++++++++++Try+++++++++++++++++++++++++++++++++++++");
+				setContentView(R.layout.currenttrip_fragment);
+			} catch (RuntimeException e) {
+			System.out.println("+++++++++++++++++++++++++++++++++++ catch+++++++++++++++++++++++++++++++++++++");
+				Intent intent = new Intent(HomeActivity.this,
+						HomeActivity.class);
+				startActivity(intent);
+			}
+
 			}else{
-			setContentView(R.layout.home_fragment);
+
+				setContentView(R.layout.home_fragment);
+
 			}
 		}
 
@@ -243,12 +259,14 @@ private	Runnable m_statusChecker = new Runnable()
 							//startLocationUpdates();
 							//System.out.println("++++++++++++++++++++connected++++++++++++++++++..");
 							m_handler.postDelayed(m_statusChecker, m_interval);
+							System.out.println("*******************************+crash+*****************");
 						}
 						break;
 					case Activity.RESULT_CANCELED:
 						//System.out.println("++++++++++++++++++++cancel++++++++++++++++++..");
 						if(counter>0) {
 							m_handler.postDelayed(m_statusChecker, m_interval);
+							System.out.println("*******************************+crash1+*****************");
 						}
 						// The user was asked to change settings, but chose not to
 						break;
@@ -258,20 +276,34 @@ private	Runnable m_statusChecker = new Runnable()
 				break;
 		}
 	}
-	public void onStart()
+	/*public void onStart()
 	{
 		super.onStart();
-	}
+		System.out.println("+++++++++++++++++++++++++++++++++++Home onstart activity+++++++++++++++++++++++++++++++++++++");
+	}*/
 	@Override
 	public void onResume() {
 		super.onResume();
-		Toast.makeText(this.getApplicationContext(),"onresume activity",Toast.LENGTH_LONG);
+		//System.out.println("+++++++++++++++++++++++++++++++++++Home onresume activity+++++++++++++++++++++++++++++++++++++");
+
+		//Toast.makeText(this.getApplicationContext(),"onresume activity",Toast.LENGTH_LONG);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            /*View view = inflater.inflate(R.layout.network_failure_popup,
+                        null);*/
+		View promptsView = inflater.inflate(R.layout.network_failure,null);
 
+		final Dialog dialog = new Dialog(getApplicationContext());
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		promptsView.setBackgroundResource(R.color.white);
+		dialog.setContentView(promptsView);
+		dialog.dismiss();
+
+		//System.out.println("+++++++++++++++++++++++++++++++++++Home ondestroy activity+++++++++++++++++++++++++++++++++++++");
 	}
 
 	@Override
