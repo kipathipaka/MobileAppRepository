@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,16 +30,27 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import timber.log.Timber;
 
 /**
  * Created by Anita on 10/29/2015.
@@ -85,6 +97,7 @@ public class UpdateLocationService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Timber.i("Service : Start Command Call");
         userlist = new ArrayList<User>();
         getLocation();
         return Service.START_STICKY;
@@ -95,9 +108,81 @@ public class UpdateLocationService extends Service
     public IBinder onBind(Intent intent) {
         return null;
     }
+   public void getLocation() {
+       Timber.i("Inside Service GetLocation Method:");
+        //Toast.makeText(getActivity().getApplicationContext(), "Enter get location method..", Toast.LENGTH_SHORT).show();
+       try {
+           LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+           if (locationManager != null) {
+               //	Toast.makeText(getActivity().getApplicationContext(), "location manager checking..." + locationManager.toString(), Toast.LENGTH_SHORT).show();
+               try {
+                   isGPSEnabled = locationManager
+                           .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+               } catch (Exception ex) {
+                   Timber.i("Inside Service GetLocation Exception:" + ex);
+               }
+               try {
+                   isNetworkEnabled = locationManager
+                           .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+               } catch (Exception ex) {
+                   Timber.i("Inside Service GetLocation Exception:" + ex);
+               }
+               if (!isGPSEnabled && !isNetworkEnabled) {
+                   //System.out.println("++++++++++++++++++++++++++++++++++enable location++++++++++++++++++++++++");
+                   //locationVal = "null";
+                   //fullAddress = "null";
+                   Intent intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                   getApplicationContext().startActivity(intent);
+               } else {
+                   if (isNetworkEnabled) {
+                       if (location == null) {
+                           Timber.i("Inside Service GetLocation :NetworkEnabled");
+                           locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) this);
+                           if (locationManager != null) {
+                               location = locationManager
+                                       .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                               //Toast.makeText(getActivity().getApplicationContext(), "Location value....." + "latitude" + String.valueOf(location.getLatitude()) + "longitude" + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
+                               if (location != null) {
+                                   updateGPSCoordinates(location);
+                               }
+                           } else {
+                               Timber.i("Inside Service GetLocation : no location found");
+                               Toast.makeText(getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
+                           }
+                       }
+                   }
+                   if (isGPSEnabled) {
+                       if (location == null) {
+                           Timber.i("Inside Service GetLocation :GPSEnabled");
+                           locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
+                           if (locationManager != null) {
+                               location = locationManager
+                                       .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                               if (location != null) {
+                                   updateGPSCoordinates(location);
+                               }
+
+                           } else {
+                               Timber.i("Inside Service GetLocation : no location found");
+                               Toast.makeText(getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
+                           }
+                       }
+                   }
+               }
+           }
+       }
+       catch (Exception e) {
+           Timber.i("Error :Get Location Method"+
+                   "Impossible to connect to LocationManager"+e);
+           Log.e("Error : Location",
+                   "Impossible to connect to LocationManager", e);
+       }
+    }
 
 
-    public Location getLocation() {
+   /* public Location getLocation() {
         try {
 
             LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
@@ -114,14 +199,14 @@ public class UpdateLocationService extends Service
             } catch (Exception ex) {
             }
             // getting network status
-           /* Criteria crta = new Criteria();
+           *//* Criteria crta = new Criteria();
             crta.setAccuracy(Criteria.ACCURACY_FINE);
             crta.setAltitudeRequired(false);
             crta.setBearingRequired(false);
             crta.setCostAllowed(true);
             crta.setPowerRequirement(Criteria.POWER_LOW);
             String provider = locationManager.getBestProvider(crta, true);
-            System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*/
+            System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*//*
             if (!isGPSEnabled && !isNetworkEnabled) {
                // locationEnable_popup();
                 Intent intent = new Intent(this.getApplicationContext(),HomeActivity.class);
@@ -138,6 +223,8 @@ public class UpdateLocationService extends Service
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
                                 @Override
                                 public void onLocationChanged(Location location) {
+                                    Timber.i("onLocationChanged  : Network Provider latlng"+location.getLatitude()+
+                                            "&"+location.getLongitude());
                                     // System.out.println("++++++++++++++++++++++isNetworkEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
                                     //updateGPSCoordinates(location);
                                     // new UpdateLocationApi().execute("", "", "");
@@ -159,7 +246,7 @@ public class UpdateLocationService extends Service
 
                                 }
                             });
-
+                    Timber.i("Network : Network enable");
                     Log.d("Network", "Network");
 
                     if (locationManager != null) {
@@ -198,7 +285,7 @@ public class UpdateLocationService extends Service
 
                                     }
                                 });
-
+                        Timber.i("Service Location Manager :GPS Enabled");
                         Log.d("GPS Enabled", "GPS Enabled");
 
                         if (locationManager != null) {
@@ -211,32 +298,37 @@ public class UpdateLocationService extends Service
 
             }
         } catch (Exception e) {
+            Timber.i("Error : Location"+
+                    "Impossible to connect to LocationManager"+e);
             Log.e("Error : Location",
                     "Impossible to connect to LocationManager", e);
         }
         return location;
-    }
+    }*/
 
     public void updateGPSCoordinates(Location updateLocation) {
+        Timber.i("Location Service :Enter updateGPSCoordinates");
         if (updateLocation != null) {
             latitude = updateLocation.getLatitude();
             longitude = updateLocation.getLongitude();
-            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+            Timber.i("Service :updateGPSCoordinates latitude :  " + latitude + "Longitude  :" + longitude);
+            new GetAddressFromJson().execute("", "", "");
+           /* Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             try {
                 List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
                 if (addressList != null && addressList.size() > 0) {
                     Address address = addressList.get(0);
-
+                    Timber.i("Service :updateGPSCoordinates Address List :  ",address );
                 //   fullAddress = new StringBuilder();
 
-                   /* for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                   *//* for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
                         if(address.getAddressLine(i)!=null) {
                             fullAddress.append(address.getAddressLine(i)).append(",");
                         }
-                    }*/
-                    /*sb.append(address.getLocality()).append("\n");
+                    }*//*
+                    *//*sb.append(address.getLocality()).append("\n");
                     sb.append(address.getPostalCode()).append("\n");
-                    sb.append(address.getCountryName());*/
+                    sb.append(address.getCountryName());*//*
                     if (address.getSubLocality() == null) {
                         if (address.getLocality() == null) {
                             locationVal = "null";
@@ -255,16 +347,18 @@ public class UpdateLocationService extends Service
                         }
 
                     }
-
+                    Timber.i("Service : Current Location  "+fullAddress);
                         new UpdateLocationApi().execute("", "", "");
 
                 }
 
 
             } catch (IOException e) {
+                Timber.i("Service : "+"Update Location IOException"+e);
                 e.printStackTrace();
 
-            }
+
+        }*/
         }
     }
 
@@ -279,10 +373,13 @@ public class UpdateLocationService extends Service
         protected String doInBackground(String... params) {
 
             try {
+                Timber.i("Service APi Call :  " + latitude + "Longitude  :" + longitude);
                 //  System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" +
                 //session.getPhoneno()+latitude.toString()+longitude.toString());
                 if (session.getPhoneno() == null || String.valueOf(latitude) == null || String.valueOf(longitude) == null || locationVal.toString() == null) {
+
                     responsevalue = "noResult";
+                    Timber.i("Service APi Call Result  :  " + responsevalue);
                 } else {
                     //System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" + session.getPhoneno());
                     List<NameValuePair> updatelocationlist = new ArrayList<NameValuePair>();
@@ -294,10 +391,11 @@ public class UpdateLocationService extends Service
                     response = request.requestLocationServicePostType(
                             ServiceConstants.UPDATE_LOCATION, updatelocationlist, ServiceConstants.BASE_URL);
                     responsevalue = "" + response.getStatusLine().getStatusCode();
+                    Timber.i("Location update API result :"+ response.getStatusLine().getStatusCode());
                     //System.out.println("++++++++++++++++++++++++++++++++++response+eee++++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
                 }
             } catch (Exception e) {
-
+                Timber.i("Location update API  Error :"+e);
                 e.printStackTrace();
 
             }
@@ -308,50 +406,95 @@ public class UpdateLocationService extends Service
     }
 
 
-    public void locationEnable_popup() {
-        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        View promptsView = inflater.inflate(R.layout.location_enable_popup, null);
+    private class GetAddressFromJson extends
+            AsyncTask<String, Void, String> {
+        @Override
+        protected void onPostExecute(String result) {
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(this.getApplicationContext()).create();
+        }
 
-        alertDialog.setView(promptsView);
+        protected String doInBackground(String... params) {
+            InputStream is = null;
+            String result = "";
+            JSONObject jsonObj=null;
+            try {
+                Timber.i("Location Service: "+"GetAddressFromJsonAPI");
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost("https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude + ","+longitude);
+                HttpResponse response = httpclient.execute(httppost);
+                responsevalue = "" + response.getStatusLine().getStatusCode();
+                System.out.println("++++++++++++++++++++++++++++++++++Status+++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
+                HttpEntity entity = response.getEntity();
+                is = entity.getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                is.close();
+                result = sb.toString();
+                jsonObj = new JSONObject(result);
+                String Status = jsonObj.getString("status");
+                if (Status.equalsIgnoreCase("OK")) {
+                    JSONArray Results = jsonObj.getJSONArray("results");
+                    JSONObject zero = Results.getJSONObject(0);
+                    JSONArray address_components = zero.getJSONArray("address_components");
+                    for (int i = 0; i < address_components.length(); i++) {
+                        JSONObject zero2 = address_components.getJSONObject(i);
+                        String long_name = zero2.getString("long_name");
+                        //System.out.println("++++++++++++++++++++++++++++++++++long_name+++++++++++++++++++++++++"+long_name);
+                        JSONArray mtypes = zero2.getJSONArray("types");
+                        // System.out.println("++++++++++++++++++++++++++++++++++mtypes+++++++++++++++++++++++++"+mtypes+TextUtils.isEmpty(long_name));
+                        String Type = mtypes.getString(0);
+                        if (TextUtils.isEmpty(long_name) == false || long_name!=null || long_name.length() > 0 || long_name != "") {
 
-        alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        alertDialog.show();
+                            if (Type.equalsIgnoreCase("sublocality_level_1")) {
+                                fullAddress=long_name+",";
 
-        Button textbutton = (Button) promptsView.findViewById(R.id.btnYes);
+                            } else if (Type.equalsIgnoreCase("sublocality")) {
+                                fullAddress=long_name+",";
 
-        textbutton.setOnClickListener(new View.OnClickListener() {
+                            }else if (Type.equalsIgnoreCase("locality")) {
+                                // Address2 = Address2 + long_name + ", ";
+                                locationVal = long_name;
+                                if(fullAddress!=null) {
+                                    fullAddress = fullAddress + long_name;
+                                }else{
+                                    fullAddress = long_name;
+                                }
 
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
-                alertDialog.dismiss();
+                            } else if (Type.equalsIgnoreCase("administrative_area_level_2")) {
+                                if(fullAddress == null ||locationVal==null ) {
+                                    locationVal = long_name;
+                                    fullAddress = long_name;
+
+                                }
+                            } else if (Type.equalsIgnoreCase("administrative_area_level_1")) {
+                                if(fullAddress == null ||locationVal==null ){
+                                    locationVal = long_name;
+                                    fullAddress=long_name;
+                                }
+                            }
+                        }
+
+                        // JSONArray mtypes = zero2.getJSONArray("types");
+                        // String Type = mtypes.getString(0);
+                        // Log.e(Type,long_name);
+                        Timber.i("Location Service: CurrentLocation"+fullAddress);
+                        System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
+                                "+++++++++++++++++++++++"+fullAddress+"+local++"+locationVal);
+                    }
+                }
+                new UpdateLocationApi().execute("", "", "");
+            } catch (Exception e) {
+
+                e.printStackTrace();
 
             }
 
-        });
-        Button textbutton1=(Button)promptsView.findViewById(R.id.btnNo);
-        textbutton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
+            return responsevalue;
 
-            }
-        });
-        final Timer timer2 = new Timer();
-        timer2.schedule(new TimerTask() {
-            public void run() {
-
-                alertDialog.dismiss();
-                timer2.cancel(); //this will cancel the timer of the system
-            }
-        }, 5000); // the timer will count 5 seconds....
-
-
+        }
     }
-
-
 }

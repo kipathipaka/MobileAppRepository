@@ -80,7 +80,7 @@ public class GetMytripListParsing {
                     dateFormat2.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
                     //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
                     mytrip.setLast_ping_Datetime(dateFormat2.format(date).toString());
-                    System.out.println("++++++++++++++++++++++++++++++mydate2++++++++++++++++++++" + mytrip.getLast_ping_Datetime());
+                    //System.out.println("++++++++++++++++++++++++++++++mydate2++++++++++++++++++++" + mytrip.getLast_ping_Datetime());
                     // System.out.println("++++++++++++++++++++++++++++++++++date+++++++++++++++++++++++++++"+mytrip.getLast_sync_time());
                     // System.out.println("++++++++++++++++++++++++++++++++++date+++++++++++++++++++++++++++"+mytrip.getLast_sync_time());
                 }
@@ -153,7 +153,7 @@ public class GetMytripListParsing {
                     dateFormat2.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
                     //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
                     mytrip.setLast_ping_Datetime(dateFormat2.format(date).toString());
-                    System.out.println("++++++++++++++++++++++++++++++mydate++++++++++++++++++++" + mytrip.getLast_ping_Datetime());
+                   // System.out.println("++++++++++++++++++++++++++++++mydate++++++++++++++++++++" + mytrip.getLast_ping_Datetime());
                     // System.out.println("++++++++++++++++++++++++++++++++++date+++++++++++++++++++++++++++"+mytrip.getLast_sync_time());
                 }
                 mytriplist.add(mytrip);

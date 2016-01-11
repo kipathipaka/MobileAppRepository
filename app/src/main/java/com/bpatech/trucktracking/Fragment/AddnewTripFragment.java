@@ -37,6 +37,8 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class AddnewTripFragment extends Fragment {
 	MySQLiteHelper db;
 	SessionManager session;
@@ -62,6 +64,7 @@ public class AddnewTripFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.addnewtrip_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		Timber.i("Inside ADD NewTrip ");
 		db = new MySQLiteHelper(getActivity().getApplicationContext());
 		request = new Request(getActivity());
 		currenttripdetails = new ArrayList<AddTrip>();
@@ -173,6 +176,7 @@ public class AddnewTripFragment extends Fragment {
 			} catch (Exception e) {
 				//Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
 						//Toast.LENGTH_LONG).show();
+				Timber.i("Inside add Trip Exception",e);
 				progressBar.setVisibility(View.INVISIBLE);
 				e.printStackTrace();
 			}
@@ -217,6 +221,7 @@ public class AddnewTripFragment extends Fragment {
 		protected String doInBackground(String... params) {
 
 			try {
+				Timber.i("Add Trip APiCall");
 				List<NameValuePair> addtriplist = new ArrayList<NameValuePair>();
 				addtriplist.addAll(obj.AddtripObject(addtrip.getTruckno(), addtrip.getDestination(), session.getPhoneno(),
 						addtrip.getCustomer_company(), addtrip.getCustomer_name(), addtrip.getCustomer_phoneno(), addtrip.getDriver_phone_no()));
@@ -235,7 +240,7 @@ public class AddnewTripFragment extends Fragment {
 
 				}
 			} catch (Exception e) {
-
+				Timber.i("Add Trip APiCall Exception",e);
 				e.printStackTrace();
 
 			}
@@ -259,6 +264,7 @@ public class AddnewTripFragment extends Fragment {
 			protected String doInBackground(String... params) {
 
 				try {
+					Timber.i("Getdriver API Call");
 					List<String> driverphonenolist = new ArrayList<String>();
 					String get_driver_url = ServiceConstants.GET_DRIVER + session.getPhoneno();
 					HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);
@@ -305,7 +311,7 @@ public class AddnewTripFragment extends Fragment {
 
 
 				} catch (Exception e) {
-
+					Timber.i("Getdriver API Call Exception",e);
 					e.printStackTrace();
 
 				}

@@ -8,21 +8,21 @@ import android.content.Context;
 import android.content.Intent;
         import android.widget.Toast;
 
+        import timber.log.Timber;
+
         /**
  * Created by Anita on 11/13/2015.
  */
 public class UpdateLocationReceiver extends BroadcastReceiver{
-
-
     @Override
     public void onReceive(final Context context, Intent intent) {
          //Toast.makeText(context, "Reciverrrrrrrrrrr: ", Toast.LENGTH_SHORT).show();
-        System.out.println("inside receiver **************************");
-
+        Timber.i("UpdateLocationReceiver: inside receiver **************************");
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             // Set the alarm here.
-            System.out.println("inside receiver boot completed condition**************************");
-            Toast.makeText(context, "Reciverrrrrrrrrrr:setting alarm on reboot ", Toast.LENGTH_LONG).show();
+            Timber.i("UpdateLocationReceiver: inside receiver boot completed condition**************************");
+            Timber.i("UpdateLocationReceiver:setting alarm on reboot**************************");
+           // Toast.makeText(context, "Reciverrrrrrrrrrr:setting alarm on reboot ", Toast.LENGTH_LONG).show();
             AlarmManager alarmManager=(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intentR = new Intent( context, UpdateLocationReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentR, 0);

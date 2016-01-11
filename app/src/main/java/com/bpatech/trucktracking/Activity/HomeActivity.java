@@ -53,6 +53,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class HomeActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks,
 		GoogleApiClient.OnConnectionFailedListener {
 
@@ -104,7 +106,6 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
-System.out.println("+++++++++++++++++++++++++++++++++Home onCreate+++++++++++++++++++++++");
 			new GetandStroeMessages().execute("", "", "");
 		Intent i = getIntent();
 		final String action = i.getAction();
@@ -294,7 +295,7 @@ private	Runnable m_statusChecker = new Runnable()
 		LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             /*View view = inflater.inflate(R.layout.network_failure_popup,
                         null);*/
-		View promptsView = inflater.inflate(R.layout.network_failure,null);
+		View promptsView = inflater.inflate(R.layout.network_failure, null);
 
 		final Dialog dialog = new Dialog(getApplicationContext());
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

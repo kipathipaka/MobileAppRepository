@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,14 +41,24 @@ import com.bpatech.trucktracking.Util.SessionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 
 public class DetailFragment extends Fragment implements LocationListener {
@@ -69,6 +80,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 	Double longitude;
 	String locationVal =null;
 	String fullAddress = null;
+	String responsevalue;
 	boolean isGPSEnabled = false;
 
 	// flag for network status
@@ -81,6 +93,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 
 		View view = inflater.inflate(R.layout.companydetail_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		Timber.i("Inside Company Details");
 		debtn = (Button) view.findViewById(R.id.detbtn);
 		companyname = (EditText) view.findViewById(R.id.editcompanynamee);
 		username = (EditText) view.findViewById(R.id.edityourname);
@@ -140,6 +153,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 
 		db = new MySQLiteHelper(getActivity().getApplicationContext());
 		db.addUser(user);
+		Timber.i("Insert: ", "Inserting ..");
 		Log.d("Insert: ", "Inserting ..");
 	}
 
@@ -154,6 +168,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 		protected String doInBackground(String... params) {
 
 			try {
+				Timber.i("AddUserDetail: "+"Entering ..");
 				List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 				List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
 				if(fullAddress!=null || locationVal!=null ) {
@@ -235,7 +250,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 					}
 
 			} catch (Exception e) {
-
+				Timber.i("Inside Company Details : API Exception"+e);
 				e.printStackTrace();
 
 			}
@@ -282,6 +297,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 								UpdateLocation(location);
 							}
 						} else {
+							Timber.i("Inside Company Details : no location found");
 							Toast.makeText(getActivity().getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
 						}
 					}
@@ -308,11 +324,13 @@ public class DetailFragment extends Fragment implements LocationListener {
 }
 
 	public void UpdateLocation(Location updateLocation) {
+		Timber.i("Company Detail: ", "UpdateLocation Entering ..");
 		if (updateLocation != null) {
 			latitude = updateLocation.getLatitude();
 			longitude = updateLocation.getLongitude();
-
-			Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(),Locale.getDefault());
+			Timber.i("Company Detail: ", "UpdateLocation latitude and longitude .." + latitude + "&" + longitude);
+			new GetAddressFromJson().execute("", "", "");
+			/*Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(),Locale.getDefault());
 			//System.out.println("++++++++++++++++++++++++++++++++++address+address++List++++++++++++++++++++++++");
 			if(geocoder!=null) {
 				try {
@@ -324,7 +342,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 						//fullAddress = new StringBuilder();
 						//System.out.println("++++++++++++++++++++++++++++++++++address+address++++++++++++++++++++++++++"+address);
 						//Toast.makeText(getActivity().getApplicationContext(), "address......" +addressList, Toast.LENGTH_LONG).show();
-						/*if (address.getMaxAddressLineIndex() > 0) {
+						*//*if (address.getMaxAddressLineIndex() > 0) {
 							//Toast.makeText(getActivity().getApplicationContext(), "address..if loop...." + address.getMaxAddressLineIndex(), Toast.LENGTH_SHORT).show();
 							for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
 								//Toast.makeText(getActivity().getApplicationContext(), "address..for loop...." + address.getMaxAddressLineIndex(), Toast.LENGTH_SHORT).show();
@@ -333,10 +351,10 @@ public class DetailFragment extends Fragment implements LocationListener {
 									//fullAddress.append(address.getAddressLine(i)).append(",");
 								}
 							}
-						}*/
-                  /*  sb.append(address.getLocality()).append("\n");
+						}*//*
+                  *//*  sb.append(address.getLocality()).append("\n");
                     sb.append(address.getPostalCode()).append("\n");
-                    sb.append(address.getCountryName());*/
+                    sb.append(address.getCountryName());*//*
 						if (address.getSubLocality() == null) {
 							if (address.getLocality() == null) {
 								locationVal = "null";
@@ -356,20 +374,109 @@ public class DetailFragment extends Fragment implements LocationListener {
 						}
 
 						}
+						Timber.i("Company Detail: Current Location", fullAddress);
 						//System.out.println("++++++++++++++++++++++++++++++++++fulladdress+++++++++++++++++++++++++++"+fullAddress);
 						//Toast.makeText(getActivity().getApplicationContext(), "fulladdress.."+fullAddress+".....location"+locationVal, Toast.LENGTH_SHORT).show();
 					}
 
 				} catch (IOException e) {
+					Timber.i("Company Detail: ", "UpdateLocation IOException ..",e);
 					e.printStackTrace();
+}
+				}*/
 
-				}
-			}
 		}else{
+			Timber.i("Company Detail: ", "Update Location Null");
 			locationVal=null;
 			fullAddress=null;
 			latitude=0.0;
 			longitude=0.0;
+		}
+	}
+	private class GetAddressFromJson extends
+			AsyncTask<String, Void, String> {
+		@Override
+		protected void onPostExecute(String result) {
+
+		}
+
+		protected String doInBackground(String... params) {
+			InputStream is = null;
+			String result = "";
+			JSONObject jsonObj=null;
+			try {
+				Timber.i("Company Detail: ", "GetAddressFromJsonAPI");
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httppost = new HttpPost("https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude + ","+longitude);
+				HttpResponse response = httpclient.execute(httppost);
+				responsevalue = "" + response.getStatusLine().getStatusCode();
+				HttpEntity entity = response.getEntity();
+				is = entity.getContent();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+				StringBuilder sb = new StringBuilder();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				is.close();
+				result = sb.toString();
+				jsonObj = new JSONObject(result);
+				String Status = jsonObj.getString("status");
+				if (Status.equalsIgnoreCase("OK")) {
+					JSONArray Results = jsonObj.getJSONArray("results");
+					JSONObject zero = Results.getJSONObject(0);
+					JSONArray address_components = zero.getJSONArray("address_components");
+					for (int i = 0; i < address_components.length(); i++) {
+						JSONObject zero2 = address_components.getJSONObject(i);
+						String long_name = zero2.getString("long_name");
+						//System.out.println("++++++++++++++++++++++++++++++++++long_name+++++++++++++++++++++++++"+long_name);
+						JSONArray mtypes = zero2.getJSONArray("types");
+						// System.out.println("++++++++++++++++++++++++++++++++++mtypes+++++++++++++++++++++++++"+mtypes+TextUtils.isEmpty(long_name));
+						String Type = mtypes.getString(0);
+						if (TextUtils.isEmpty(long_name) == false || long_name!=null || long_name.length() > 0 || long_name != "") {
+							if (Type.equalsIgnoreCase("sublocality_level_1")) {
+								fullAddress=long_name+",";
+							} else if (Type.equalsIgnoreCase("sublocality")) {
+								fullAddress=long_name+",";
+							}else if (Type.equalsIgnoreCase("locality")) {
+								// Address2 = Address2 + long_name + ", ";
+								locationVal = long_name;
+								if(fullAddress!=null) {
+									fullAddress = fullAddress + long_name;
+								}else{
+									fullAddress = long_name;
+								}
+							} else if (Type.equalsIgnoreCase("administrative_area_level_2")) {
+								if(fullAddress == null ||locationVal==null ) {
+									locationVal = long_name;
+									fullAddress = long_name;
+
+								}
+							} else if (Type.equalsIgnoreCase("administrative_area_level_1")) {
+								if(fullAddress == null ||locationVal==null ){
+									locationVal = long_name;
+									fullAddress=long_name;
+								}
+							}
+						}
+
+						// JSONArray mtypes = zero2.getJSONArray("types");
+						// String Type = mtypes.getString(0);
+						// Log.e(Type,long_name);
+						Timber.i("Company Detail: CurrentLocation ", fullAddress);
+						System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
+								"+++++++++++++++++++++++"+fullAddress+"+local++"+locationVal);
+					}
+				}
+				//new UpdateLocationApi().execute("", "", "");
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return responsevalue;
+
 		}
 	}
 	public void locationEnable_popup() {

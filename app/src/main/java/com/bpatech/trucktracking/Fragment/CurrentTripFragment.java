@@ -1,6 +1,5 @@
 package com.bpatech.trucktracking.Fragment;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -50,6 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import timber.log.Timber;
+
 
 public class CurrentTripFragment  extends Fragment  {
 	private static Bundle b;
@@ -70,19 +71,22 @@ public class CurrentTripFragment  extends Fragment  {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		b= savedInstanceState;
-		 view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
+		 view = inflater.inflate(R.layout.currenttriplist_layout, container, false);
+
+		b= savedInstanceState;
 		session = new SessionManager(getActivity());
 		obj = new AddUserObjectParsing();
+		Timber.tag(session.getPhoneno());
+		Timber.i("inside current trips");
 		AlarmManager alarmManager=(AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		Intent intentR = new Intent( getActivity().getApplicationContext(), UpdateLocationReceiver.class);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity().getApplicationContext(), 0, intentR, 0);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity().getApplicationContext(), 0,intentR,PendingIntent.FLAG_UPDATE_CURRENT);
 		//intentR.setAction(UpdateLocationReceiver.);//the same as up
 		//boolean isWorking = (PendingIntent.getBroadcast(getActivity(), 1001, intentR, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
 		//Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
-		//System.out.println("********************************isWorking************** sync call end ..."+isWorking);
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10 * 60 * 1000, 20 * 60 * 1000,
+		//System.out.println("********************************isWorking************** sync call end ..."+pendingIntent.FLAG_UPDATE_CURRENT+pendingIntent.FLAG_CANCEL_CURRENT);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10 * 60 * 1000,20 * 60 * 1000,
 				pendingIntent);
 		request= new Request(getActivity());
 			if(session.getVechil_trip_id()!=null) {

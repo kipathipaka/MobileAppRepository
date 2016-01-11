@@ -34,6 +34,8 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 
 public class AddphoneFragment extends Fragment {
 	Button addbtn;
@@ -61,6 +63,7 @@ public class AddphoneFragment extends Fragment {
 		progressBar.setProgress(10);
 		progressBar.setMax(100);
 		progressBar.setVisibility(View.INVISIBLE);
+		Timber.i("inside Add PHONE");
 		txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
 		txt_contTitle.setText("Add Driver");
 		addbtn = (Button) view.findViewById(R.id.addbtn);
@@ -136,6 +139,7 @@ public class AddphoneFragment extends Fragment {
 		protected String doInBackground(String... params) {
 
 			try {
+				Timber.i("inside Add PHONE API Call");
 				List<NameValuePair> driverphonelist = new ArrayList<NameValuePair>();
 				//System.out.println("+++++++++++++++sizeeeeeeee+++++++++++++++" + session.getDriverlist().size());
 				driverphonelist.addAll(obj.addDriverPhone(phonenumber, session.getPhoneno()));
@@ -153,7 +157,7 @@ public class AddphoneFragment extends Fragment {
 					//new GetdriverPhonelist().execute("", "", "");
 				}
 			} catch (Exception e) {
-
+				Timber.i("inside Add PHONE Exception",e);
 				e.printStackTrace();
 
 			}
@@ -174,6 +178,7 @@ public class AddphoneFragment extends Fragment {
 		protected String doInBackground(String... params) {
 
 			try {
+				Timber.i("Add Phone getdriver APi Call");
 				driverphonenolist = new ArrayList<String>();
 				//driverphonenolist.addAll(obj.getDriverPhone(session.getPhoneno()));
 				String get_driver_url= ServiceConstants.GET_DRIVER+session.getPhoneno();
@@ -223,15 +228,18 @@ public class AddphoneFragment extends Fragment {
 										number = "+91" + phonenumber;
 										SmsManager smsManager = SmsManager.getDefault();
 										smsManager.sendTextMessage(number, null, add_Driver_Message, null, null);
+										Timber.i("sendSMS"+ add_Driver_Message);
 										Log.d("Sms", "sendSMS " + add_Driver_Message);
 										Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
 												Toast.LENGTH_LONG).show();
 										new AddUserPhone().execute("", "", "");
 									} else {
+										Timber.i("This Driver PhoneNumber Already Added");
 										Toast.makeText(getActivity().getApplicationContext(), "This Driver PhoneNumber Already Added",
 												Toast.LENGTH_LONG).show();
 									}
 								} catch (Exception e) {
+									Timber.i("GetDriverAPi Exception",e);
 									e.printStackTrace();
 								}
 							}

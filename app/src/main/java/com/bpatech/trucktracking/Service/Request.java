@@ -59,6 +59,8 @@ import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.SessionManager;
 import com.bpatech.trucktracking.Activity.ConnectionDetector;
 
+import timber.log.Timber;
+
 public class Request {
     private Context myContext;
     BufferedReader reader;
@@ -144,7 +146,7 @@ public class Request {
             responseJson = new JSONObject(sb.toString());
 
         } catch (Exception e) {
-
+            Timber.i("responseParsingException :",e);
         }
         return responseJson;
     }
@@ -165,7 +167,7 @@ public class Request {
             responsearr = new JSONArray(sb.toString());
 
         } catch (Exception e) {
-
+            Timber.i("responseArrayParsingException :",e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
             response = new BasicHttpResponse(sl);
@@ -196,11 +198,12 @@ public class Request {
 
                 response = client.execute(request);
             } else {
+                Timber.i("RequestPutType :InternetConnecction Failed");
                 noInternetConnection();
             }
 
         } catch (Exception e) {
-
+            Timber.i("RequestPutType :",e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
             response = new BasicHttpResponse(sl);
@@ -243,6 +246,7 @@ public class Request {
         try {
             internetStatus = connectionCheck();
             if (internetStatus==true) {
+                Timber.i("Request :Enter RequestPostType");
                 serverUrl = BASE_URL+Url;
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost(serverUrl);
@@ -250,6 +254,7 @@ public class Request {
                 response = client.execute(request);
             } else {
                // networkIssue();
+                Timber.i("RequestPostType :InternetConnecction Failed");
                noInternetConnection();
             }
 
@@ -260,7 +265,8 @@ public class Request {
 
                 e.printStackTrace();
                 e1.printStackTrace();
-
+                Timber.i("Request SSLException :", e);
+                Timber.i("Request Exception :",e1);
                 ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
                 StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
                 response = new BasicHttpResponse(sl);
@@ -271,7 +277,7 @@ public class Request {
          catch (Exception e) {
 
             e.printStackTrace();
-
+             Timber.i("Request Exception :", e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
             response = new BasicHttpResponse(sl);
@@ -301,7 +307,8 @@ public class Request {
 
                 e.printStackTrace();
                 e1.printStackTrace();
-
+                Timber.i("RequestLocationServicePostType SSLException :", e);
+                Timber.i("requestLocationServicePostType Exception :", e1);
                 ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
                 StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
                 locationResponse = new BasicHttpResponse(sl);
@@ -312,7 +319,7 @@ public class Request {
         catch (Exception e) {
 
             e.printStackTrace();
-
+            Timber.i("RequestLocationServicePostType SSLException :", e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
             response = new BasicHttpResponse(sl);
@@ -334,6 +341,7 @@ public class Request {
     // this method will check the internet status
     public boolean connectionCheck() {
         ConnectionDetector cd = new ConnectionDetector(myContext);
+        Timber.i("ConnectionCheck :");
         boolean status = cd.isConnectingToInternet();
         return status;
     }

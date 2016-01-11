@@ -23,6 +23,7 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:paddingLeft="0.5dp"
+        android:layout_below="@+id/headerlayou"
         android:paddingRight="0.5dp"
         android:layout_centerVertical="true">
 

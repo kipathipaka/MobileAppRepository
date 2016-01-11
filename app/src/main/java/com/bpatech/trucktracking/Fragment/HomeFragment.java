@@ -36,6 +36,8 @@ import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 
 public class HomeFragment extends Fragment {
 	MySQLiteHelper db;
@@ -98,6 +100,7 @@ try {
 		progressBar.setVisibility(View.VISIBLE);
 		String savephoneno = phoneNo.getText().toString();
 		System.out.println("phoneNo " + phoneNo);
+		Timber.tag("USER : "+String.valueOf(phoneNo));
 		session.setPhoneno(savephoneno);
 		/*DetailFragment detailfrag = new DetailFragment();
 
@@ -218,6 +221,7 @@ try {
 
 		db=new MySQLiteHelper(getActivity().getApplicationContext());
 		db.addUser(user);
+		Timber.i("Home : Create Table:  ", "Inserting ..");
 		Log.d("Insert: ", "Inserting ..");
 	}
 }

@@ -24,6 +24,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Database Name
@@ -52,6 +54,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY, " +  KEY_USER_NAME + " TEXT,"
                 + KEY_COMPANY + " TEXT, "+  KEY_PH_NO + " TEXT" +")";
         db.execSQL(CREATE_CONTACTS_TABLE);
+        Timber.i("MySQLiteHelper After tabele: Table created**************************");
         Log.d("After tabele: ", "created ..");
         // TODO Auto-generated method stub
 
@@ -66,6 +69,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         onCreate(db);
         // TODO Auto-generated method stub
+        Timber.i(MySQLiteHelper.class.getName(),"Upgrading database from version " + oldVersion + " to "
+                + newVersion + ", which will destroy all old data");
         Log.w(MySQLiteHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
@@ -86,6 +91,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         // Contact Phone
         // Inserting Row
         db.insert(TABLE_USER, null, values);
+        Timber.i("After Insert: ", "Inserted ..");
         Log.d("After Insert: ", "Inserted ..");
         db.close(); // Closing database connection
     }
