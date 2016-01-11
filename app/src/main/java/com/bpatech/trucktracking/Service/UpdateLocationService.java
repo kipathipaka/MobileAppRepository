@@ -108,166 +108,56 @@ public class UpdateLocationService extends Service
     public IBinder onBind(Intent intent) {
         return null;
     }
-   public void getLocation() {
-       Timber.i("Inside Service GetLocation Method:");
-        //Toast.makeText(getActivity().getApplicationContext(), "Enter get location method..", Toast.LENGTH_SHORT).show();
-       try {
-           LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-           if (locationManager != null) {
-               //	Toast.makeText(getActivity().getApplicationContext(), "location manager checking..." + locationManager.toString(), Toast.LENGTH_SHORT).show();
-               try {
-                   isGPSEnabled = locationManager
-                           .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-               } catch (Exception ex) {
-                   Timber.i("Inside Service GetLocation Exception:" + ex);
-               }
-               try {
-                   isNetworkEnabled = locationManager
-                           .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-               } catch (Exception ex) {
-                   Timber.i("Inside Service GetLocation Exception:" + ex);
-               }
-               if (!isGPSEnabled && !isNetworkEnabled) {
-                   //System.out.println("++++++++++++++++++++++++++++++++++enable location++++++++++++++++++++++++");
-                   //locationVal = "null";
-                   //fullAddress = "null";
-                   Intent intent = new Intent(this.getApplicationContext(), HomeActivity.class);
-                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                   getApplicationContext().startActivity(intent);
-               } else {
-                   if (isNetworkEnabled) {
-                       if (location == null) {
-                           Timber.i("Inside Service GetLocation :NetworkEnabled");
-                           locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) this);
-                           if (locationManager != null) {
-                               location = locationManager
-                                       .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                               //Toast.makeText(getActivity().getApplicationContext(), "Location value....." + "latitude" + String.valueOf(location.getLatitude()) + "longitude" + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
-                               if (location != null) {
-                                   updateGPSCoordinates(location);
-                               }
-                           } else {
-                               Timber.i("Inside Service GetLocation : no location found");
-                               Toast.makeText(getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
-                           }
-                       }
-                   }
-                   if (isGPSEnabled) {
-                       if (location == null) {
-                           Timber.i("Inside Service GetLocation :GPSEnabled");
-                           locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
-                           if (locationManager != null) {
-                               location = locationManager
-                                       .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                               if (location != null) {
-                                   updateGPSCoordinates(location);
-                               }
-
-                           } else {
-                               Timber.i("Inside Service GetLocation : no location found");
-                               Toast.makeText(getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
-                           }
-                       }
-                   }
-               }
-           }
-       }
-       catch (Exception e) {
-           Timber.i("Error :Get Location Method"+
-                   "Impossible to connect to LocationManager"+e);
-           Log.e("Error : Location",
-                   "Impossible to connect to LocationManager", e);
-       }
-    }
-
-
-   /* public Location getLocation() {
+   public Location getLocation() {
         try {
-
             LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-            try {
-                isGPSEnabled = locationManager
-                        .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (locationManager!=null) {
+                Timber.i("locationManager  : " +locationManager);
+                System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+locationManager);
+                try {
+                    isGPSEnabled = locationManager
+                            .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            } catch (Exception ex) {
-            }
+                } catch (Exception ex) {
+                }
 
-            try {
-                isNetworkEnabled = locationManager
-                        .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            } catch (Exception ex) {
-            }
-            // getting network status
-           *//* Criteria crta = new Criteria();
+                try {
+                    isNetworkEnabled = locationManager
+                            .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                } catch (Exception ex) {
+                }
+                // getting network status
+           /* Criteria crta = new Criteria();
             crta.setAccuracy(Criteria.ACCURACY_FINE);
             crta.setAltitudeRequired(false);
             crta.setBearingRequired(false);
             crta.setCostAllowed(true);
             crta.setPowerRequirement(Criteria.POWER_LOW);
             String provider = locationManager.getBestProvider(crta, true);
-            System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*//*
-            if (!isGPSEnabled && !isNetworkEnabled) {
-               // locationEnable_popup();
-                Intent intent = new Intent(this.getApplicationContext(),HomeActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
-                //Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
-            } else {
-              this.canGetLocation = true;
-                if (isNetworkEnabled) {
-                    //System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++++++++++++++++++++++++"+isNetworkEnabled);
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
-                                @Override
-                                public void onLocationChanged(Location location) {
-                                    Timber.i("onLocationChanged  : Network Provider latlng"+location.getLatitude()+
-                                            "&"+location.getLongitude());
-                                    // System.out.println("++++++++++++++++++++++isNetworkEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
-                                    //updateGPSCoordinates(location);
-                                    // new UpdateLocationApi().execute("", "", "");
-                                    //Toast.makeText(getApplicationContext(), location.getLatitude()+""+location.getLongitude(), Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                                }
-
-                                @Override
-                                public void onProviderEnabled(String provider) {
-
-                                }
-
-                                @Override
-                                public void onProviderDisabled(String provider) {
-
-                                }
-                            });
-                    Timber.i("Network : Network enable");
-                    Log.d("Network", "Network");
-
-                    if (locationManager != null) {
-                        location = locationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        updateGPSCoordinates(location);
-                    }
-
-                }
-                if (isGPSEnabled) {
-                    //System.out.println("++++++++++++++++++++++++++++++++++isGPSEnabled+++++++++++++++++++++++++++"+isGPSEnabled);
-                    if (location == null) {
+            System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+provider);*/
+                if (!isGPSEnabled && !isNetworkEnabled) {
+                    // locationEnable_popup();
+                    Intent intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
+                    //Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
+                } else {
+                    this.canGetLocation = true;
+                    if (isNetworkEnabled) {
+                        //System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++++++++++++++++++++++++"+isNetworkEnabled);
                         locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
+                                LocationManager.NETWORK_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
                                     @Override
                                     public void onLocationChanged(Location location) {
-                                        //System.out.println("++++++++++++++++++++++isGPSEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
-                                        // updateGPSCoordinates(location);
-                                        //System.out.println("++++++++++++++++++++++isGPSEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
+                                        Timber.i("onLocationChanged  : Network Provider latlng" + location.getLatitude() +
+                                                "&" + location.getLongitude());
+                                        // System.out.println("++++++++++++++++++++++isNetworkEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
+                                        //updateGPSCoordinates(location);
+                                        // new UpdateLocationApi().execute("", "", "");
+                                        //Toast.makeText(getApplicationContext(), location.getLatitude()+""+location.getLongitude(), Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override
@@ -285,17 +175,57 @@ public class UpdateLocationService extends Service
 
                                     }
                                 });
-                        Timber.i("Service Location Manager :GPS Enabled");
-                        Log.d("GPS Enabled", "GPS Enabled");
+                        Timber.i("Network : Network enable");
+                        Log.d("Network", "Network");
 
                         if (locationManager != null) {
-                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            location = locationManager
+                                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                             updateGPSCoordinates(location);
                         }
+
                     }
+                    if (isGPSEnabled) {
+                        //System.out.println("++++++++++++++++++++++++++++++++++isGPSEnabled+++++++++++++++++++++++++++"+isGPSEnabled);
+                        if (location == null) {
+                            locationManager.requestLocationUpdates(
+                                    LocationManager.GPS_PROVIDER,
+                                    MIN_TIME_BW_UPDATES,
+                                    MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
+                                        @Override
+                                        public void onLocationChanged(Location location) {
+                                            //System.out.println("++++++++++++++++++++++isGPSEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
+                                            // updateGPSCoordinates(location);
+                                            //System.out.println("++++++++++++++++++++++isGPSEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
+                                        }
+
+                                        @Override
+                                        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                                        }
+
+                                        @Override
+                                        public void onProviderEnabled(String provider) {
+
+                                        }
+
+                                        @Override
+                                        public void onProviderDisabled(String provider) {
+
+                                        }
+                                    });
+                            Timber.i("Service Location Manager :GPS Enabled");
+                            Log.d("GPS Enabled", "GPS Enabled");
+
+                            if (locationManager != null) {
+                                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                updateGPSCoordinates(location);
+                            }
+                        }
+                    }
+
+
                 }
-
-
             }
         } catch (Exception e) {
             Timber.i("Error : Location"+
@@ -304,7 +234,7 @@ public class UpdateLocationService extends Service
                     "Impossible to connect to LocationManager", e);
         }
         return location;
-    }*/
+    }
 
     public void updateGPSCoordinates(Location updateLocation) {
         Timber.i("Location Service :Enter updateGPSCoordinates");
@@ -481,10 +411,12 @@ public class UpdateLocationService extends Service
                         // JSONArray mtypes = zero2.getJSONArray("types");
                         // String Type = mtypes.getString(0);
                         // Log.e(Type,long_name);
-                        Timber.i("Location Service: CurrentLocation"+fullAddress);
-                        System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
-                                "+++++++++++++++++++++++"+fullAddress+"+local++"+locationVal);
+
+
                     }
+                    Timber.i("Location Service: CurrentLocation"+fullAddress);
+                    System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
+                            "+++++++++++++++++++++++" + fullAddress + "+local++" + locationVal);
                 }
                 new UpdateLocationApi().execute("", "", "");
             } catch (Exception e) {

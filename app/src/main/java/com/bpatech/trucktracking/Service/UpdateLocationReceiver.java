@@ -16,6 +16,7 @@ import android.content.Intent;
 public class UpdateLocationReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(final Context context, Intent intent) {
+      //  System.out.println("++++++++++++++++++++++++++++++++++UpdateLocationReceiver+++++++++++++++++++++++++++");
          //Toast.makeText(context, "Reciverrrrrrrrrrr: ", Toast.LENGTH_SHORT).show();
         Timber.i("UpdateLocationReceiver: inside receiver **************************");
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
