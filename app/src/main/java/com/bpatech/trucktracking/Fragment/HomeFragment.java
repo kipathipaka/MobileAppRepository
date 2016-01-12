@@ -221,7 +221,7 @@ try {
 
 		db=new MySQLiteHelper(getActivity().getApplicationContext());
 		db.addUser(user);
-		Timber.i("Home : Create Table:  ", "Inserting ..");
+		Timber.i("HomeFragment : Create Table: "+"Inserting ..");
 		Log.d("Insert: ", "Inserting ..");
 	}
 }

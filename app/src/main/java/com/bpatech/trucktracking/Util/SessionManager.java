@@ -37,6 +37,7 @@ public class SessionManager {
 
     // User name (make variable public to access from outside)
     public static final String KEY_phoneno = "phoneno";
+    public static final String KEY_ALARAM = "Alaramcount";
     public static final String KEY_Username = "username";
 
     // Email address (make variable public to access from outside)
@@ -90,6 +91,7 @@ public class SessionManager {
         return pref.getString(KEY_phoneno, null);
     }
 
+
     public void setUsername(String username) {
 
         editor.putString(KEY_Username, username);
@@ -117,7 +119,15 @@ public class SessionManager {
 
         return pref.getInt(KEY_otpno, 0);
     }
+    public void setAlaramcount(int Alaramcount) {
 
+        editor.putInt(KEY_ALARAM, Alaramcount);
+        editor.commit();
+    }
+    public int getAlaramcount() {
+
+        return pref.getInt(KEY_ALARAM, 0);
+    }
 
     public static List<AddTrip> getAddtripdetails() {
         return addtripdetails;

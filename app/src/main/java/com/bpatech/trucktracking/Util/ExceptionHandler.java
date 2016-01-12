@@ -187,7 +187,6 @@ public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandl
 
         printWriter.close();
         Report += "****  End of current Report ***";
-        System.out.println("++++++++++++++++++++start+++++++++++++++++++");
         Intent intent = new Intent(myContext, CrashActivity.class);
         intent.putExtra("STACKTRACE", Report);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

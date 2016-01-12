@@ -91,7 +91,7 @@ public class TaskDetailFragment extends Fragment   {
     URLShortner shorturl;
     String responseStrng;
     ProgressBar progressBar;
-    RelativeLayout taskdeatlilayout;
+    RelativeLayout taskdeatlilayout,taskdetailbuttonlayout;
     SessionManager session;
     EditText whatsuptext,message;
     String lastlocationtxt,lastupdate_time;
@@ -132,6 +132,8 @@ public class TaskDetailFragment extends Fragment   {
         txt_contTitle = (TextView) view.findViewById(R.id.txt_contTitle);
         taskdeatlilayout = (RelativeLayout) view.findViewById(R.id.taskdetaillayout);
         taskdeatlilayout.setOnClickListener(new Layoutclicklistener());
+        taskdetailbuttonlayout = (RelativeLayout) view.findViewById(R.id.taskdetailbuttonlayout);
+        taskdetailbuttonlayout.setOnClickListener(new Layoutclicklistener());
         txt_contTitle.setText(ServiceConstants.TASK_DETAIL_TITLE);
         Startbtn = (Button)view.findViewById(R.id.startbtn);
         Startbtn.setVisibility(View.INVISIBLE);
@@ -189,7 +191,7 @@ public class TaskDetailFragment extends Fragment   {
                 }
             });
         }else{
-            Timber.i("Please... Install Google Maps***************************");
+            Timber.i("TaskDetailFragment:Please... Install Google Maps***************************");
             Toast.makeText(getActivity().getApplicationContext(), "Please... Install Google Maps",
                     Toast.LENGTH_LONG).show();
             /*View rootView = inflater.inflate(R.layout.location_enable_popup, container, false);
@@ -258,7 +260,7 @@ public class TaskDetailFragment extends Fragment   {
                 }
 
             } else {
-                Timber.i("TaskDetail:Driver has not downloaded the app****************************");
+                Timber.i("TaskDetailFragment:Driver has not downloaded the app****************************");
                 Toast.makeText(getActivity().getApplicationContext(), "Driver has not downloaded the app",
                         Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.INVISIBLE);
@@ -377,7 +379,7 @@ public class TaskDetailFragment extends Fragment   {
         mapView.onPause();
     }
 
-    /*@Override
+   /* @Override
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
@@ -510,6 +512,7 @@ public class TaskDetailFragment extends Fragment   {
         protected String doInBackground(String... params) {
 
             try {
+                Timber.i("TaskDetailFragment:Enter GetTrackDetail API***************************");
                 //progressBar.setVisibility(View.VISIBLE);
                 String Gettrip_url = ServiceConstants.TRACK_TRIP+Integer.parseInt(vechile_trip_no);
                 HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
@@ -687,7 +690,7 @@ public class TaskDetailFragment extends Fragment   {
 
                 }
             } catch (Exception e) {
-
+                Timber.i("TaskDetailFragment:GetTrackDetail Exception***************************");
                 e.printStackTrace();
 
             }
@@ -986,7 +989,7 @@ public class TaskDetailFragment extends Fragment   {
     }
     private void prepareMessage(){
         String name=session.getUsername();
-        Timber.i("Enter Share Button Listener***************************");
+        Timber.i("TaskDetailFragment:Enter Share Button Listener***************************");
         if(session.getMessagelist()!=null) {
             if (session.getMessagelist().size() > 0) {
                 Share_msg = name + " " + session.getMessagelist().get(0).getShare_message() + " " + trip_url + " " + ServiceConstants.MESSAGE_SENDING_END;

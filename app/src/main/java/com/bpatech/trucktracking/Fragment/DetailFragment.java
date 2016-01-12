@@ -153,7 +153,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 
 		db = new MySQLiteHelper(getActivity().getApplicationContext());
 		db.addUser(user);
-		Timber.i("Insert: ", "Inserting ..");
+		Timber.i("DetailFragment:Insert: ", "Inserting ..");
 		Log.d("Insert: ", "Inserting ..");
 	}
 
@@ -168,7 +168,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 		protected String doInBackground(String... params) {
 
 			try {
-				Timber.i("AddUserDetail: "+"Entering ..");
+				Timber.i("DetailFragment:AddUserDetail: "+"Entering ..");
 				List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 				List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
 				if(fullAddress!=null || locationVal!=null ) {
@@ -463,14 +463,15 @@ public class DetailFragment extends Fragment implements LocationListener {
 						// JSONArray mtypes = zero2.getJSONArray("types");
 						// String Type = mtypes.getString(0);
 						// Log.e(Type,long_name);
-						Timber.i("Company Detail: CurrentLocation ", fullAddress);
-						System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
-								"+++++++++++++++++++++++"+fullAddress+"+local++"+locationVal);
-					}
-				}
-				//new UpdateLocationApi().execute("", "", "");
-			} catch (Exception e) {
 
+
+					}
+					Timber.i("Company Detail: CurrentLocation ", fullAddress);
+					System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
+							"+++++++++++++++++++++++" + fullAddress + "+local++" + locationVal);
+				}
+			} catch (Exception e) {
+				Timber.i("Company Detail:GetAddressFromJson Exception "+e);
 				e.printStackTrace();
 
 			}

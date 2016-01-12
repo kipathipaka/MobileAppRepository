@@ -65,6 +65,7 @@ public class CurrentTripFragment  extends Fragment  {
 	ListView listView;
 	Bundle taskdetail;
 	View view;
+	int alarmval=0;
 	String trip_id;
 	AddUserObjectParsing obj;
 	private static ProgressBar progressBar;
@@ -78,16 +79,21 @@ public class CurrentTripFragment  extends Fragment  {
 		session = new SessionManager(getActivity());
 		obj = new AddUserObjectParsing();
 		Timber.tag(session.getPhoneno());
-		Timber.i("inside current trips");
-		AlarmManager alarmManager=(AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-		Intent intentR = new Intent( getActivity().getApplicationContext(), UpdateLocationReceiver.class);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity().getApplicationContext(), 0,intentR,PendingIntent.FLAG_UPDATE_CURRENT);
-		//intentR.setAction(UpdateLocationReceiver.);//the same as up
-		//boolean isWorking = (PendingIntent.getBroadcast(getActivity(), 1001, intentR, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
-		//Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
-		//System.out.println("********************************isWorking************** sync call end ..."+pendingIntent.FLAG_UPDATE_CURRENT+pendingIntent.FLAG_CANCEL_CURRENT);
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10 * 60 * 1000,20 * 60 * 1000,
-				pendingIntent);
+		Timber.i("Inside Current Trips");
+		Timber.i("Alaram Count:"+session.getAlaramcount());
+		System.out.println("++++++++++session.getKeyAlaram()++++++++"+session.getAlaramcount());
+		if(session.getAlaramcount()== 0) {
+			AlarmManager alarmManager = (AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+			Intent intentR = new Intent(getActivity().getApplicationContext(), UpdateLocationReceiver.class);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 0, intentR, PendingIntent.FLAG_UPDATE_CURRENT);
+			//intentR.setAction(UpdateLocationReceiver.);//the same as up
+			//boolean isWorking = (PendingIntent.getBroadcast(getActivity(), 1001, intentR, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
+			//Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
+			//System.out.println("********************************isWorking************** sync call end ..."+pendingIntent.FLAG_UPDATE_CURRENT+pendingIntent.FLAG_CANCEL_CURRENT);
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),20 * 60 * 1000,
+					pendingIntent);
+			session.setAlaramcount(1);
+		}
 		request= new Request(getActivity());
 			if(session.getVechil_trip_id()!=null) {
 				trip_id = session.getVechil_trip_id();

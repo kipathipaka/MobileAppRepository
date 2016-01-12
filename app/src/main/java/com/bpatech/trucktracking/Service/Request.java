@@ -146,7 +146,7 @@ public class Request {
             responseJson = new JSONObject(sb.toString());
 
         } catch (Exception e) {
-            Timber.i("responseParsingException :",e);
+            Timber.i("Request Class:responseParsingException :"+e);
         }
         return responseJson;
     }
@@ -167,7 +167,7 @@ public class Request {
             responsearr = new JSONArray(sb.toString());
 
         } catch (Exception e) {
-            Timber.i("responseArrayParsingException :",e);
+            Timber.i("Request Class:ResponseArrayParsingException :"+e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
             response = new BasicHttpResponse(sl);
@@ -198,12 +198,12 @@ public class Request {
 
                 response = client.execute(request);
             } else {
-                Timber.i("RequestPutType :InternetConnecction Failed");
+                Timber.i("Request Class:PutType :InternetConnecction Failed");
                 noInternetConnection();
             }
 
         } catch (Exception e) {
-            Timber.i("RequestPutType :",e);
+            Timber.i("Request Class:PutType :"+e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
             response = new BasicHttpResponse(sl);
@@ -246,7 +246,7 @@ public class Request {
         try {
             internetStatus = connectionCheck();
             if (internetStatus==true) {
-                Timber.i("Request :Enter RequestPostType");
+                Timber.i("Request Class:Enter RequestPostType");
                 serverUrl = BASE_URL+Url;
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost(serverUrl);
@@ -254,7 +254,7 @@ public class Request {
                 response = client.execute(request);
             } else {
                // networkIssue();
-                Timber.i("RequestPostType :InternetConnecction Failed");
+                Timber.i("Request Class:PostType :InternetConnecction Failed");
                noInternetConnection();
             }
 
@@ -265,8 +265,8 @@ public class Request {
 
                 e.printStackTrace();
                 e1.printStackTrace();
-                Timber.i("Request SSLException :", e);
-                Timber.i("Request Exception :",e1);
+                Timber.i("Request Class:SSLException :"+e);
+                Timber.i("Request Class: Exception :"+e1);
                 ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
                 StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
                 response = new BasicHttpResponse(sl);
@@ -277,7 +277,7 @@ public class Request {
          catch (Exception e) {
 
             e.printStackTrace();
-             Timber.i("Request Exception :", e);
+             Timber.i("Request Class: Exception :"+ e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
             response = new BasicHttpResponse(sl);
@@ -307,8 +307,8 @@ public class Request {
 
                 e.printStackTrace();
                 e1.printStackTrace();
-                Timber.i("RequestLocationServicePostType SSLException :", e);
-                Timber.i("requestLocationServicePostType Exception :", e1);
+                Timber.i("Request Class:LocationServicePostType SSLException :"+ e);
+                Timber.i("Request Class:LocationServicePostType Exception :"+ e1);
                 ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
                 StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
                 locationResponse = new BasicHttpResponse(sl);
@@ -319,7 +319,7 @@ public class Request {
         catch (Exception e) {
 
             e.printStackTrace();
-            Timber.i("RequestLocationServicePostType SSLException :", e);
+            Timber.i("Request  Class:LocationServicePostType SSLException :"+ e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
             response = new BasicHttpResponse(sl);
@@ -341,7 +341,7 @@ public class Request {
     // this method will check the internet status
     public boolean connectionCheck() {
         ConnectionDetector cd = new ConnectionDetector(myContext);
-        Timber.i("ConnectionCheck :");
+        Timber.i("Request Class:InternetConnectionCheck");
         boolean status = cd.isConnectingToInternet();
         return status;
     }

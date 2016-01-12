@@ -38,7 +38,7 @@ ProgressBar progressBar;
         progressBar.setProgress(10);
         progressBar.setMax(100);
         progressBar.setVisibility(View.INVISIBLE);
-        Timber.tag("Crash ACtivity Call");
+        Timber.i("Crash Activity Call");
         findViewById(R.id.btn).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -64,7 +64,7 @@ ProgressBar progressBar;
     }
 
     private void sendErrorMail(Context _context, String filePath) {
-        Timber.tag("Send Error Mail");
+        Timber.i("Crash Activity:Send Error Mail");
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
         String subject = "Error Description";
         String body = "Unfortunately Vehilce Tracking application crashed.\nPlease find the attached error log.";

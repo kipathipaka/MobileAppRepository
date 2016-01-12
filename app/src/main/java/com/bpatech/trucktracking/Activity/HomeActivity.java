@@ -124,7 +124,6 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 				System.out.println("+++++++++++++++++++++++++++++++++++Try+++++++++++++++++++++++++++++++++++++");
 				setContentView(R.layout.currenttrip_fragment);
 			} catch (RuntimeException e) {
-			System.out.println("+++++++++++++++++++++++++++++++++++ catch+++++++++++++++++++++++++++++++++++++");
 				Intent intent = new Intent(HomeActivity.this,
 						HomeActivity.class);
 				startActivity(intent);

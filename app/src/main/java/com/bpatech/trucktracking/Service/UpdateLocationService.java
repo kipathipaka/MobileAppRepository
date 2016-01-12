@@ -82,7 +82,7 @@ public class UpdateLocationService extends Service
     String fullAddress;
     HttpResponse response;
     // The minimum time beetwen updates in milliseconds 15 * 60 * 1000.
-    private static final long MIN_TIME_BW_UPDATES =20 * 60 * 1000;
+    private static final long MIN_TIME_BW_UPDATES =20* 60 * 1000;
 
 
     @Override
@@ -97,7 +97,7 @@ public class UpdateLocationService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timber.i("Service : Start Command Call");
+        Timber.i("UpdateLocationService : Start Command Call");
         userlist = new ArrayList<User>();
         getLocation();
         return Service.START_STICKY;
@@ -113,7 +113,7 @@ public class UpdateLocationService extends Service
         try {
             LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
             if (locationManager!=null) {
-                Timber.i("locationManager  : " +locationManager);
+                Timber.i("UpdateLocationService:locationManager  : " +locationManager);
                 System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+locationManager);
                 try {
                     isGPSEnabled = locationManager
@@ -152,7 +152,7 @@ public class UpdateLocationService extends Service
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
                                     @Override
                                     public void onLocationChanged(Location location) {
-                                        Timber.i("onLocationChanged  : Network Provider latlng" + location.getLatitude() +
+                                        Timber.i("UpdateLocationService:onLocationChanged  : Network Provider latlng" + location.getLatitude() +
                                                 "&" + location.getLongitude());
                                         // System.out.println("++++++++++++++++++++++isNetworkEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
                                         //updateGPSCoordinates(location);
@@ -175,7 +175,7 @@ public class UpdateLocationService extends Service
 
                                     }
                                 });
-                        Timber.i("Network : Network enable");
+                        Timber.i("UpdateLocationService:Network : Network enable");
                         Log.d("Network", "Network");
 
                         if (locationManager != null) {
@@ -214,7 +214,7 @@ public class UpdateLocationService extends Service
 
                                         }
                                     });
-                            Timber.i("Service Location Manager :GPS Enabled");
+                            Timber.i("UpdateLocationService :GPS Enabled");
                             Log.d("GPS Enabled", "GPS Enabled");
 
                             if (locationManager != null) {
@@ -228,7 +228,7 @@ public class UpdateLocationService extends Service
                 }
             }
         } catch (Exception e) {
-            Timber.i("Error : Location"+
+            Timber.i("UpdateLocationServiceException : Location"+
                     "Impossible to connect to LocationManager"+e);
             Log.e("Error : Location",
                     "Impossible to connect to LocationManager", e);
@@ -237,11 +237,11 @@ public class UpdateLocationService extends Service
     }
 
     public void updateGPSCoordinates(Location updateLocation) {
-        Timber.i("Location Service :Enter updateGPSCoordinates");
+        Timber.i("UpdateLocationService :Enter updateGPSCoordinates");
         if (updateLocation != null) {
             latitude = updateLocation.getLatitude();
             longitude = updateLocation.getLongitude();
-            Timber.i("Service :updateGPSCoordinates latitude :  " + latitude + "Longitude  :" + longitude);
+            Timber.i("UpdateLocationService :updateGPSCoordinates latitude :  " + latitude + "Longitude  :" + longitude);
             new GetAddressFromJson().execute("", "", "");
            /* Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             try {
@@ -303,13 +303,13 @@ public class UpdateLocationService extends Service
         protected String doInBackground(String... params) {
 
             try {
-                Timber.i("Service APi Call :  " + latitude + "Longitude  :" + longitude);
+                Timber.i("UpdateLocationService:Service APi Call :  " + latitude + "Longitude  :" + longitude);
                 //  System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" +
                 //session.getPhoneno()+latitude.toString()+longitude.toString());
                 if (session.getPhoneno() == null || String.valueOf(latitude) == null || String.valueOf(longitude) == null || locationVal.toString() == null) {
 
                     responsevalue = "noResult";
-                    Timber.i("Service APi Call Result  :  " + responsevalue);
+                    Timber.i("UpdateLocationService:Service APi Call Result  :  " + responsevalue);
                 } else {
                     //System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" + session.getPhoneno());
                     List<NameValuePair> updatelocationlist = new ArrayList<NameValuePair>();
@@ -321,11 +321,11 @@ public class UpdateLocationService extends Service
                     response = request.requestLocationServicePostType(
                             ServiceConstants.UPDATE_LOCATION, updatelocationlist, ServiceConstants.BASE_URL);
                     responsevalue = "" + response.getStatusLine().getStatusCode();
-                    Timber.i("Location update API result :"+ response.getStatusLine().getStatusCode());
+                    Timber.i("UpdateLocationService:Location update API result :"+ response.getStatusLine().getStatusCode());
                     //System.out.println("++++++++++++++++++++++++++++++++++response+eee++++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
                 }
             } catch (Exception e) {
-                Timber.i("Location update API  Error :"+e);
+                Timber.i("UpdateLocationService:Location update API  Exception :"+e);
                 e.printStackTrace();
 
             }
