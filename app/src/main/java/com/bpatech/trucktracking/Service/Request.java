@@ -86,7 +86,7 @@ public class Request {
              HttpClient client;
                 client = new DefaultHttpClient();
                 HttpDelete deleterequest = new HttpDelete(serverUrl);
-               // deleterequest.setParams(getTimeOutParams());
+                deleterequest.setParams(getTimeOutParams());
                // deleterequest.setURI(website);
                 response = client.execute(deleterequest);
             } else {
@@ -111,8 +111,12 @@ public class Request {
             internetStatus = connectionCheck();
             if (internetStatus == true) {
                 serverUrl = BASE_URL+Url;
+                URI website = new URI(serverUrl);
                 HttpClient client = new DefaultHttpClient();
-                HttpGet request = new HttpGet(serverUrl);
+
+                HttpGet request = new HttpGet();
+                request.setParams(getTimeOutParams());
+                request.setURI(website);
                 response = client.execute(request);
             } else {
                 noInternetConnection();
@@ -186,9 +190,10 @@ public class Request {
                 URI website = new URI(serverUrl);
 
                 HttpPut request = new HttpPut(serverUrl);
-               /* request.setParams(getTimeOutParams());
+                request.setParams(getTimeOutParams());
                 request.setURI(website);
-                StringEntity entityString = new StringEntity(
+               // request.setURI(website);
+               /* StringEntity entityString = new StringEntity(
                         jsonObj.toString(), "UTF8");*/
                 request.setEntity(new UrlEncodedFormEntity(userlist));
                 /*request.setHeader(ServiceConstants.CONTENT_TYPE_KEY,
@@ -248,8 +253,11 @@ public class Request {
             if (internetStatus==true) {
                 Timber.i("Request Class:Enter RequestPostType");
                 serverUrl = BASE_URL+Url;
+                URI website = new URI(serverUrl);
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost(serverUrl);
+                request.setParams(getTimeOutParams());
+                request.setURI(website);
                 request.setEntity(new UrlEncodedFormEntity(userlist));
                 response = client.execute(request);
             } else {
@@ -291,10 +299,14 @@ public class Request {
             internetStatus = connectionCheck();
             if (internetStatus==true) {
                 serverUrl = BASE_URL+Url;
+                URI website = new URI(serverUrl);
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost(serverUrl);
+                request.setParams(getTimeOutParams());
+                request.setURI(website);
                 request.setEntity(new UrlEncodedFormEntity(userlist));
                 locationResponse = client.execute(request);
+               // System.out.println("++++++++++++++++++++++++++++++++++locationResponse+++++++++++++++++++++++++++"+locationResponse);
             } else {
                 // networkIssue();
                 noInternetConnection();
@@ -312,26 +324,27 @@ public class Request {
                 ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
                 StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
                 locationResponse = new BasicHttpResponse(sl);
-                return responseValidation(locationResponse);
+                return locationResponse;
             }
-            return responseValidation(locationResponse);
+            return  locationResponse;
         }
         catch (Exception e) {
 
             e.printStackTrace();
-            Timber.i("Request  Class:LocationServicePostType SSLException :"+ e);
+            Timber.i("Request Class:LocationServicePostType SSLException :"+ e);
             ProtocolVersion pv = new ProtocolVersion("HTTP", 1, 1);
             StatusLine sl = new BasicStatusLine(pv, 999, "Network Issue");
-            response = new BasicHttpResponse(sl);
-            return responseValidation(locationResponse);
+            locationResponse = new BasicHttpResponse(sl);
+            return locationResponse;
 
         }
-        return responseValidation(locationResponse);
+        return locationResponse;
     }
 
     public HttpResponse responseValidation(HttpResponse response) {
 
        if (response.getStatusLine().getStatusCode()!= 200) {
+          // System.out.println("++++++++++++++++++++++++++++++++++responseValidation+++++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
             networkIssue();
         }
 
@@ -352,12 +365,12 @@ public class Request {
         HttpParams httpParameters = new BasicHttpParams();
         // Set the timeout in milliseconds until a connection is established.
         // The default value is zero, that means the timeout is not used.
-        int timeoutConnection = 15000;// 5000
+        int timeoutConnection = 5000;// 5000
         HttpConnectionParams.setConnectionTimeout(httpParameters,
                 timeoutConnection);
         // Set the default socket timeout (SO_TIMEOUT)
         // in milliseconds which is the timeout for waiting for data.
-        int timeoutSocket = 20000;// 10000
+        int timeoutSocket = 10000;// 10000
         HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
         // DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);

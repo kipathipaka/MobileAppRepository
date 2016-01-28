@@ -74,6 +74,7 @@ public class AddphoneFragment extends Fragment {
 		request = new Request(getActivity());
 		addPhoneLayout.setOnClickListener(new AddPhoneLayoutclicklistener());
 		addbtn.setOnClickListener(new MyaddButtonListener());
+
 		return view;
 	}
 
@@ -147,16 +148,28 @@ public class AddphoneFragment extends Fragment {
 						ServiceConstants.ADD_DRIVER_PHONE, driverphonelist, ServiceConstants.BASE_URL);
 				responseStrng = "" + response.getStatusLine().getStatusCode();
 				if (response.getStatusLine().getStatusCode() == 200) {
-					CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-					FragmentManager fragmentmanager = getFragmentManager();
-					FragmentTransaction fragmenttransaction = fragmentmanager
-							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-					fragmenttransaction.addToBackStack(null);
-					fragmenttransaction.commit();
-					//new GetdriverPhonelist().execute("", "", "");
-				}
-			} catch (Exception e) {
+					System.out.println("+++++++++++++++number+++++++++++++++" + number);
+					getActivity().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
+									Toast.LENGTH_LONG).show();
+
+							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
+
+						}
+					});
+					}
+
+		//new GetdriverPhonelist().execute("", "", "");
+
+}catch (Exception e) {
 				Timber.i("AddphoneFragment:Inside Add PHONE Exception"+e);
 				e.printStackTrace();
 
@@ -230,8 +243,8 @@ public class AddphoneFragment extends Fragment {
 										smsManager.sendTextMessage(number, null, add_Driver_Message, null, null);
 										Timber.i("AddphoneFragment:sendSMS"+ add_Driver_Message);
 										Log.d("Sms", "sendSMS " + add_Driver_Message);
-										Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
-												Toast.LENGTH_LONG).show();
+										/*Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!" + number,
+												Toast.LENGTH_LONG).show();*/
 										new AddUserPhone().execute("", "", "");
 									} else {
 										Timber.i("AddphoneFragment:This Driver PhoneNumber Already Added");

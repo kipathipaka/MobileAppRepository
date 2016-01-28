@@ -100,7 +100,7 @@ try {
 		progressBar.setVisibility(View.VISIBLE);
 		String savephoneno = phoneNo.getText().toString();
 		System.out.println("phoneNo " + phoneNo);
-		Timber.tag("USER : "+String.valueOf(phoneNo));
+		Timber.tag(String.valueOf(phoneNo));
 		session.setPhoneno(savephoneno);
 		/*DetailFragment detailfrag = new DetailFragment();
 
@@ -146,6 +146,7 @@ try {
 				String Getuser_url= ServiceConstants.GET_USER+session.getPhoneno();
 				response = request.requestGetType(Getuser_url,ServiceConstants.BASE_URL);
 				responseStrng = "" + response.getStatusLine().getStatusCode();
+				System.out.println("+++++++++++++++++++++Status+code++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONObject responsejson = request.responseParsing(response);
 
@@ -190,18 +191,6 @@ try {
 
 
 					}
-
-				}else{
-
-					DetailFragment detailfrag = new DetailFragment();
-
-					FragmentManager fragmentmanager = getFragmentManager();
-					FragmentTransaction fragmenttransaction = fragmentmanager
-							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
-					fragmenttransaction.addToBackStack(null);
-					fragmenttransaction.commit();
-
 
 				}
 

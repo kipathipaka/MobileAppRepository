@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.MessageDTO;
+import com.bpatech.trucktracking.DTO.UpdateLocationDTO;
 import com.bpatech.trucktracking.Fragment.AddnewTripFragment;
 import com.bpatech.trucktracking.Fragment.AddphoneFragment;
 import com.bpatech.trucktracking.Fragment.CurrentTripFragment;
@@ -50,8 +51,12 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import timber.log.Timber;
 
@@ -74,6 +79,7 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 	String responseStrng;
 	String trip_id;
 	int phonecount;
+	UpdateLocationDTO updateLocationDTO;
 	private Context myContext;
 	LocationRequest locationRequest;
 	@Override
@@ -93,15 +99,13 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 		obj = new AddUserObjectParsing();
 		request= new Request(this);
 		m_handler = new Handler();
-		m_handler.postDelayed(m_statusChecker,0);
-
-			googleApiClient = new GoogleApiClient.Builder(this)
+		m_handler.postDelayed(m_statusChecker, 0);
+		googleApiClient = new GoogleApiClient.Builder(this)
 					.addConnectionCallbacks(this)
 					.addOnConnectionFailedListener(this)
 					.addApi(LocationServices.API)
 					.build();
 			googleApiClient.connect();
-
 			locationRequest = LocationRequest.create();
 			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			locationRequest.setInterval(30 * 1000);
@@ -121,7 +125,7 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 		}else{
 		if(phonecount>0){
 			try {
-				System.out.println("+++++++++++++++++++++++++++++++++++Try+++++++++++++++++++++++++++++++++++++");
+			//	System.out.println("+++++++++++++++++++++++++++++++++++Try+++++++++++++++++++++++++++++++++++++");
 				setContentView(R.layout.currenttrip_fragment);
 			} catch (RuntimeException e) {
 				Intent intent = new Intent(HomeActivity.this,
@@ -226,7 +230,7 @@ private	Runnable m_statusChecker = new Runnable()
 					FragmentManager fragmentmanager = getFragmentManager();
 					FragmentTransaction fragmenttransaction = fragmentmanager
 							.beginTransaction();
-					fragmenttransaction.replace(R.id.viewers, currentfrag);
+					fragmenttransaction.replace(R.id.viewers,currentfrag);
 					fragmenttransaction.addToBackStack(null);
 					fragmenttransaction.commit();
 				}
@@ -440,4 +444,14 @@ public void Enable_location_popup()
 		}
 
 	}
+	void UpdateLocation(UpdateLocationDTO Updatelocation) {
+
+		db.addUpdateLocationDetails(Updatelocation);
+      /*List<UpdateLocationDTO> tracklist=new  ArrayList<UpdateLocationDTO>();
+      tracklist.addAll(db.getTracktripDetails());*/
+		System.out.println("++++++++home++++++list size++" + db.getUpdateLocationCount());
+		Timber.i("DetailFragment:Insert:Inserting ..");
+		//Log.d("Insert: ", "Inserting ..");
+	}
+
 }

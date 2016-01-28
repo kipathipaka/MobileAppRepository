@@ -20,11 +20,13 @@ public class UpdateLocationReceiver extends BroadcastReceiver{
             SessionManager  session;
     @Override
     public void onReceive(final Context context, Intent intent) {
-      //  System.out.println("++++++++++++++++++++++++++++++++++UpdateLocationReceiver+++++++++++++++++++++++++++");
+        System.out.println("++++++++++++++++++++++++++++++++++UpdateLocationReceiver+++++++++++++++++++++++++++");
          //Toast.makeText(context, "Reciverrrrrrrrrrr: ", Toast.LENGTH_SHORT).show();
         Timber.i("UpdateLocationReceiver: Inside receiver **************************");
+
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             // Set the alarm here.
+            session = new SessionManager(context);
             Timber.i("UpdateLocationReceiver: Inside receiver boot completed condition**************************");
             Timber.i("UpdateLocationReceiver:Setting alarm on reboot**************************");
            // Toast.makeText(context, "Reciverrrrrrrrrrr:setting alarm on reboot ", Toast.LENGTH_LONG).show();
@@ -32,8 +34,9 @@ public class UpdateLocationReceiver extends BroadcastReceiver{
             Intent intentR = new Intent( context, UpdateLocationReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentR, 0);
 
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10 * 60 * 1000,20 * 60 * 1000,
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),20 * 60 * 1000,
                     pendingIntent);
+            session.setAlaramcount(1);
         }
 
         context.startService(new Intent(context, UpdateLocationService.class));

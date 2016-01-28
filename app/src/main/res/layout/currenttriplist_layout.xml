@@ -59,6 +59,7 @@
     android:layout_height="50dp"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
+    android:visibility="gone"
     android:background="@drawable/tab_bar_bg"
     >
 

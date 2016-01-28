@@ -271,7 +271,7 @@ public class TaskDetailFragment extends Fragment   {
 
         @Override
         public void onClick(View v) {
-
+           // refreshbutton.setClickable(false);
            TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
             taskdetailfrag.setArguments(taskdetail);
             FragmentManager fragmentmanager = getFragmentManager();
@@ -397,7 +397,11 @@ public class TaskDetailFragment extends Fragment   {
         protected void onPostExecute(String result) {
             Startbtn.setText("End Tracking");
             Startbtn.setBackgroundColor(Color.RED);
-            lastlocation.setText(lastlocationtxt);
+            if(lastlocationtxt.equalsIgnoreCase("null")) {
+                lastlocation.setText("Not Available");
+            }else{
+                lastlocation.setText(lastlocationtxt);
+            }
             if(lastupdate_time.equalsIgnoreCase("null")) {
                 DateFormat dateFormat = new SimpleDateFormat("h:mm a");
                 Date date = new Date();
@@ -561,19 +565,20 @@ public class TaskDetailFragment extends Fragment   {
                                                         }
                                                         lastlocationtxt=currenttripdetailslist.get(0).getFullAddress().toString();
                                                         if(currenttripdetailslist.get(0).getFullAddress().toString().equalsIgnoreCase("null") ) {
-                                                            lastlocation.setText("");
+                                                            lastlocation.setText("Not Available");
                                                             textmessagerow.setVisibility(View.GONE);
                                                         }else {
                                                             lastlocation.setText(currenttripdetailslist.get(0).getFullAddress().toString());
                                                         }
                                                         updatetime.setText(currenttripdetailslist.get(0).getLast_sync_time().toString());
+
+                                                        locationrow.setVisibility(View.VISIBLE);
+                                                        lasttimerow.setVisibility(View.VISIBLE);
+                                                        startclick = true;
                                                         String diffDate=makeDecisonPing(currenttripdetailslist.get(0).getLast_ping_Datetime().toString());
                                                         String ping_message=ServiceConstants.PING_DIFFERENCE_MESSAGE+" "+diffDate;
                                                         text_message.setText(ping_message);
                                                         text_message.setTextColor(getResources().getColor(R.color.red));
-                                                        locationrow.setVisibility(View.VISIBLE);
-                                                        lasttimerow.setVisibility(View.VISIBLE);
-                                                        startclick = true;
                                                         //startclick = true;
                                                     }else{
                                                         Startbtn.setVisibility(View.VISIBLE);

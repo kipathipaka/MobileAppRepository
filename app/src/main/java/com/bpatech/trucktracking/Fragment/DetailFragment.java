@@ -76,8 +76,8 @@ public class DetailFragment extends Fragment implements LocationListener {
 	protected LocationManager locationManager;
 	protected LocationListener locationListener;
 	Location location;
-	Double latitude;
-	Double longitude;
+	Double latitude=0.0;
+	Double longitude=0.0;
 	String locationVal =null;
 	String fullAddress = null;
 	String responsevalue;
@@ -100,7 +100,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 		progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
 		progressBar.setProgress(10);
 		progressBar.setMax(100);
-		progressBar.setVisibility(View.INVISIBLE);
+		progressBar.setVisibility(View.VISIBLE);
 		obj = new AddUserObjectParsing();
 		request = new Request(getActivity());
 		user = new User();
@@ -153,7 +153,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 
 		db = new MySQLiteHelper(getActivity().getApplicationContext());
 		db.addUser(user);
-		Timber.i("DetailFragment:Insert: ", "Inserting ..");
+		Timber.i("DetailFragment:Insert:Inserting ..");
 		Log.d("Insert: ", "Inserting ..");
 	}
 
@@ -171,21 +171,21 @@ public class DetailFragment extends Fragment implements LocationListener {
 				Timber.i("DetailFragment:AddUserDetail: "+"Entering ..");
 				List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 				List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
-				if(fullAddress!=null || locationVal!=null ) {
+				if(fullAddress==null || locationVal==null || latitude.toString()==null || latitude.toString()==null) {
+					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(),"null", "null","null", "null", "Y", "Y", user.getUserName()));
+					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), "null", "null","null","null", "Y", "Y", user.getUserName()));
 					//System.out.println("+++++++++++++++if+++++++++++");
-					//createuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y", user.getUserName()));
-					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress, "Y", "Y", user.getUserName()));
-					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress, "Y", "Y", user.getUserName()));
+					//createuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y", user.getUserName()))
 				}else {
 					//System.out.println("+++++++++++++++else+++++++++++");
-					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null", "null", "Y", "Y", user.getUserName()));
-					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null","null", "Y", "Y", user.getUserName()));
+					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress, "Y", "Y", user.getUserName()));
+					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), locationVal, fullAddress, "Y", "Y", user.getUserName()));
 				}
-					String Getuser_url = ServiceConstants.GET_USER + session.getPhoneno();
-					response = request.requestGetType(Getuser_url, ServiceConstants.BASE_URL);
-					if (response.getStatusLine().getStatusCode() == 200) {
-						JSONObject responsejson = request.responseParsing(response);
-						String Updateuser_url = ServiceConstants.UPDATE_USER + session.getPhoneno();
+				String Getuser_url = ServiceConstants.GET_USER + session.getPhoneno();
+				response = request.requestGetType(Getuser_url, ServiceConstants.BASE_URL);
+				if (response.getStatusLine().getStatusCode() == 200) {
+					JSONObject responsejson = request.responseParsing(response);
+					String Updateuser_url = ServiceConstants.UPDATE_USER + session.getPhoneno();
 						/*List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 						if(fullAddress!=null || locationVal!=null) {
 							//updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y",user.getUserName()));
@@ -193,50 +193,13 @@ public class DetailFragment extends Fragment implements LocationListener {
 						}else {
 							updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null", "null", "Y", "Y", user.getUserName()));
 						}*/
-							if (responsejson != null) {
-							response = request.requestPutType(ServiceConstants.UPDATE_USER, updateuserlist, ServiceConstants.BASE_URL);
-							responseStrng = "" + response.getStatusLine().getStatusCode();
-							if (response.getStatusLine().getStatusCode() == 200) {
-							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
-							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							startActivity(intent);*/
-								InsertUser(user);
-								CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-								FragmentManager fragmentmanager = getFragmentManager();
-								FragmentTransaction fragmenttransaction = fragmentmanager
-										.beginTransaction();
-								fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-								fragmenttransaction.addToBackStack(null);
-								fragmenttransaction.commit();
-
-							}
-
-						} else {
-							response = request.requestPostType(
-									ServiceConstants.CREATE_USER, createuserlist, ServiceConstants.BASE_URL);
-							responseStrng = "" + response.getStatusLine().getStatusCode();
-							if (response.getStatusLine().getStatusCode() == 200) {
-							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
-							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							startActivity(intent);*/
-								InsertUser(user);
-								CurrentTripFragment currenttripfrag = new CurrentTripFragment();
-								FragmentManager fragmentmanager = getFragmentManager();
-								FragmentTransaction fragmenttransaction = fragmentmanager
-										.beginTransaction();
-								fragmenttransaction.replace(R.id.viewers, currenttripfrag);
-								fragmenttransaction.addToBackStack(null);
-								fragmenttransaction.commit();
-							}
-						}
-					} else {
-						response = request.requestPostType(
-								ServiceConstants.CREATE_USER, createuserlist, ServiceConstants.BASE_URL);
+					if (responsejson != null) {
+						response = request.requestPutType(ServiceConstants.UPDATE_USER, updateuserlist, ServiceConstants.BASE_URL);
 						responseStrng = "" + response.getStatusLine().getStatusCode();
 						if (response.getStatusLine().getStatusCode() == 200) {
-						/*Intent intent = new Intent(getActivity(), HomeActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(intent);*/
+							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							startActivity(intent);*/
 							InsertUser(user);
 							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
 							FragmentManager fragmentmanager = getFragmentManager();
@@ -247,7 +210,44 @@ public class DetailFragment extends Fragment implements LocationListener {
 							fragmenttransaction.commit();
 
 						}
+
+					} else {
+						response = request.requestPostType(
+								ServiceConstants.CREATE_USER, createuserlist, ServiceConstants.BASE_URL);
+						responseStrng = "" + response.getStatusLine().getStatusCode();
+						if (response.getStatusLine().getStatusCode() == 200) {
+							/*Intent intent = new Intent(getActivity(), HomeActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							startActivity(intent);*/
+							InsertUser(user);
+							CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+							FragmentManager fragmentmanager = getFragmentManager();
+							FragmentTransaction fragmenttransaction = fragmentmanager
+									.beginTransaction();
+							fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+							fragmenttransaction.addToBackStack(null);
+							fragmenttransaction.commit();
+						}
 					}
+				} else {
+					response = request.requestPostType(
+							ServiceConstants.CREATE_USER, createuserlist, ServiceConstants.BASE_URL);
+					responseStrng = "" + response.getStatusLine().getStatusCode();
+					if (response.getStatusLine().getStatusCode() == 200) {
+						/*Intent intent = new Intent(getActivity(), HomeActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(intent);*/
+						InsertUser(user);
+						CurrentTripFragment currenttripfrag = new CurrentTripFragment();
+						FragmentManager fragmentmanager = getFragmentManager();
+						FragmentTransaction fragmenttransaction = fragmentmanager
+								.beginTransaction();
+						fragmenttransaction.replace(R.id.viewers, currenttripfrag);
+						fragmenttransaction.addToBackStack(null);
+						fragmenttransaction.commit();
+
+					}
+				}
 
 			} catch (Exception e) {
 				Timber.i("Inside Company Details : API Exception"+e);
@@ -262,28 +262,38 @@ public class DetailFragment extends Fragment implements LocationListener {
 	}
 
 	public void getLocation() {
+		//progressBar.setVisibility(View.VISIBLE);
 		//Toast.makeText(getActivity().getApplicationContext(), "Enter get location method..", Toast.LENGTH_SHORT).show();
+		Timber.i("Company Details:Inside GetLocation Method");
 		locationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 		if (locationManager != null) {
-		//	Toast.makeText(getActivity().getApplicationContext(), "location manager checking..." + locationManager.toString(), Toast.LENGTH_SHORT).show();
-			try {
+			Timber.i("Company Details:Location manager connected");
+			//System.out.println("++++++++++getlocation+++++try+++++++++++");
+			//	Toast.makeText(getActivity().getApplicationContext(), "location manager checking..." + locationManager.toString(), Toast.LENGTH_SHORT).show();
+			/*try {
 				isGPSEnabled = locationManager
 						.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 			} catch (Exception ex) {
 			}
-
+*/
 			try {
 				isNetworkEnabled = locationManager
 						.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 			} catch (Exception ex) {
+				Timber.i("Company Details:Exception"+ex.getMessage());
 			}
-			if (!isGPSEnabled && !isNetworkEnabled) {
-				//System.out.println("++++++++++++++++++++++++++++++++++enable location++++++++++++++++++++++++");
+			if (!isNetworkEnabled) {
+				locationVal=null;
+				fullAddress=null;
+				latitude=0.0;
+				longitude=0.0;
+				Timber.i("Company Details:isNetworkEnabled &isGPSEnabled not enabled");
+			//	System.out.println("++++++++++++++++++++++++++++++not++++enable location++++++++++++++++++++++++");
 				//locationVal = "null";
 				//fullAddress = "null";
-				location = null;
-				UpdateLocation(location);
+				//System.out.println("++++++++++getlocation+++not enable+++++++++++++");
+
 
 			} else {
 				if (isNetworkEnabled) {
@@ -302,7 +312,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 						}
 					}
 				}
-				if (isGPSEnabled) {
+				/*if (isGPSEnabled) {
 					if (location == null) {
 						locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 						if (locationManager != null) {
@@ -316,31 +326,41 @@ public class DetailFragment extends Fragment implements LocationListener {
 							Toast.makeText(getActivity().getApplicationContext(), "no location found", Toast.LENGTH_SHORT).show();
 						}
 					}
-				}
+				}*/
 			}
+		}else{
+			//System.out.println("++++++++++++++++++++++++++++++location disabled++++++++++++++++++++++++");
+
+			//System.out.println("++++++++++++++++++++++++++++++location disabled++++++++++++++++++++++++");
+			locationVal=null;
+			fullAddress=null;
+			latitude=0.0;
+			longitude=0.0;
+			Timber.i("Company Detail:Location manager disabled(null)");
 		}
 
-
-}
+		progressBar.setVisibility(View.INVISIBLE);
+	}
 
 	public void UpdateLocation(Location updateLocation) {
-		Timber.i("Company Detail: ", "UpdateLocation Entering ..");
+		//System.out.println("++++++++++UpdateLocation++++++++++++++++");
+		Timber.i("Company Detail: UpdateLocation Entering ..");
 		if (updateLocation != null) {
 			latitude = updateLocation.getLatitude();
 			longitude = updateLocation.getLongitude();
-			Timber.i("Company Detail: ", "UpdateLocation latitude and longitude .." + latitude + "&" + longitude);
+			Timber.i("Company Detail: UpdateLocation latitude and longitude .." + latitude + "&" + longitude);
 			new GetAddressFromJson().execute("", "", "");
 			/*Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(),Locale.getDefault());
-			//System.out.println("++++++++++++++++++++++++++++++++++address+address++List++++++++++++++++++++++++");
-			if(geocoder!=null) {
+			System.out.println("++++++++++++++++++++++++++++++++++address+address++List++++++++++++++++++++++++");*/
+		/*	if(geocoder!=null) {
 				try {
 					List<Address> addressList = geocoder.getFromLocation(latitude,longitude,1);
 
 					if (addressList != null && addressList.size() > 0) {
-						//System.out.println("++++++++++++++++++++++++++++++++++address+address++List++++++++++++++++++++++++"+addressList);
+						System.out.println("++++++++++++++++++++++++++++++++++address+address++List++++++++++++++++++++++++"+addressList);
 						Address address = addressList.get(0);
 						//fullAddress = new StringBuilder();
-						//System.out.println("++++++++++++++++++++++++++++++++++address+address++++++++++++++++++++++++++"+address);
+						System.out.println("++++++++++++++++++++++++++++++++++address+address++++++++++++++++++++++++++"+address);
 						//Toast.makeText(getActivity().getApplicationContext(), "address......" +addressList, Toast.LENGTH_LONG).show();
 						*//*if (address.getMaxAddressLineIndex() > 0) {
 							//Toast.makeText(getActivity().getApplicationContext(), "address..if loop...." + address.getMaxAddressLineIndex(), Toast.LENGTH_SHORT).show();
@@ -365,13 +385,13 @@ public class DetailFragment extends Fragment implements LocationListener {
 								locationVal = address.getLocality().toString();
 							}
 						} else {
-							 if (address.getLocality() == null) {
-								 fullAddress = address.getSubLocality().toString();
+							if (address.getLocality() == null) {
+								fullAddress = address.getSubLocality().toString();
 								locationVal = address.getSubLocality().toString();
 							} else {
-								 fullAddress = address.getSubLocality().toString() + "," + address.getLocality().toString();
-								 locationVal = address.getLocality().toString();
-						}
+								fullAddress = address.getSubLocality().toString() + "," + address.getLocality().toString();
+								locationVal = address.getLocality().toString();
+							}
 
 						}
 						Timber.i("Company Detail: Current Location", fullAddress);
@@ -382,22 +402,23 @@ public class DetailFragment extends Fragment implements LocationListener {
 				} catch (IOException e) {
 					Timber.i("Company Detail: ", "UpdateLocation IOException ..",e);
 					e.printStackTrace();
-}
-				}*/
+				}
+			}*/
 
 		}else{
-			Timber.i("Company Detail: ", "Update Location Null");
+			Timber.i("Company Detail: Update Location Null");
 			locationVal=null;
 			fullAddress=null;
 			latitude=0.0;
 			longitude=0.0;
 		}
+
 	}
 	private class GetAddressFromJson extends
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
-
+			progressBar.setVisibility(View.INVISIBLE);
 		}
 
 		protected String doInBackground(String... params) {
@@ -405,9 +426,11 @@ public class DetailFragment extends Fragment implements LocationListener {
 			String result = "";
 			JSONObject jsonObj=null;
 			try {
-				Timber.i("Company Detail: ", "GetAddressFromJsonAPI");
+				//System.out.println("++++++++++GetAddressFromJsonAPI++++++++++++++++");
+
+				Timber.i("Company Detail:GetAddressFromJsonAPI");
 				HttpClient httpclient = new DefaultHttpClient();
-				HttpPost httppost = new HttpPost("https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude + ","+longitude);
+				HttpPost httppost = new HttpPost("https://maps.googleapis.com/maps/api/geocode/json?latlng=" +latitude+ "," +longitude );
 				HttpResponse response = httpclient.execute(httppost);
 				responsevalue = "" + response.getStatusLine().getStatusCode();
 				HttpEntity entity = response.getEntity();
@@ -420,58 +443,66 @@ public class DetailFragment extends Fragment implements LocationListener {
 				}
 				is.close();
 				result = sb.toString();
-				jsonObj = new JSONObject(result);
-				String Status = jsonObj.getString("status");
-				if (Status.equalsIgnoreCase("OK")) {
-					JSONArray Results = jsonObj.getJSONArray("results");
-					JSONObject zero = Results.getJSONObject(0);
-					JSONArray address_components = zero.getJSONArray("address_components");
-					for (int i = 0; i < address_components.length(); i++) {
-						JSONObject zero2 = address_components.getJSONObject(i);
-						String long_name = zero2.getString("long_name");
-						//System.out.println("++++++++++++++++++++++++++++++++++long_name+++++++++++++++++++++++++"+long_name);
-						JSONArray mtypes = zero2.getJSONArray("types");
-						// System.out.println("++++++++++++++++++++++++++++++++++mtypes+++++++++++++++++++++++++"+mtypes+TextUtils.isEmpty(long_name));
-						String Type = mtypes.getString(0);
-						if (TextUtils.isEmpty(long_name) == false || long_name!=null || long_name.length() > 0 || long_name != "") {
-							if (Type.equalsIgnoreCase("sublocality_level_1")) {
-								fullAddress=long_name+",";
-							} else if (Type.equalsIgnoreCase("sublocality")) {
-								fullAddress=long_name+",";
-							}else if (Type.equalsIgnoreCase("locality")) {
-								// Address2 = Address2 + long_name + ", ";
-								locationVal = long_name;
-								if(fullAddress!=null) {
-									fullAddress = fullAddress + long_name;
-								}else{
-									fullAddress = long_name;
-								}
-							} else if (Type.equalsIgnoreCase("administrative_area_level_2")) {
-								if(fullAddress == null ||locationVal==null ) {
+				if (result != null){
+					jsonObj = new JSONObject(result);
+					String Status = jsonObj.getString("status");
+					if (Status.equalsIgnoreCase("OK")) {
+						JSONArray Results = jsonObj.getJSONArray("results");
+						JSONObject zero = Results.getJSONObject(0);
+						JSONArray address_components = zero.getJSONArray("address_components");
+						//System.out.println("++++++++++++++++++++++++++++++++++address_components+++++++++++++++++++++++++" + address_components.length());
+						for (int i = 0; i < address_components.length(); i++) {
+							JSONObject zero2 = address_components.getJSONObject(i);
+							String long_name = zero2.getString("long_name");
+							//System.out.println("++++++++++++++++++++++++++++++++++long_name+++++++++++++++++++++++++" + zero2);
+							JSONArray mtypes = zero2.getJSONArray("types");
+							// System.out.println("++++++++++++++++++++++++++++++++++mtypes+++++++++++++++++++++++++"+mtypes+TextUtils.isEmpty(long_name));
+							String Type = mtypes.getString(0);
+							if (TextUtils.isEmpty(long_name) == false || long_name != null || long_name.length() > 0 || long_name != "") {
+								if (Type.equalsIgnoreCase("sublocality_level_1")) {
+									if (fullAddress == null) {
+										fullAddress = long_name + ",";
+									}
+								} else if (Type.equalsIgnoreCase("sublocality")) {
+									if (fullAddress == null) {
+										fullAddress = long_name + ",";
+									}
+								} else if (Type.equalsIgnoreCase("locality")) {
+									// Address2 = Address2 + long_name + ", ";
 									locationVal = long_name;
-									fullAddress = long_name;
+									if (fullAddress != null) {
+										fullAddress = fullAddress + long_name;
+									} else {
+										fullAddress = long_name;
+									}
+								} else if (Type.equalsIgnoreCase("administrative_area_level_2")) {
+									if (fullAddress == null || locationVal == null) {
+										locationVal = long_name;
+										fullAddress = long_name;
 
-								}
-							} else if (Type.equalsIgnoreCase("administrative_area_level_1")) {
-								if(fullAddress == null ||locationVal==null ){
-									locationVal = long_name;
-									fullAddress=long_name;
+									}
+								} else if (Type.equalsIgnoreCase("administrative_area_level_1")) {
+									if (fullAddress == null || locationVal == null) {
+										locationVal = long_name;
+										fullAddress = long_name;
+									}
 								}
 							}
+
+							// JSONArray mtypes = zero2.getJSONArray("types");
+							// String Type = mtypes.getString(0);
+							// Log.e(Type,long_name);
+
+
 						}
-
-						// JSONArray mtypes = zero2.getJSONArray("types");
-						// String Type = mtypes.getString(0);
-						// Log.e(Type,long_name);
-
-
+						Timber.i("Company Detail:CurrentLocation "+fullAddress);
+						System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
+								"+++++++++++++++++++++++" + fullAddress + "+local++" + locationVal);
 					}
-					Timber.i("Company Detail: CurrentLocation ", fullAddress);
-					System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
-							"+++++++++++++++++++++++" + fullAddress + "+local++" + locationVal);
 				}
 			} catch (Exception e) {
-				Timber.i("Company Detail:GetAddressFromJson Exception "+e);
+			//	System.out.println("++++++++++Company Detailjson exception+++++++++++++++"+e.getMessage());
+				Timber.i("Company Detail:GetAddressFromJson Exception " + e);
 				e.printStackTrace();
 
 			}

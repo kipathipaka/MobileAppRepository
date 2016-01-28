@@ -10,6 +10,7 @@ public class ServiceConstants {
    public static final String BASE_URL= "http://52.88.194.128:2020/vehicletracking-spring";
     //public static final String BASE_URL="http://52.26.74.16:2020/vehicletracking-spring";
     public static final String UPDATE_LOCATION="/api/trip/trackTrip";
+    public static final String UPDATE_BULK_LOCATION="/api/trip/trackBulkTrip";
     public static final String CREATE_USER="/api/user/addUser";
     public static final String SAVE_TRIP_ID_URL="/api/sharedTrip/addSharedTrip";
     public static final String GET_MESSAGE_URL="/api/common/messages";

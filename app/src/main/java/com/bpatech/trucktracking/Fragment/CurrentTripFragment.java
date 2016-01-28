@@ -55,7 +55,7 @@ import timber.log.Timber;
 public class CurrentTripFragment  extends Fragment  {
 	private static Bundle b;
 	SessionManager session;
-	LinearLayout triplist_ll,footer_addtrip_ll;
+	LinearLayout triplist_ll,footer_addtrip_ll,footerlayout;
 	TextView txt_contTitle,triplistsize_view;
 	Request request;
 	String responseStrng;
@@ -67,6 +67,7 @@ public class CurrentTripFragment  extends Fragment  {
 	View view;
 	int alarmval=0;
 	String trip_id;
+	//boolean processClick=true;
 	AddUserObjectParsing obj;
 	private static ProgressBar progressBar;
 	@Override
@@ -80,17 +81,17 @@ public class CurrentTripFragment  extends Fragment  {
 		obj = new AddUserObjectParsing();
 		Timber.tag(session.getPhoneno());
 		Timber.i("Inside Current Trips");
-		Timber.i("Alaram Count:"+session.getAlaramcount());
+		Timber.i("Alaram Count:" + session.getAlaramcount());
 		System.out.println("++++++++++session.getKeyAlaram()++++++++"+session.getAlaramcount());
 		if(session.getAlaramcount()== 0) {
 			AlarmManager alarmManager = (AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 			Intent intentR = new Intent(getActivity().getApplicationContext(), UpdateLocationReceiver.class);
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 0, intentR, PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 0, intentR,0);
 			//intentR.setAction(UpdateLocationReceiver.);//the same as up
 			//boolean isWorking = (PendingIntent.getBroadcast(getActivity(), 1001, intentR, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
 			//Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
 			//System.out.println("********************************isWorking************** sync call end ..."+pendingIntent.FLAG_UPDATE_CURRENT+pendingIntent.FLAG_CANCEL_CURRENT);
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),20 * 60 * 1000,
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20 * 60 * 1000,
 					pendingIntent);
 			session.setAlaramcount(1);
 		}
@@ -129,6 +130,8 @@ public class CurrentTripFragment  extends Fragment  {
 		triplistsize_view=(TextView)view.findViewById(R.id.triplistsize_view);
 		triplist_ll = (LinearLayout) view.findViewById(R.id.currenttriplist_view);
 		currenttripLayout = (RelativeLayout) view.findViewById(R.id.currenttriplayout);
+		footerlayout = (LinearLayout) view.findViewById(R.id.footerlayout);
+		//footerlayout.setVisibility(View.VISIBLE);
 		currenttripLayout.setOnClickListener(new Layoutclicklistener());
 		triplist_ll.setVisibility(view.GONE);
 		listView = (ListView)view.findViewById(R.id.listview);
@@ -139,23 +142,25 @@ public class CurrentTripFragment  extends Fragment  {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 									long id) {
-				progressBar.setVisibility(View.VISIBLE);
 
-				TextView vehicle_id = (TextView) view.findViewById(R.id.vechiletrip_no);
-				String vechile_trip_id = vehicle_id.getText().toString();
+					progressBar.setVisibility(View.VISIBLE);
 
-				TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
-				Bundle bundle = new Bundle();
-				bundle.putString(ServiceConstants.VECHILE_TRIP_ID, vechile_trip_id);
-				bundle.putBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE, false);
-				progressBar.setVisibility(View.INVISIBLE);
-				taskdetailfrag.setArguments(bundle);
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, taskdetailfrag, "BackCurrentTrip");
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();
+					TextView vehicle_id = (TextView) view.findViewById(R.id.vechiletrip_no);
+					//System.out.println("+++++++++++++vehicle_id  ++++++++++++++"+vehicle_id.toString());
+					String vechile_trip_id = vehicle_id.getText().toString();
+					TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
+					Bundle bundle = new Bundle();
+					bundle.putString(ServiceConstants.VECHILE_TRIP_ID, vechile_trip_id);
+					bundle.putBoolean(ServiceConstants.TASK_DETAIL_ENDPAGE, false);
+					progressBar.setVisibility(View.INVISIBLE);
+					taskdetailfrag.setArguments(bundle);
+					FragmentManager fragmentmanager = getFragmentManager();
+					FragmentTransaction fragmenttransaction = fragmentmanager
+							.beginTransaction();
+					fragmenttransaction.replace(R.id.viewers, taskdetailfrag, "BackCurrentTrip");
+					fragmenttransaction.addToBackStack(null);
+					fragmenttransaction.commit();
+
 
 			}
 		});
@@ -178,6 +183,7 @@ public class CurrentTripFragment  extends Fragment  {
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
+
 			progressBar.setVisibility(View.INVISIBLE);
 		}
 
@@ -190,6 +196,7 @@ public class CurrentTripFragment  extends Fragment  {
 				HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
 
 				responseStrng = "" + response.getStatusLine().getStatusCode();
+				//System.out.println("++++++++++++response+++code++++++++++++++++++"+response.getStatusLine().getStatusCode());
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONArray responsejSONArray = request.responseArrayParsing(response);
 					GetMytripListParsing mytripListParsing = new GetMytripListParsing();
@@ -211,6 +218,7 @@ public class CurrentTripFragment  extends Fragment  {
 								listView.setAdapter(adapter);
 
 								listView.setDividerHeight(5);
+								footerlayout.setVisibility(View.VISIBLE);
 								//System.out.println("********************************************** after list set ...");
 								// btnDone.setVisibility(View.VISIBLE);
 
