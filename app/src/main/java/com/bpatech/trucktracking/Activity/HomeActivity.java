@@ -10,7 +10,6 @@ import android.content.IntentSender;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.AsyncTask;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -57,8 +56,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-
-import timber.log.Timber;
 
 public class HomeActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks,
 		GoogleApiClient.OnConnectionFailedListener {
@@ -107,7 +104,8 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 					.build();
 			googleApiClient.connect();
 			locationRequest = LocationRequest.create();
-			locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
 			new GetandStroeMessages().execute("", "", "");
@@ -355,6 +353,7 @@ public void Enable_location_popup()
 	if (googleApiClient != null) {
 		LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
 				.addLocationRequest(locationRequest);
+
 
 		// **************************
 		builder.setAlwaysShow(true); // this is the key ingredient
