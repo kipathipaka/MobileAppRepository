@@ -172,9 +172,10 @@ public class DetailFragment extends Fragment implements LocationListener {
 				List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 				List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
 				if(fullAddress==null || locationVal==null || latitude.toString()==null || latitude.toString()==null) {
-					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(),"null", "null","null", "null", "Y", "Y", user.getUserName()));
-					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), "null", "null","null","null", "Y", "Y", user.getUserName()));
 					//System.out.println("+++++++++++++++if+++++++++++");
+					updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(),"null", "null","null", "null", "Y", "Y", user.getUserName()));
+					createuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(),"null", "null", "null", "null", "Y", "Y", user.getUserName()));
+
 					//createuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y", user.getUserName()))
 				}else {
 					//System.out.println("+++++++++++++++else+++++++++++");
@@ -185,7 +186,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 				response = request.requestGetType(Getuser_url, ServiceConstants.BASE_URL);
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONObject responsejson = request.responseParsing(response);
-					String Updateuser_url = ServiceConstants.UPDATE_USER + session.getPhoneno();
+					//String Updateuser_url = ServiceConstants.UPDATE_USER + session.getPhoneno();
 						/*List<NameValuePair> updateuserlist = new ArrayList<NameValuePair>();
 						if(fullAddress!=null || locationVal!=null) {
 							//updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),"Y","Y",user.getUserName()));
@@ -194,6 +195,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 							updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(), user.getCompanyName(), latitude.toString(), longitude.toString(), "null", "null", "Y", "Y", user.getUserName()));
 						}*/
 					if (responsejson != null) {
+						//System.out.println("+++++++++++++++11111+++++++++++");
 						response = request.requestPutType(ServiceConstants.UPDATE_USER, updateuserlist, ServiceConstants.BASE_URL);
 						responseStrng = "" + response.getStatusLine().getStatusCode();
 						if (response.getStatusLine().getStatusCode() == 200) {
@@ -212,6 +214,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 						}
 
 					} else {
+						//System.out.println("+++++++++++++++2222+++++++++++");
 						response = request.requestPostType(
 								ServiceConstants.CREATE_USER, createuserlist, ServiceConstants.BASE_URL);
 						responseStrng = "" + response.getStatusLine().getStatusCode();
@@ -230,6 +233,7 @@ public class DetailFragment extends Fragment implements LocationListener {
 						}
 					}
 				} else {
+					//System.out.println("+++++++++++++++3333+++++++++++");
 					response = request.requestPostType(
 							ServiceConstants.CREATE_USER, createuserlist, ServiceConstants.BASE_URL);
 					responseStrng = "" + response.getStatusLine().getStatusCode();

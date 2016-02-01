@@ -392,22 +392,28 @@ public class UpdateLocationService extends Service
                                 Timber.i("UpdateLocationService:Location update API result :" + response.getStatusLine().getStatusCode());
                         Timber.i("UpdateLocationService:Location Service  ApI updated");
                     }else {
-                        System.out.println("+++++++++++++++not 200++++++++++++++++"+response.getStatusLine().getStatusCode());
-                        String smsno = "+91"+session.getPhoneno();
-                        SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(smsno, null,"You have Poor Net Connection.So,Your Last location didn't update to the Owner", null, null);
-                        Timber.i("UpdateLocationService:Location update API failed result :" + response.getStatusLine().getStatusCode());
-                            DateFormat updatetimeformat = new SimpleDateFormat("yyyy MMM dd,h:mm a");
-                            updatetimeformat.setTimeZone(TimeZone.getTimeZone("IST"));
-                    Date date1 = new Date();
-                    updateLocationDTO.setDriver_phone_no(session.getPhoneno());
-                    updateLocationDTO.setLocation(locationVal);
-                    updateLocationDTO.setLocation_latitude(latitude.toString());
-                    updateLocationDTO.setLocation_longitude(longitude.toString());
-                    updateLocationDTO.setFulladdress(fullAddress.toString());
-                    updateLocationDTO.setUpdatetime(updatetimeformat.format(date1).toString());
-                    UpdateLocation(updateLocationDTO);
+                        System.out.println("+++++++++++++++not 200++++++++++++++++" + response.getStatusLine().getStatusCode());
+                        if (count > 0) {
+                            System.out.println("+++++++++++++++not 200+++++count+++++++++++"+count);
+                            m_handler.postDelayed(m_statusChecker,4000);
+                            //String smsno = "+91"+session.getPhoneno();
+                            // SmsManager smsManager = SmsManager.getDefault();
+                            // smsManager.sendTextMessage(smsno, null,"You have Poor Net Connection.So,Your Last location didn't update to the Owner", null, null);
+                            Timber.i("UpdateLocationService:Location update API failed result :" + response.getStatusLine().getStatusCode());
 
+                        } else {
+                            DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                            updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+                            Date date1 = new Date();
+                            updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+                            updateLocationDTO.setLocation(locationVal);
+                            updateLocationDTO.setLocation_latitude(latitude.toString());
+                            updateLocationDTO.setLocation_longitude(longitude.toString());
+                            updateLocationDTO.setFulladdress(fullAddress.toString());
+                            updateLocationDTO.setUpdatetime(updateTimeFormat.format(date1).toString());
+                            UpdateLocation(updateLocationDTO);
+
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -689,9 +695,9 @@ public class UpdateLocationService extends Service
                              System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
                                      "+++++++++++++++++++++++" + fullAddress + "+local++" + locationVal);
                          }
-                        // count = 3;
-                        // m_handler.postDelayed(m_statusChecker, 0);
-                         new UpdateLocationApi().execute("", "", "");
+                        count = 3;
+                         m_handler.postDelayed(m_statusChecker, 0);
+                        // new UpdateLocationApi().execute("", "", "");
                      } else {
                          locationVal = null;
                          fullAddress = null;
@@ -722,7 +728,7 @@ public class UpdateLocationService extends Service
     private	Runnable m_statusChecker = new Runnable() {
         @Override
         public void run() {
-            //System.out.println("+++++++++++++++repeat+handler+++" + count);
+           // System.out.println("+++++++++++++++repeat+handler+++" + count);
             if (count > 0){
                 new UpdateLocationApi().execute("", "", "");
             count--;
