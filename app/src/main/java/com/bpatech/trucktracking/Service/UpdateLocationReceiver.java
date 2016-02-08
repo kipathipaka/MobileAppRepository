@@ -16,16 +16,16 @@ import android.content.Intent;
  * Created by Anita on 11/13/2015.
  */
 public class UpdateLocationReceiver extends BroadcastReceiver{
-            int alarmval=0;
             SessionManager  session;
     @Override
     public void onReceive(final Context context, Intent intent) {
-        System.out.println("++++++++++++++++++++++++++++++++++UpdateLocationReceiver+++++++++++++++++++++++++++");
+       // System.out.println("++++++++++++++++++++++++++++++++++UpdateLocationReceiver+++++++++++++++++++++++++++");
          //Toast.makeText(context, "Reciverrrrrrrrrrr: ", Toast.LENGTH_SHORT).show();
         Timber.i("UpdateLocationReceiver: Inside receiver **************************");
 
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             // Set the alarm here.
+           // System.out.println("++++++++++++++++++++++++++++++++++boot completed+++++++++++++++++++++++++++");
             session = new SessionManager(context);
             Timber.i("UpdateLocationReceiver: Inside receiver boot completed condition**************************");
             Timber.i("UpdateLocationReceiver:Setting alarm on reboot**************************");
@@ -33,13 +33,12 @@ public class UpdateLocationReceiver extends BroadcastReceiver{
             AlarmManager alarmManager=(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intentR = new Intent( context, UpdateLocationReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentR, 0);
-
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),20 * 60 * 1000,
-                    pendingIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20 * 60 * 1000,pendingIntent);
             session.setAlaramcount(1);
+        }else {
+            //System.out.println("++++++++++++++++++++++++++else++++++++boot completed+++++++++++++++++++++++++++");
+            context.startService(new Intent(context, UpdateLocationService.class));
         }
-
-        context.startService(new Intent(context, UpdateLocationService.class));
 
          //System.out.println("++++++++++++++++++++++++++++++++++Reciverrrrrrrrrrr+++++++++++++++++++++++++++");
         // This method is called when this BroadcastReceiver receives an Intent broadcast.

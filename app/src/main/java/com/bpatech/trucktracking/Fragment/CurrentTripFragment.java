@@ -208,7 +208,6 @@ public class CurrentTripFragment  extends Fragment  {
 						@Override
 						public void run() {
 							try {
-
 								String triplisttext ="My Account : "+session.getUsername()+" - "+session.getPhoneno();
 								triplistsize_view.setText(triplisttext);
 								triplist_ll.setVisibility(View.VISIBLE);

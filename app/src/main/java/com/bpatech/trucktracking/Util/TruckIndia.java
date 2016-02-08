@@ -18,7 +18,7 @@ public class TruckIndia extends Application{
     public void onCreate() {
         super.onCreate();
 
-        final String LOGGLY_TOKEN = "93781e47-4b58-4901-96f0-84137b938cf3";
+        final String LOGGLY_TOKEN = "4cd84179-cae6-4150-bb72-c984249ceedb";
         Timber.plant(new LogglyTree(LOGGLY_TOKEN));
     }
 }

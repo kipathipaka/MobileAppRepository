@@ -40,8 +40,14 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,6 +56,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,6 +66,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 
 import timber.log.Timber;
 
@@ -72,6 +82,7 @@ public class UpdateLocationService extends Service
 
     // flag for network status
     boolean isNetworkEnabled = false;
+    boolean isProviderEnabled=false;
 
     boolean canGetLocation = false;
     SessionManager session;
@@ -121,11 +132,11 @@ public class UpdateLocationService extends Service
         m_handler = new Handler();
         updateLocationDTO = new UpdateLocationDTO();
        // locationDBlist.addAll(db.getTracktripDetails());
-       // System.out.println("++++&&++++++++++list size++" + locationDBlist.size());
+        System.out.println("+++++Start service+++");
         //updateBulkLocation();
       new UpdateBulkLocationApi().execute("", "", "");
      //  getLocation();
-        return Service.START_STICKY;
+        return Service.START_NOT_STICKY;
     }
 
     @Nullable
@@ -187,10 +198,25 @@ public class UpdateLocationService extends Service
 
             if (locationManager!=null) {
                 Timber.i("UpdateLocationService:locationManager  : " + locationManager);
-                //System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++"+locationManager);
+                //System.out.println("++++++++++++++++++++++++++++++++++provider+++++++++++++++++++++++++++" + locationManager);
+                List<String> abc = locationManager.getAllProviders();
+                for(String a:abc){
+                    //System.out.println("++++++++++++++++++++++++++++++++++providers++++++++++++++++++++++++++"+a);
+
+                    boolean status = locationManager.isProviderEnabled(a);
+                   // System.out.println("++++++++++++++++++++++++++++++++++status+++++++++++++++++++++++++++" + status);
+                   /* boolean status1=locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    System.out.println("++++++++++++++++++++++++++++++++++status+++++++++++++++++++++++++++" + status1);
+                    boolean status2=locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER);
+                    System.out.println("++++++++++++++++++++++++++++++++++status+++++++++++++++++++++++++++" + status2);*/
+                }
+
+
                 try {
+                    //System.out.println("++++++++++++++++++++++++++++++++++LocationManager.NETWORK_PROVIDER+++++++++++++++++++++++++++" + LocationManager.NETWORK_PROVIDER);
                     isNetworkEnabled = locationManager
                             .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                    //System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled1+++++++++++++++++++++++++++"+isNetworkEnabled);
                 } catch (Exception ex) {
                     Timber.i("UpdateLocationService:locationManager Exception : " +ex.getMessage());
                 }
@@ -199,17 +225,28 @@ public class UpdateLocationService extends Service
                     Intent intent = new Intent(this.getApplicationContext(), HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getApplicationContext().startActivity(intent);
+                    DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                    updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+                    Date date1 = new Date();
+                    updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+                    updateLocationDTO.setLocation("Location Manager is not enabled");
+                    updateLocationDTO.setLocation_latitude("0.00");
+                    updateLocationDTO.setLocation_longitude("0.00");
+                    updateLocationDTO.setFulladdress("Location Manager is not enabled");
+                    updateLocationDTO.setUpdatetime(updateTimeFormat.format(date1).toString());
+                    UpdateLocation(updateLocationDTO);
                     //Toast.makeText(getApplicationContext(), "Location is not enabled.. Please check", Toast.LENGTH_SHORT).show();
                 } else {
                     this.canGetLocation = true;
                     if (isNetworkEnabled) {
-                      //  System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++++++++++++++++++++++++"+isNetworkEnabled);
+                      //  System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++yesss++++++++++++++++++++++" + isNetworkEnabled);
                         locationManager.requestLocationUpdates(
                                 LocationManager.NETWORK_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
                                     @Override
                                     public void onLocationChanged(Location location) {
+                                      //  System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++onlocation changed++++++++++++++++++++++"+location.getLatitude()+location.getLongitude());
                                         Timber.i("UpdateLocationService:onLocationChanged  : Network Provider latlng" + location.getLatitude() +
                                                 "&" + location.getLongitude());
                                         //updateGPSCoordinates(location);
@@ -239,10 +276,7 @@ public class UpdateLocationService extends Service
 
                             location = locationManager
                                     .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                           // System.out.println("++++++++++++++++++++++++++++++++++location manger not null+++++++++++++++++++++++++++" +location.getLatitude()+location.getLongitude() );
                             updateGPSCoordinates(location);
-
-
                     }
      /*               if (isGPSEnabled) {
                         //System.out.println("++++++++++++++++++++++++++++++++++isGPSEnabled+++++++++++++++++++++++++++"+isGPSEnabled);
@@ -283,9 +317,19 @@ public class UpdateLocationService extends Service
                         }
                     }*/
 
-
                 }
-            }else{
+            } else {
+               // System.out.println("++++++++++++++++++++++++++++111+++no location found++++++");
+                DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+                Date date1 = new Date();
+                updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+                updateLocationDTO.setLocation("Location Manager is not enabled");
+                updateLocationDTO.setLocation_latitude("0.00");
+                updateLocationDTO.setLocation_longitude("0.00");
+                updateLocationDTO.setFulladdress("Location Manager is not enabled");
+                updateLocationDTO.setUpdatetime(updateTimeFormat.format(date1).toString());
+                UpdateLocation(updateLocationDTO);
                 Timber.i("UpdateLocationServic :LocationManager is not connected");
             }
         } catch (Exception e) {
@@ -351,7 +395,17 @@ public class UpdateLocationService extends Service
 
         }*/
         }else{
-            System.out.println("+++++++++++++++++++++++++++++++no location found++++++");
+            DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+            Date date1 = new Date();
+            updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+            updateLocationDTO.setLocation("Location Manager is not enabled");
+            updateLocationDTO.setLocation_latitude("0.00");
+            updateLocationDTO.setLocation_longitude("0.00");
+            updateLocationDTO.setFulladdress("Location Manager is not enabled");
+            updateLocationDTO.setUpdatetime(updateTimeFormat.format(date1).toString());
+            UpdateLocation(updateLocationDTO);
+            //System.out.println("+++++++++++++++++++++++++++++++no location found++++++");
         }
     }
 
@@ -366,7 +420,7 @@ public class UpdateLocationService extends Service
         protected String doInBackground(String... params) {
 
             try {
-                System.out.println("+++++++++++++++++++++++++++++++enter ++UpdateLocationApi++++");
+                //System.out.println("+++++++++++++++++++++++++++++++enter ++UpdateLocationApi++++");
                 Timber.i("UpdateLocationService:Service APi Call :  " + latitude + "Longitude  :" + longitude);
                // System.out.println("++++++++++++++++++++++++++++++++++UpdateLocationService:Service APi Call +++++++++++++++++++++++++++");
                 //  System.out.println("++++++++++++++++++++++++++++++++++userphoneno+++++++++++++++++++++++++++" +
@@ -386,19 +440,19 @@ public class UpdateLocationService extends Service
                     response = request.requestLocationServicePostType(
                             ServiceConstants.UPDATE_LOCATION, updatelocationlist, ServiceConstants.BASE_URL);
                     responsevalue = "" + response.getStatusLine().getStatusCode();
-                   System.out.println("+++++++++++++++location Api++++++Status++++++++++++++++"+response.getStatusLine().getStatusCode());
+                 System.out.println("+++++++++++++++location Api++++++Status++++++++++++++++"+response.getStatusLine().getStatusCode());
                     if( response.getStatusLine().getStatusCode() == 200) {
                         //System.out.println("+++++++++++++++location if condition++++++++++++++++");
                                 Timber.i("UpdateLocationService:Location update API result :" + response.getStatusLine().getStatusCode());
                         Timber.i("UpdateLocationService:Location Service  ApI updated");
                     }else {
-                        System.out.println("+++++++++++++++not 200++++++++++++++++" + response.getStatusLine().getStatusCode());
+                       // System.out.println("+++++++++++++++not 200++++++++++++++++" + response.getStatusLine().getStatusCode());
                         if (count > 0) {
-                            System.out.println("+++++++++++++++not 200+++++count+++++++++++"+count);
-                            m_handler.postDelayed(m_statusChecker,4000);
-                            //String smsno = "+91"+session.getPhoneno();
-                            // SmsManager smsManager = SmsManager.getDefault();
-                            // smsManager.sendTextMessage(smsno, null,"You have Poor Net Connection.So,Your Last location didn't update to the Owner", null, null);
+                            count--;
+                            m_handler.postDelayed(m_statusChecker,0);
+                            /*String smsno = "+91"+session.getPhoneno();
+                            SmsManager smsManager = SmsManager.getDefault();
+                            smsManager.sendTextMessage(smsno, null,"You have Poor Net Connection.So,Your Last location didn't update to the Owner", null, null);*/
                             Timber.i("UpdateLocationService:Location update API failed result :" + response.getStatusLine().getStatusCode());
 
                         } else {
@@ -437,7 +491,7 @@ public class UpdateLocationService extends Service
         protected String doInBackground(String... params) {
 
             try {
-                System.out.println("++++++enter++++++++ServiceBULK+Api+++++++++++++++++++");
+               // System.out.println("++++++enter++++++++ServiceBULK+Api+++++++++++++++++++");
                // Timber.i("UpdateLocationService:ServiceBULK APi Call :  " + latitude + "Longitude  :" + longitude);
                 locationDBlist.addAll(db.getTracktripDetails());
                 //System.out.println("++++&&+updateBulkLocation+++++++++list size++" + locationDBlist.size());
@@ -462,7 +516,7 @@ public class UpdateLocationService extends Service
                             if (response.getStatusLine().getStatusCode() == 200) {
                                 int id=locationDBlist.get(i).getUpdate_id();
                                db.deleteLocation_byID(id);
-                                System.out.println("+++++++++++++++db deleted++++++++++++++");
+                                //System.out.println("+++++++++++++++db deleted++++++++++++++");
                                // System.out.println("+++++++++++++++db deleted++++++++++++++");
                                 Timber.i("UpdateLocationService:Location update API result :" + response.getStatusLine().getStatusCode());
                                 Timber.i("UpdateLocationService:Location Service ApI updated");
@@ -618,13 +672,25 @@ public class UpdateLocationService extends Service
             locationVal=null;
             try {
                 Timber.i("Location Service:GetAddressFromJsonAPI");
-
+               //System.out.println("++++++++++++++++++");
                  if (isConnectingToInternet()==true) {
                      HttpClient httpclient = new DefaultHttpClient();
                      HttpPost httppost = new HttpPost("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude);
                      HttpResponse response = httpclient.execute(httppost);
 
                      responsevalue = "" + response.getStatusLine().getStatusCode();
+                     System.out.println("+++++++++++++++++++++++++AddressApi+++++++++Status+++++++++++++++++++++++++" + response.getStatusLine().getStatusCode());
+                     if(response.getStatusLine().getStatusCode()!=200){
+                         DateFormat timeformat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                         timeformat.setTimeZone(TimeZone.getTimeZone("IST"));
+                         Date update1 = new Date();
+                         updateLocationDTO=new UpdateLocationDTO();
+                         updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+                         updateLocationDTO.setLocation_latitude(latitude.toString());
+                         updateLocationDTO.setLocation_longitude(longitude.toString());
+                         updateLocationDTO.setUpdatetime(timeformat.format(update1).toString());
+                         UpdateLocation(updateLocationDTO);
+                     }
                      //System.out.println("++++++++++++++++++++++++++++++++++Status+++++++++++++++++++++++++" + response.getStatusLine().getStatusCode());
                      HttpEntity entity = response.getEntity();
                      is = entity.getContent();
@@ -642,6 +708,13 @@ public class UpdateLocationService extends Service
                          if (Status.equalsIgnoreCase("OK")) {
                              JSONArray Results = jsonObj.getJSONArray("results");
                              JSONObject zero = Results.getJSONObject(0);
+                            /* String list=zero.getString("formatted_address");
+                             System.out.println("++++++++++++++++++++++formated add+++++++++++++++++++"+list);
+                             String[] addresslist;
+                             addresslist=list.split(",");
+                             System.out.println("++++++++++formated add++++size++++++++++++"+addresslist.length);
+                             int n=addresslist.length;
+                             System.out.println("+++++++++++++++formated add++++size+++++++++++++++"+addresslist[n-3]+"++++++++++++"+addresslist[n-4]);*/
                              JSONArray address_components = zero.getJSONArray("address_components");
                              for (int i = 0; i < address_components.length(); i++) {
                                  JSONObject zero2 = address_components.getJSONObject(i);
@@ -695,7 +768,7 @@ public class UpdateLocationService extends Service
                              System.out.println("+++++++++++++++++++++++++++full+ddresss++" +
                                      "+++++++++++++++++++++++" + fullAddress + "+local++" + locationVal);
                          }
-                        count = 3;
+                        count = 2;
                          m_handler.postDelayed(m_statusChecker, 0);
                         // new UpdateLocationApi().execute("", "", "");
                      } else {
@@ -715,7 +788,15 @@ public class UpdateLocationService extends Service
 		UpdateLocation(updateLocationDTO);
                  }
             } catch (Exception e) {
-
+                DateFormat timeformat2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                timeformat2.setTimeZone(TimeZone.getTimeZone("IST"));
+                Date update2 = new Date();
+                updateLocationDTO=new UpdateLocationDTO();
+                updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+                updateLocationDTO.setLocation_latitude(latitude.toString());
+                updateLocationDTO.setLocation_longitude(longitude.toString());
+                updateLocationDTO.setUpdatetime(timeformat2.format(update2).toString());
+                UpdateLocation(updateLocationDTO);
                 e.printStackTrace();
 
             }
@@ -731,8 +812,19 @@ public class UpdateLocationService extends Service
            // System.out.println("+++++++++++++++repeat+handler+++" + count);
             if (count > 0){
                 new UpdateLocationApi().execute("", "", "");
-            count--;
-        }
+
+        }else {
+                DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+                Date date1 = new Date();
+                updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+                updateLocationDTO.setLocation(locationVal);
+                updateLocationDTO.setLocation_latitude(latitude.toString());
+                updateLocationDTO.setLocation_longitude(longitude.toString());
+                updateLocationDTO.setFulladdress(fullAddress.toString());
+                updateLocationDTO.setUpdatetime(updateTimeFormat.format(date1).toString());
+                UpdateLocation(updateLocationDTO);
+            }
 
             //System.out.println("+++++++++++++++++counter 1..."+counter
            // Enable_location_popup(); //this function can change value of m_interval.
@@ -757,6 +849,7 @@ public class UpdateLocationService extends Service
         return info != null && info.isConnected();
 
     }
+
 
 }
 
