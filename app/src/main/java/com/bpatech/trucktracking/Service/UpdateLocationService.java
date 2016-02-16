@@ -598,7 +598,7 @@ public class UpdateLocationService extends Service
                                        // new UpdateBulkLocationandAdressApi().execute("", "", "");
                                         try {
                                             //System.out.println("++++++enter++++++++UpdateBulkLocationandAdressApi+Api+++++++++++++++++++");
-                                            Timber.i("UpdateLocationService:ServiceBULK APi Call :  " + latitude + "Longitude  :" + longitude);
+                                            Timber.i("UpdateLocationService:ServiceBULK APi Call :  " + bulklatitude + "Longitude  :" + bulklongitude);
                                             response = request.requestLocationServicePostType(
                                                     ServiceConstants.UPDATE_BULK_LOCATION, updateBulklocationandadresslist, ServiceConstants.BASE_URL);
                                             responsevalue = "" + response.getStatusLine().getStatusCode();
