@@ -1,13 +1,9 @@
 package com.bpatech.trucktracking.Service;
 
 
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,22 +13,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.Toast;
 
-import com.bpatech.trucktracking.Activity.ConnectionDetector;
 import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.UpdateLocationDTO;
 import com.bpatech.trucktracking.DTO.User;
-import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
@@ -40,35 +27,21 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 
 import timber.log.Timber;
 
@@ -333,6 +306,17 @@ public class UpdateLocationService extends Service
                 Timber.i("UpdateLocationServic :LocationManager is not connected");
             }
         } catch (Exception e) {
+            DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+            Date date1 = new Date();
+            updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+            updateLocationDTO.setLocation("Location Manager is not enabled");
+            updateLocationDTO.setLocation_latitude("0.00");
+            updateLocationDTO.setLocation_longitude("0.00");
+            updateLocationDTO.setFulladdress("Location Manager is not enabled");
+            updateLocationDTO.setUpdatetime(updateTimeFormat.format(date1).toString());
+            UpdateLocation(updateLocationDTO);
+            e.printStackTrace();
             Timber.i("UpdateLocationServiceException : Location"+
                     "Impossible to connect to LocationManager"+e.getMessage());
             Log.e("Error : Location",
