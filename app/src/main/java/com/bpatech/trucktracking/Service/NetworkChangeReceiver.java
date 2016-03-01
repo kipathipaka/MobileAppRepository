@@ -28,7 +28,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         locationDBlist.addAll(db.getTracktripDetails());
        // System.out.println("++++++++++++++++++++++++++++++network change+++++++++++++++++++++++++++");
         if (isConnectingToInternet()==true) {
-            Toast.makeText(context, "network fluctuating", Toast.LENGTH_LONG).show();
+           // Toast.makeText(context, "network fluctuating", Toast.LENGTH_LONG).show();
             if (locationDBlist != null && locationDBlist.size() > 0) {
                 context.startService(new Intent(context, UpdateLoctionByNetworkChange.class));
             }
