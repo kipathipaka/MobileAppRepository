@@ -106,7 +106,13 @@ public class HomeActivity extends FragmentActivity  implements GoogleApiClient.C
 					.build();
 			googleApiClient.connect();
 			locationRequest = LocationRequest.create();
-		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+if(locationRequest.getPriority() == 102) {
+	System.out.println("++++++++++++++++++++++++++++++++++++++++++priority++++++++++" + locationRequest.getPriority());
+	locationRequest.setPriority(102);//LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+}else{
+	System.out.println("++++++++++++++++++++++++++++++++++++++++++priority+else+++++++++" + locationRequest.getPriority());
+	locationRequest.setPriority(100);//LocationRequest.PRIORITY_HIGH_ACCURACY
+}
 			locationRequest.setInterval(30 * 1000);
 			locationRequest.setFastestInterval(5 * 1000);
 			new GetandStroeMessages().execute("", "", "");

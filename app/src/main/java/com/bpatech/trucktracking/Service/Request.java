@@ -8,6 +8,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -365,12 +367,12 @@ public class Request {
         HttpParams httpParameters = new BasicHttpParams();
         // Set the timeout in milliseconds until a connection is established.
         // The default value is zero, that means the timeout is not used.
-        int timeoutConnection = 5000;// 5000
+        int timeoutConnection = 20000;// 5000
         HttpConnectionParams.setConnectionTimeout(httpParameters,
                 timeoutConnection);
         // Set the default socket timeout (SO_TIMEOUT)
         // in milliseconds which is the timeout for waiting for data.
-        int timeoutSocket = 10000;// 10000
+        int timeoutSocket = 20000;// 10000
         HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
         // DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
@@ -404,6 +406,16 @@ public class Request {
                     }
 
                 });
+
+                final Timer timer1 = new Timer();
+                timer1.schedule(new TimerTask() {
+                    public void run() {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        timer1.cancel(); //this will cancel the timer of the system
+                    }
+                }, 6000);
             }
         });
     }
@@ -431,6 +443,15 @@ public class Request {
                     }
 
                 });
+               final Timer timer2 = new Timer();
+                timer2.schedule(new TimerTask() {
+                    public void run() {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        timer2.cancel(); //this will cancel the timer of the system
+                    }
+                }, 6000);
             }
         });
     }

@@ -83,7 +83,7 @@ public class UpdateLocationService extends Service
     // flag for network status
     boolean isNetworkEnabled = false;
     boolean isProviderEnabled=false;
-
+    boolean islocationchanged=false;
     boolean canGetLocation = false;
     SessionManager session;
     Location location;
@@ -134,8 +134,8 @@ public class UpdateLocationService extends Service
        // locationDBlist.addAll(db.getTracktripDetails());
         System.out.println("+++++Start service+++");
         //updateBulkLocation();
-      new UpdateBulkLocationApi().execute("", "", "");
-     //  getLocation();
+        islocationchanged=false;
+         getLocation();
         return Service.START_NOT_STICKY;
     }
 
@@ -239,45 +239,64 @@ public class UpdateLocationService extends Service
                 } else {
                     this.canGetLocation = true;
                     if (isNetworkEnabled) {
-                      //  System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++yesss++++++++++++++++++++++" + isNetworkEnabled);
-                        locationManager.requestLocationUpdates(
-                                LocationManager.NETWORK_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, new LocationListener() {
-                                    @Override
-                                    public void onLocationChanged(Location location) {
-                                      //  System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++onlocation changed++++++++++++++++++++++"+location.getLatitude()+location.getLongitude());
-                                        Timber.i("UpdateLocationService:onLocationChanged  : Network Provider latlng" + location.getLatitude() +
-                                                "&" + location.getLongitude());
-                                        //updateGPSCoordinates(location);
-                                        // System.out.println("++++++++++++++++++++++isNetworkEnabled++++++++++++location onchange+++++++++++++++++++++++++++");
-                                        //updateGPSCoordinates(location);
-                                        // new UpdateLocationApi().execute("", "", "");
-                                        //Toast.makeText(getApplicationContext(), location.getLatitude()+""+location.getLongitude(), Toast.LENGTH_SHORT).show();
-                                    }
+                        //System.out.println("++++++++++++++++++++++++++++++++++isNetworkEnabled+++++yesss++++++++++++++++++++++" + isNetworkEnabled);
+                        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, new LocationListener() {
+                            @Override
+                            public void onLocationChanged(Location location) {
+                                if(!islocationchanged) {
+                                    System.out.println("++++++++onlocationchanged+++yesss++++++++" + location.getLatitude() + "++++" + location.getLongitude());
+                                   // updateGPSCoordinates(location);
+                                    latitude=location.getLatitude();
+                                    longitude= location.getLongitude();
+                                    DateFormat timeformat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                                    timeformat.setTimeZone(TimeZone.getTimeZone("IST"));
+                                    Date update1 = new Date();
+                                    updateLocationDTO=new UpdateLocationDTO();
+                                    updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+                                    updateLocationDTO.setLocation_latitude(latitude.toString());
+                                    updateLocationDTO.setLocation_longitude(longitude.toString());
+                                    updateLocationDTO.setUpdatetime(timeformat.format(update1).toString());
+                                    UpdateLocation(updateLocationDTO);
+                                    islocationchanged=true;
+                                    count = 2;
+                                    m_handler.postDelayed(m_statusChecker, 0);
+                                    //new UpdateBulkLocationApi().execute("", "", "");
 
-                                    @Override
-                                    public void onStatusChanged(String provider, int status, Bundle extras) {
+                                }
 
-                                    }
+                            }
 
-                                    @Override
-                                    public void onProviderEnabled(String provider) {
+                            @Override
+                            public void onStatusChanged(String provider, int status, Bundle extras) {
 
-                                    }
+                            }
 
-                                    @Override
-                                    public void onProviderDisabled(String provider) {
+                            @Override
+                            public void onProviderEnabled(String provider) {
 
-                                    }
-                                });
+                            }
+
+                            @Override
+                            public void onProviderDisabled(String provider) {
+
+                            }
+                        }, null);
                         Timber.i("UpdateLocationService:Network : Network enable");
                         Log.d("Network", "Network");
 
-                            location = locationManager
-                                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        /*if (location == null) {
+                            System.out.println("++++++++++++++++++++++++++++++++++location changed false+++++++++++++++++++++++++++" + isGPSEnabled);
+                            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                             updateGPSCoordinates(location);
+
+                    }*/
                     }
+                   /* if (location == null) {
+                        System.out.println("++++++++++++++++++++++++++++++++++location changed false+++++++++++++++++++++++++++");
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        updateGPSCoordinates(location);
+
+                    }*/
      /*               if (isGPSEnabled) {
                         //System.out.println("++++++++++++++++++++++++++++++++++isGPSEnabled+++++++++++++++++++++++++++"+isGPSEnabled);
                         if (location == null) {
@@ -333,6 +352,17 @@ public class UpdateLocationService extends Service
                 Timber.i("UpdateLocationServic :LocationManager is not connected");
             }
         } catch (Exception e) {
+            DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+            Date date1 = new Date();
+            updateLocationDTO.setDriver_phone_no(session.getPhoneno());
+            updateLocationDTO.setLocation("Location Manager is not enabled");
+            updateLocationDTO.setLocation_latitude("0.00");
+            updateLocationDTO.setLocation_longitude("0.00");
+            updateLocationDTO.setFulladdress("Location Manager is not enabled");
+            updateLocationDTO.setUpdatetime(updateTimeFormat.format(date1).toString());
+            UpdateLocation(updateLocationDTO);
+            e.printStackTrace();
             Timber.i("UpdateLocationServiceException : Location"+
                     "Impossible to connect to LocationManager"+e.getMessage());
             Log.e("Error : Location",
@@ -343,6 +373,7 @@ public class UpdateLocationService extends Service
 
     public void updateGPSCoordinates(Location updateLocation) {
         Timber.i("UpdateLocationService :Enter updateGPSCoordinates");
+        islocationchanged=true;
         if (updateLocation != null) {
             latitude = updateLocation.getLatitude();
             longitude = updateLocation.getLongitude();
@@ -408,7 +439,6 @@ public class UpdateLocationService extends Service
             //System.out.println("+++++++++++++++++++++++++++++++no location found++++++");
         }
     }
-
 
     private class UpdateLocationApi extends
             AsyncTask<String, Void, String> {
@@ -491,7 +521,7 @@ public class UpdateLocationService extends Service
         protected String doInBackground(String... params) {
 
             try {
-               // System.out.println("++++++enter++++++++ServiceBULK+Api+++++++++++++++++++");
+                //System.out.println("++++++enter++++++++ServiceBULK+Api+++++++++++++++++++");
                // Timber.i("UpdateLocationService:ServiceBULK APi Call :  " + latitude + "Longitude  :" + longitude);
                 locationDBlist.addAll(db.getTracktripDetails());
                 //System.out.println("++++&&+updateBulkLocation+++++++++list size++" + locationDBlist.size());
@@ -504,11 +534,12 @@ public class UpdateLocationService extends Service
                           //  System.out.println("++++&&+updateBulkLocation+++++++++enter first loop++");
                             //delete_id=locationDBlist.get(i).getUpdate_id();
                             updateBulklocationlist.add(new BasicNameValuePair("driver_phone_number", locationDBlist.get(i).getDriver_phone_no()));
-                            updateBulklocationlist.add(new BasicNameValuePair("location", locationDBlist.get(i).getLocation()));
-                            updateBulklocationlist.add(new BasicNameValuePair("fullAddress", locationDBlist.get(i).getFulladdress()));
+                            //updateBulklocationlist.add(new BasicNameValuePair("location", locationDBlist.get(i).getLocation()));
+                           // updateBulklocationlist.add(new BasicNameValuePair("fullAddress", locationDBlist.get(i).getFulladdress()));
                             updateBulklocationlist.add(new BasicNameValuePair("latitude", locationDBlist.get(i).getLocation_latitude()));
                             updateBulklocationlist.add(new BasicNameValuePair("longitude", locationDBlist.get(i).getLocation_longitude()));
                             updateBulklocationlist.add(new BasicNameValuePair("updateTime", locationDBlist.get(i).getUpdatetime()));
+                            updateBulklocationlist.add(new BasicNameValuePair("mobileDataStatus","Y"));
                             response = request.requestLocationServicePostType(
                                     ServiceConstants.UPDATE_BULK_LOCATION, updateBulklocationlist, ServiceConstants.BASE_URL);
                             responsevalue = "" + response.getStatusLine().getStatusCode();
@@ -527,94 +558,22 @@ public class UpdateLocationService extends Service
                             bulklongitude=Double.parseDouble(locationDBlist.get(i).getLocation_longitude());
                             //System.out.println("+++++++++++++++++bulklongitude++++++++bulklongitude+++++++++++++++++++++++++"+bulklatitude+bulklongitude);
                             //new GetBulkAddressFromJson().execute("", "", "");
-                            InputStream is = null;
-                            String result = "";
-                            JSONObject jsonObj=null;
                             bulkfullAddress=null;
                             bulklocationVal=null;
-                            try {
                                 Timber.i("Location Service:GetBulkAddressFromJsonAPI");
                               //  System.out.println("+++++++++++++++++++++enter bulkjson++++++++++++++++++++++" + locationDBlist.get(i).getUpdate_id());
-                                if (isConnectingToInternet()==true) {
-                                    HttpClient httpclient = new DefaultHttpClient();
-                                    HttpPost httppost = new HttpPost("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + bulklatitude + "," + bulklongitude);
-                                    HttpResponse response = httpclient.execute(httppost);
-                                    responsevalue = "" + response.getStatusLine().getStatusCode();
-                                    Timber.i("Location Service:GetBulkAddressFromJsonAPI :Status" + response.getStatusLine().getStatusCode());
-                                    HttpEntity entity = response.getEntity();
-                                    is = entity.getContent();
-                                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
-                                    StringBuilder sb = new StringBuilder();
-                                    String line = null;
-                                    while ((line = reader.readLine()) != null) {
-                                        sb.append(line + "\n");
-                                    }
-                                    is.close();
-                                    result = sb.toString();
-                                    if (result != null) {
-                                        jsonObj = new JSONObject(result);
-                                        String Status = jsonObj.getString("status");
-                                        if (Status.equalsIgnoreCase("OK")) {
-                                            JSONArray Results = jsonObj.getJSONArray("results");
-                                            JSONObject zero = Results.getJSONObject(0);
-                                            JSONArray address_components = zero.getJSONArray("address_components");
-                                            for (int i = 0; i < address_components.length(); i++) {
-                                                JSONObject zero2 = address_components.getJSONObject(i);
-                                                String long_name = zero2.getString("long_name");
-                                                //System.out.println("++++++++++++++++++++++++++++++++++long_name+++++++++++++++++++++++++"+long_name);
-                                                JSONArray mtypes = zero2.getJSONArray("types");
-                                                // System.out.println("++++++++++++++++++++++++++++++++++mtypes+++++++++++++++++++++++++"+mtypes+TextUtils.isEmpty(long_name));
-                                                String Type = mtypes.getString(0);
-                                                if (TextUtils.isEmpty(long_name) == false || long_name != null || long_name.length() > 0 || long_name != "") {
-
-                                                    if (Type.equalsIgnoreCase("sublocality_level_1")) {
-                                                        if (bulkfullAddress == null) {
-                                                            bulkfullAddress = long_name + ",";
-                                                        }
-
-                                                    } else if (Type.equalsIgnoreCase("sublocality")) {
-                                                        if (bulkfullAddress == null) {
-                                                            bulkfullAddress = long_name + ",";
-                                                        }
-
-                                                    } else if (Type.equalsIgnoreCase("locality")) {
-                                                        // Address2 = Address2 + long_name + ", ";
-                                                        bulklocationVal = long_name;
-                                                        if (bulkfullAddress != null) {
-                                                            bulkfullAddress = bulkfullAddress + long_name;
-                                                        } else {
-                                                            bulkfullAddress = long_name;
-                                                        }
-
-                                                    } else if (Type.equalsIgnoreCase("administrative_area_level_2")) {
-                                                        if (bulkfullAddress == null || bulklocationVal == null) {
-                                                            bulklocationVal = long_name;
-                                                            bulkfullAddress = long_name;
-
-                                                        }
-                                                    } else if (Type.equalsIgnoreCase("administrative_area_level_1")) {
-                                                        if (bulkfullAddress == null || bulklocationVal == null) {
-                                                            bulklocationVal = long_name;
-                                                            bulkfullAddress = long_name;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            Timber.i("Location Service:GetBulkAddressFromJsonAPI  CurrentLocation  " + bulkfullAddress);
-                                            System.out.println("+++++++++addresss++++++++++++++++full+ddresss++" +
-                                                    "+++++++++++++++++++++++" + bulkfullAddress + "+local++" + bulklocationVal);
-                                        }
                                         updateBulklocationandadresslist = new ArrayList<NameValuePair>();
                                         updateBulklocationandadresslist.add(new BasicNameValuePair("driver_phone_number",session.getPhoneno()));
-                                        updateBulklocationandadresslist.add(new BasicNameValuePair("location",bulklocationVal));
-                                        updateBulklocationandadresslist.add(new BasicNameValuePair("fullAddress",bulkfullAddress));
+                                       // updateBulklocationandadresslist.add(new BasicNameValuePair("location",bulklocationVal));
+                                        //updateBulklocationandadresslist.add(new BasicNameValuePair("fullAddress",bulkfullAddress));
                                         updateBulklocationandadresslist.add(new BasicNameValuePair("latitude", bulklatitude.toString()));
                                         updateBulklocationandadresslist.add(new BasicNameValuePair("longitude",bulklongitude.toString()));
                                         updateBulklocationandadresslist.add(new BasicNameValuePair("updateTime", locationDBlist.get(i).getUpdatetime()));
+                            updateBulklocationandadresslist.add(new BasicNameValuePair("mobileDataStatus","Y"));
                                        // new UpdateBulkLocationandAdressApi().execute("", "", "");
                                         try {
                                             //System.out.println("++++++enter++++++++UpdateBulkLocationandAdressApi+Api+++++++++++++++++++");
-                                            Timber.i("UpdateLocationService:ServiceBULK APi Call :  " + latitude + "Longitude  :" + longitude);
+                                            Timber.i("UpdateLocationService:ServiceBULK APi Call :  " + bulklatitude + "Longitude  :" + bulklatitude);
                                             response = request.requestLocationServicePostType(
                                                     ServiceConstants.UPDATE_BULK_LOCATION, updateBulklocationandadresslist, ServiceConstants.BASE_URL);
                                             responsevalue = "" + response.getStatusLine().getStatusCode();
@@ -626,6 +585,14 @@ public class UpdateLocationService extends Service
                                                 System.out.println("+++++++++++UpdateBulkLocationandAdressApi++++db deleted++++++++++++++");
                                                 Timber.i("UpdateLocationService:Location update API result :" + response.getStatusLine().getStatusCode());
                                                 Timber.i("UpdateLocationService:Location Service  ApI updated");
+                                            } if (count > 0) {
+                                                count--;
+                                                m_handler.postDelayed(m_statusChecker, 0);
+                            /*String smsno = "+91"+session.getPhoneno();
+                            SmsManager smsManager = SmsManager.getDefault();
+                            smsManager.sendTextMessage(smsno, null,"You have Poor Net Connection.So,Your Last location didn't update to the Owner", null, null);*/
+                                                Timber.i("UpdateLocationService:Location update API failed result :" + response.getStatusLine().getStatusCode());
+
                                             }
 
                                         } catch (Exception e) {
@@ -633,16 +600,9 @@ public class UpdateLocationService extends Service
                                             e.printStackTrace();
 
                                         }
-                                    } else {
-                                        bulklocationVal = null;
-                                        bulkfullAddress = null;
-                                    }
-                                }
-                            } catch (Exception e) {
 
-                                e.printStackTrace();
 
-                            }
+
                         }
                     }
                 }
@@ -811,9 +771,10 @@ public class UpdateLocationService extends Service
         public void run() {
            // System.out.println("+++++++++++++++repeat+handler+++" + count);
             if (count > 0){
-                new UpdateLocationApi().execute("", "", "");
+               // new UpdateLocationApi().execute("", "", "");
+                new UpdateBulkLocationApi().execute("", "", "");
 
-        }else {
+        }/*else {
                 DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
                 updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
                 Date date1 = new Date();
@@ -824,7 +785,7 @@ public class UpdateLocationService extends Service
                 updateLocationDTO.setFulladdress(fullAddress.toString());
                 updateLocationDTO.setUpdatetime(updateTimeFormat.format(date1).toString());
                 UpdateLocation(updateLocationDTO);
-            }
+            }*/
 
             //System.out.println("+++++++++++++++++counter 1..."+counter
            // Enable_location_popup(); //this function can change value of m_interval.
@@ -840,6 +801,7 @@ public class UpdateLocationService extends Service
         Timber.i("UpdateLocation:Insert:Inserting ..");
         Log.d("Insert: ", "Inserting ..");
     }
+
     public boolean isConnectingToInternet() {
         ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -849,8 +811,6 @@ public class UpdateLocationService extends Service
         return info != null && info.isConnected();
 
     }
-
-
 }
 
 
