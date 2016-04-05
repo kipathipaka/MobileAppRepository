@@ -135,47 +135,7 @@
                 android:paddingLeft="5dp"
                 android:hint="e.g: Kirankumar"/>
         </TableRow>
-        <!-- <TableRow
-             android:id="@+id/tableRow5"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:paddingLeft="1dp"
-             android:paddingRight="1dp"
-              android:paddingTop="2dp">
 
-             <TextView
-                 android:id="@+id/OTP"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_weight="1"
-                 android:layout_marginBottom="@dimen/fifteen_pt"
-                 style="@style/codefont"
-                android:text="@string/otp"
-                 android:paddingLeft="5dp" >
-             </TextView>
-         </TableRow>-->
-        <!-- &lt;!&ndash;<TableRow
-             android:id="@+id/tableRow6"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="0dp"
-              android:background="@color/gray"
-             android:paddingLeft="1.5dp"
-             android:paddingRight="1.5dp"
-             android:paddingBottom="1.5dp"
-             android:paddingTop="1.5dp" >
-
-             <EditText
-                 android:id="@+id/editotp"
-                 android:layout_width="0dp"
-                 android:layout_height="@dimen/seventy_pt"
-                 android:layout_weight="1"
-                 android:background="@color/white"
-                 android:ems="10"
-                 android:textCursorDrawable="@color/black"
-                 android:inputType="number"
-                 android:paddingLeft="5dp" />&ndash;&gt;
-         </TableRow>-->
         <TableRow
             android:id="@+id/buttonrow"
             android:layout_width="match_parent"

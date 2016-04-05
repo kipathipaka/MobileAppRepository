@@ -1,7 +1,6 @@
 package com.bpatech.trucktracking.Service;
 
 import com.bpatech.trucktracking.DTO.MessageDTO;
-import com.bpatech.trucktracking.DTO.User;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,9 +8,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Anita on 10/16/2015.
- */
+
 public class GetDriverListParsing {
     public List driverPhonenumberlist(JSONArray commentsArray) {
         List  driverlist = new ArrayList();

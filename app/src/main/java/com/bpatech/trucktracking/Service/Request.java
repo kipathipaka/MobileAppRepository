@@ -1,19 +1,17 @@
 package com.bpatech.trucktracking.Service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLException;
+import com.bpatech.trucktracking.Activity.ConnectionDetector;
+import com.bpatech.trucktracking.R;
+import com.bpatech.trucktracking.Util.ServiceConstants;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,36 +28,26 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.message.BasicStatusLine;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Process;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import com.bpatech.trucktracking.Util.ServiceConstants;
-import com.bpatech.trucktracking.R;
-import com.bpatech.trucktracking.Util.SessionManager;
-import com.bpatech.trucktracking.Activity.ConnectionDetector;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLException;
 
 import timber.log.Timber;
 
@@ -194,14 +182,9 @@ public class Request {
                 HttpPut request = new HttpPut(serverUrl);
                 request.setParams(getTimeOutParams());
                 request.setURI(website);
-               // request.setURI(website);
-               /* StringEntity entityString = new StringEntity(
-                        jsonObj.toString(), "UTF8");*/
+
                 request.setEntity(new UrlEncodedFormEntity(userlist));
-                /*request.setHeader(ServiceConstants.CONTENT_TYPE_KEY,
-                        ServiceConstants.CONTENT_TYPE_VALUE);
-                request.setHeader(ServiceConstants.X_APP_VERSION_KEY,
-                        ServiceConstants.X_APP_VERSION_VALUE);*/
+
 
                 response = client.execute(request);
             } else {
@@ -242,7 +225,7 @@ public class Request {
 
         HttpPost httpPost = new HttpPost(serverUrl);
         httpPost.setURI(website);
-       // StringEntity entityString = new StringEntity(jsonObj.toString(), "UTF8");
+
         httpPost.setEntity(new UrlEncodedFormEntity(userlist));
 
         HttpResponse response = httpClient.execute(httpPost);
@@ -263,7 +246,7 @@ public class Request {
                 request.setEntity(new UrlEncodedFormEntity(userlist));
                 response = client.execute(request);
             } else {
-               // networkIssue();
+
                 Timber.i("Request Class:PostType :InternetConnecction Failed");
                noInternetConnection();
             }
@@ -308,10 +291,7 @@ public class Request {
                 request.setURI(website);
                 request.setEntity(new UrlEncodedFormEntity(userlist));
                 locationResponse = client.execute(request);
-               // System.out.println("++++++++++++++++++++++++++++++++++locationResponse+++++++++++++++++++++++++++"+locationResponse);
-            } else {
-                // networkIssue();
-                noInternetConnection();
+
             }
 
         } catch (SSLException e) {
@@ -328,7 +308,7 @@ public class Request {
                 locationResponse = new BasicHttpResponse(sl);
                 return locationResponse;
             }
-            return  locationResponse;
+            return locationResponse;
         }
         catch (Exception e) {
 
@@ -346,7 +326,7 @@ public class Request {
     public HttpResponse responseValidation(HttpResponse response) {
 
        if (response.getStatusLine().getStatusCode()!= 200) {
-          // System.out.println("++++++++++++++++++++++++++++++++++responseValidation+++++++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
+
             networkIssue();
         }
 
@@ -367,15 +347,15 @@ public class Request {
         HttpParams httpParameters = new BasicHttpParams();
         // Set the timeout in milliseconds until a connection is established.
         // The default value is zero, that means the timeout is not used.
-        int timeoutConnection = 20000;// 5000
+        int timeoutConnection = 10000;// 5000
         HttpConnectionParams.setConnectionTimeout(httpParameters,
                 timeoutConnection);
         // Set the default socket timeout (SO_TIMEOUT)
         // in milliseconds which is the timeout for waiting for data.
-        int timeoutSocket = 20000;// 10000
+        int timeoutSocket = 10000;// 10000
         HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
-        // DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
+
         return httpParameters;
 
     }
@@ -384,8 +364,7 @@ public class Request {
         ((Activity) myContext).runOnUiThread(new Runnable() {
             public void run() {
                 LayoutInflater inflater = LayoutInflater.from(myContext);
-              /*  View view = inflater.inflate(R.layout.network_failure_popup,
-                        null);*/
+
                 View promptsView = inflater.inflate(R.layout.network_failure,null);
 
 

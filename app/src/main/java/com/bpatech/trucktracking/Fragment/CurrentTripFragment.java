@@ -7,10 +7,8 @@ import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +19,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bpatech.trucktracking.Activity.HomeActivity;
 import com.bpatech.trucktracking.DTO.AddTrip;
-import com.bpatech.trucktracking.DTO.MessageDTO;
 import com.bpatech.trucktracking.R;
 import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.GetDriverListParsing;
@@ -36,20 +31,13 @@ import com.bpatech.trucktracking.Util.CustomAdapter;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
 import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 import java.util.List;
-import java.util.TimeZone;
-
-import timber.log.Timber;
 
 
 public class CurrentTripFragment  extends Fragment  {
@@ -60,14 +48,14 @@ public class CurrentTripFragment  extends Fragment  {
 	Request request;
 	String responseStrng;
 	RelativeLayout currenttripLayout;
-	ArrayList<AddTrip> currenttriplist;
+
 	ArrayList<AddTrip> currenttripdetails;
 	ListView listView;
-	Bundle taskdetail;
+
 	View view;
-	int alarmval=0;
+
 	String trip_id;
-	//boolean processClick=true;
+
 	AddUserObjectParsing obj;
 	private static ProgressBar progressBar;
 	@Override
@@ -79,19 +67,14 @@ public class CurrentTripFragment  extends Fragment  {
 		b= savedInstanceState;
 		session = new SessionManager(getActivity());
 		obj = new AddUserObjectParsing();
-		Timber.tag(session.getPhoneno());
-		Timber.i("Inside Current Trips");
-		Timber.i("Alaram Count:" + session.getAlaramcount());
-		System.out.println("++++++++++session.getKeyAlaram()++++++++"+session.getAlaramcount());
+
+
 		if(session.getAlaramcount()== 0) {
 			AlarmManager alarmManager = (AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 			Intent intentR = new Intent(getActivity().getApplicationContext(), UpdateLocationReceiver.class);
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 0, intentR,0);
-			//intentR.setAction(UpdateLocationReceiver.);//the same as up
-			//boolean isWorking = (PendingIntent.getBroadcast(getActivity(), 1001, intentR, PendingIntent.FLAG_NO_CREATE) != null);//just changed the flag
-			//Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
-			//System.out.println("********************************isWorking************** sync call end ..."+pendingIntent.FLAG_UPDATE_CURRENT+pendingIntent.FLAG_CANCEL_CURRENT);
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20 * 60 * 1000,
+
+			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20 * 60 * 1000,
 					pendingIntent);
 			session.setAlaramcount(1);
 		}
@@ -100,17 +83,7 @@ public class CurrentTripFragment  extends Fragment  {
 				trip_id = session.getVechil_trip_id();
 				session.setVechil_trip_id(null);
 				new SaveVechileTripId().execute("", "", "");
-				/*TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
-				session.setVechil_trip_id(null);
-				Bundle bundle = new Bundle();
-				bundle.putString(ServiceConstants.VECHILE_TRIP_ID, trip_id);
-				taskdetailfrag.setArguments(bundle);
-				FragmentManager fragmentmanager = getFragmentManager();
-				FragmentTransaction fragmenttransaction = fragmentmanager
-						.beginTransaction();
-				fragmenttransaction.replace(R.id.viewers, taskdetailfrag, "BackFromShareTrip");
-				fragmenttransaction.addToBackStack(null);
-				fragmenttransaction.commit();*/
+
 			}
 
 		request= new Request(getActivity());
@@ -119,11 +92,7 @@ public class CurrentTripFragment  extends Fragment  {
 		progressBar.setProgress(10);
 		progressBar.setMax(100);
 		progressBar.setVisibility(View.VISIBLE);
-		/*DateFormat dateFormat = new SimpleDateFormat("MMM,dd h:mm a");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
-		//Date date = new Date("");
-		Date date = new Date(Long.parseLong("1448877941000"));
-		System.out.println("+++++++++++++time  ++++++++++++++"+dateFormat.format(date).toString());*/
+
 		new GetMytripDetail().execute("", "", "");
 		txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
 		txt_contTitle.setText("Current Trips");
@@ -131,7 +100,7 @@ public class CurrentTripFragment  extends Fragment  {
 		triplist_ll = (LinearLayout) view.findViewById(R.id.currenttriplist_view);
 		currenttripLayout = (RelativeLayout) view.findViewById(R.id.currenttriplayout);
 		footerlayout = (LinearLayout) view.findViewById(R.id.footerlayout);
-		//footerlayout.setVisibility(View.VISIBLE);
+
 		currenttripLayout.setOnClickListener(new Layoutclicklistener());
 		triplist_ll.setVisibility(view.GONE);
 		listView = (ListView)view.findViewById(R.id.listview);
@@ -146,7 +115,7 @@ public class CurrentTripFragment  extends Fragment  {
 					progressBar.setVisibility(View.VISIBLE);
 
 					TextView vehicle_id = (TextView) view.findViewById(R.id.vechiletrip_no);
-					//System.out.println("+++++++++++++vehicle_id  ++++++++++++++"+vehicle_id.toString());
+
 					String vechile_trip_id = vehicle_id.getText().toString();
 					TaskDetailFragment taskdetailfrag = new TaskDetailFragment();
 					Bundle bundle = new Bundle();
@@ -190,20 +159,20 @@ public class CurrentTripFragment  extends Fragment  {
 		protected String doInBackground(String... params) {
 
 			try {
-				//System.out.println("********************************************** sync call...");
+
 				progressBar.setVisibility(View.VISIBLE);
 				String Gettrip_url = ServiceConstants.GET_TRIP + session.getPhoneno();
 				HttpResponse response = request.requestGetType(Gettrip_url,ServiceConstants.BASE_URL);
 
 				responseStrng = "" + response.getStatusLine().getStatusCode();
-				//System.out.println("++++++++++++response+++code++++++++++++++++++"+response.getStatusLine().getStatusCode());
+
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONArray responsejSONArray = request.responseArrayParsing(response);
 					GetMytripListParsing mytripListParsing = new GetMytripListParsing();
 					List<AddTrip> mytripdetailslist = new ArrayList<AddTrip>();
 					mytripdetailslist.addAll(mytripListParsing.getmytriplist(responsejSONArray));
 					session.setAddtripdetails(mytripdetailslist);
-					//System.out.println("********************************************** sync call end ...");
+
 					getActivity().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -218,8 +187,8 @@ public class CurrentTripFragment  extends Fragment  {
 
 								listView.setDividerHeight(5);
 								footerlayout.setVisibility(View.VISIBLE);
-								//System.out.println("********************************************** after list set ...");
-								// btnDone.setVisibility(View.VISIBLE);
+
+
 
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -262,33 +231,7 @@ public class CurrentTripFragment  extends Fragment  {
 						session.setDriverlist(driverphonenolist);
 					}
 
-					/*getActivity().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								new GetandStroeMessages().execute("", "", "");
-								*//*if(session.getDriverlist()!=null && session.getDriverlist().size() > 0){
-									footer_addtrip_ll.setEnabled(true);
-									for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
-										View child = footer_addtrip_ll.getChildAt(i);
-										child.setEnabled(true);
-									}
-								}else{
-									footer_addtrip_ll.setEnabled(false);
-									//footer_addtrip_ll.setBackground(getActivity().getResources().getDrawable(R.drawable.footerbutton_inactive));
-									for (int i = 0; i < footer_addtrip_ll.getChildCount(); i++) {
-										View child = footer_addtrip_ll.getChildAt(i);
-										child.setEnabled(false);
-									}
 
-								}*//*
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					});
-
-*/
 
 				}
 
@@ -320,7 +263,7 @@ public class CurrentTripFragment  extends Fragment  {
 				savetripiddetails.addAll(obj.SaveTripId(trip_id,session.getPhoneno()));
 				String get_driver_url= ServiceConstants.SAVE_TRIP_ID_URL;
 				HttpResponse response = request.requestPostType(get_driver_url, savetripiddetails, ServiceConstants.BASE_URL);
-				//System.out.println("++++++++++++++++++++++++response.getStatusLine().getStatusCode()+++++++++++++++"+response.getStatusLine().getStatusCode());
+
 				responseStrng = ""+response.getStatusLine().getStatusCode();
 				if (response.getStatusLine().getStatusCode() == 200) {
 					TaskDetailFragment taskdetailfrag = new TaskDetailFragment();

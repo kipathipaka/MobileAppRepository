@@ -1,8 +1,5 @@
 package com.bpatech.trucktracking.DTO;
 
-/**
- * Created by Anita on 1/20/2016.
- */
 public class UpdateLocationDTO {
     int update_id;
     String driver_phone_no;
@@ -11,6 +8,7 @@ public class UpdateLocationDTO {
     String location;
     String fulladdress;
     String updatetime;
+    String mobildatastatus;
 
     public UpdateLocationDTO() {
     }
@@ -83,5 +81,12 @@ public class UpdateLocationDTO {
 
     public void setUpdatetime(String updatetime) {
         this.updatetime = updatetime;
+    }
+    public String getMobildatastatus() {
+        return mobildatastatus;
+    }
+
+    public void setMobildatastatus(String mobildatastatus) {
+        this.mobildatastatus = mobildatastatus;
     }
 }

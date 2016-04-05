@@ -22,9 +22,7 @@ import com.bpatech.trucktracking.Util.SessionManager;
 
 import timber.log.Timber;
 
-/**
- * Created by Yugandhar on 9/28/2015.
- */
+
 public class InviteFragment extends Fragment
 {
 
@@ -43,7 +41,7 @@ public class InviteFragment extends Fragment
         session = new SessionManager(getActivity().getApplicationContext());
         txt_contTitle=(TextView)view.findViewById(R.id.txt_contTitle);
         txt_contTitle.setText("Invite");
-        Timber.i("Inside Invite Page");
+
         sndbtn=(Button)view.findViewById(R.id.sndbtn);
         phonenum=(EditText)view.findViewById(R.id.phonenum);
         inviteLayout = (RelativeLayout) view.findViewById(R.id.invite_layout);
@@ -90,7 +88,7 @@ public class InviteFragment extends Fragment
                     String smsno="+91"+number;
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(smsno, null, edittexview1.getText().toString(), null, null);
-                    //Log.d("Sms", "sendSMS " + sms);
+
                     Toast.makeText(getActivity().getApplicationContext(), "SMS Sent!"+smsno,
                             Toast.LENGTH_LONG).show();
 
@@ -113,7 +111,7 @@ public class InviteFragment extends Fragment
 
         catch(Exception e)
         {
-            Timber.i("InviteFragment:Exception "+e);
+
            Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
                     Toast.LENGTH_LONG).show();
             e.printStackTrace();

@@ -1,8 +1,6 @@
 package com.bpatech.trucktracking.DTO;
 
-/**
- * Created by Anita on 12/11/2015.
- */
+
 public class MessageDTO {
     String invite_message;
     String share_message;

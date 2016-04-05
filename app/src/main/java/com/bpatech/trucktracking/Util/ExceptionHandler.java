@@ -1,11 +1,5 @@
 package com.bpatech.trucktracking.Util;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Date;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -17,6 +11,12 @@ import android.os.StatFs;
 import android.util.Log;
 
 import com.bpatech.trucktracking.Activity.CrashActivity;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Date;
 
 /**
  * Created by Anita on 11/3/2015.
@@ -31,7 +31,7 @@ public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandl
     String AndroidVersion;
     String Board;
     String Brand;
-    // String CPU_ABI;
+
     String Device;
     String Display;
     String FingerPrint;

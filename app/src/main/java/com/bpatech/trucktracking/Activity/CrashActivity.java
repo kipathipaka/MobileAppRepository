@@ -19,9 +19,7 @@ import java.io.File;
 
 import timber.log.Timber;
 
-/**
- * Created by Anita on 11/3/2015.
- */
+
 
 public class CrashActivity extends Activity {
 
@@ -38,14 +36,13 @@ ProgressBar progressBar;
         progressBar.setProgress(10);
         progressBar.setMax(100);
         progressBar.setVisibility(View.INVISIBLE);
-        Timber.i("Crash Activity Call");
         findViewById(R.id.btn).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 progressBar.setVisibility(View.VISIBLE);
                 String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/vm/" + ".errorTrace.txt";
                 sendErrorMail(CrashActivity.this, filePath);
-                //  finish();
+
                 progressBar.setVisibility(View.INVISIBLE);
             }
 
@@ -64,7 +61,6 @@ ProgressBar progressBar;
     }
 
     private void sendErrorMail(Context _context, String filePath) {
-        Timber.i("Crash Activity:Send Error Mail");
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
         String subject = "Error Description";
         String body = "Unfortunately Vehilce Tracking application crashed.\nPlease find the attached error log.";

@@ -37,8 +37,6 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
 public class AddnewTripFragment extends Fragment {
 	MySQLiteHelper db;
 	SessionManager session;
@@ -48,7 +46,7 @@ public class AddnewTripFragment extends Fragment {
 	ProgressBar progressBar;
 	String responseStrng, responsevalue;
 	String owner_phone_number;
-	HttpResponse response;
+
 	AddUserObjectParsing obj;
 	String source = "chennai";
 	RelativeLayout addnewtripLayout;
@@ -64,7 +62,7 @@ public class AddnewTripFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.addnewtrip_layout, container, false);
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
-		Timber.i("Inside ADD NewTrip ");
+
 		db = new MySQLiteHelper(getActivity().getApplicationContext());
 		request = new Request(getActivity());
 		currenttripdetails = new ArrayList<AddTrip>();
@@ -87,7 +85,7 @@ public class AddnewTripFragment extends Fragment {
 		session = new SessionManager(getActivity().getApplicationContext());
 		obj = new AddUserObjectParsing();
 		new GetdriverPhonelist().execute("", "", "");
-		//addItemsOnSpinner2();
+
 		addbtn.setOnClickListener(new MyaddButtonListener());
 		addnewtripLayout.setOnClickListener(new AddNewtripLayoutclicklistener());
 		return view;
@@ -109,23 +107,7 @@ public class AddnewTripFragment extends Fragment {
 
 				InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
 				inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-				/*if (editdestination.getText().toString().trim().equalsIgnoreCase("") || editride.getText().toString().trim().equalsIgnoreCase("") ||
-						String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Choose Phone number")
-						|| String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Add Phone number")
-						|| customer_company.getText().toString().trim().equalsIgnoreCase("") ||
-						customer_name.getText().toString().trim().equalsIgnoreCase("") || customer_phoneno.getText().toString().trim().equalsIgnoreCase("")) {
-					Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-							Toast.LENGTH_LONG).show();
-					progressBar.setVisibility(View.INVISIBLE);
 
-				}*/
-				/*if(String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Choose Phone number")
-						|| String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Add Phone number")||
-						customer_phoneno.getText().toString().trim().equalsIgnoreCase("")) {
-					Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-							Toast.LENGTH_LONG).show();
-					progressBar.setVisibility(View.INVISIBLE);
-				}*/
 					if(String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Choose Phone number")||
 							String.valueOf(phonespinner.getSelectedItem()).toString().trim().equalsIgnoreCase("Add Phone number")){
 						Toast.makeText(getActivity().getApplicationContext(), "Please Choose Driver?",
@@ -138,7 +120,7 @@ public class AddnewTripFragment extends Fragment {
 					{
 						Toast.makeText(getActivity().getApplicationContext(), "Please enter Customer Phone Number?",
 								Toast.LENGTH_LONG).show();
-						//customer_phoneno.setFocusableInTouchMode(true);
+
 						customer_phoneno.requestFocus();
 						progressBar.setVisibility(View.INVISIBLE);
 						return;
@@ -174,54 +156,26 @@ public class AddnewTripFragment extends Fragment {
 					progressBar.setVisibility(View.INVISIBLE);
 				}
 			} catch (Exception e) {
-				//Toast.makeText(getActivity().getApplicationContext(), "Value is not entered!",
-						//Toast.LENGTH_LONG).show();
-				Timber.i("AddnewTripFragment: Inside add Trip Exception"+e);
+
 				progressBar.setVisibility(View.INVISIBLE);
 				e.printStackTrace();
 			}
 		}
 	}
 
-	/*public void addItemsOnSpinner2() {
-		progressBar.setVisibility(View.VISIBLE);
-		ArrayList<User> ownerlist = new ArrayList<User>();
-		ownerlist.addAll(db.getOwnerphoneno());
-		if (ownerlist != null && ownerlist.size() > 0) {
-			owner_phone_number = ownerlist.get(0).getPhone_no();
-			if (session.getDriverlist().size() > 0) {
-				dropdowndriverphonenolist.add("Choose Phone number");
-				dropdowndriverphonenolist.addAll(session.getDriverlist());
-				ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, dropdowndriverphonenolist);
-				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				phonespinner.setAdapter(dataAdapter);
-			} else {
 
-				List list = new ArrayList();
-				list.add("Add Phone number");
-				ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, list);
-				dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				phonespinner.setAdapter(dataAdapter);
-
-			}
-
-
-		}
-		progressBar.setVisibility(View.INVISIBLE);
-	}*/
 
 	private class AddTripDetail extends
 			AsyncTask<String, Void, String> {
 		@Override
 		protected void onPostExecute(String result) {
 
-			//progressBar.setVisibility(View.INVISIBLE);
+
 		}
 
 		protected String doInBackground(String... params) {
 
 			try {
-				Timber.i("AddnewTripFragment:Add Trip APiCall");
 				List<NameValuePair> addtriplist = new ArrayList<NameValuePair>();
 				addtriplist.addAll(obj.AddtripObject(addtrip.getTruckno(), addtrip.getDestination(), session.getPhoneno(),
 						addtrip.getCustomer_company(), addtrip.getCustomer_name(), addtrip.getCustomer_phoneno(), addtrip.getDriver_phone_no()));
@@ -240,7 +194,6 @@ public class AddnewTripFragment extends Fragment {
 
 				}
 			} catch (Exception e) {
-				Timber.i("AddnewTripFragment:Add Trip APiCall Exception"+e);
 				e.printStackTrace();
 
 			}
@@ -264,7 +217,6 @@ public class AddnewTripFragment extends Fragment {
 			protected String doInBackground(String... params) {
 
 				try {
-					Timber.i("AddnewTripFragment:Getdriver API Call");
 					List<String> driverphonenolist = new ArrayList<String>();
 					String get_driver_url = ServiceConstants.GET_DRIVER + session.getPhoneno();
 					HttpResponse response = request.requestGetType(get_driver_url, ServiceConstants.BASE_URL);
@@ -311,7 +263,6 @@ public class AddnewTripFragment extends Fragment {
 
 
 				} catch (Exception e) {
-					Timber.i("AddnewTripFragment:Getdriver API Call Exception",e);
 					e.printStackTrace();
 
 				}

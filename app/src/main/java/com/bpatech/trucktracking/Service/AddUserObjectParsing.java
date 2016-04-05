@@ -5,9 +5,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Anita on 10/14/2015.
- */
+
 public class AddUserObjectParsing {
 
     public List<NameValuePair> userCreationObject(String phone_number,String company_name,String latitude,String longitude,String locationVal,String fullAddress,String active_status,String download_status,String user_name)

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.UpdateLocationDTO;
 
@@ -21,14 +20,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     Context contextobj;
     @Override
     public void onReceive(final Context context, final Intent intent) {
-       // Toast.makeText(context, "network fluctuating", Toast.LENGTH_LONG).show();
         contextobj=context;
         db = new MySQLiteHelper(context.getApplicationContext());
         locationDBlist = new ArrayList<UpdateLocationDTO>();
         locationDBlist.addAll(db.getTracktripDetails());
-       // System.out.println("++++++++++++++++++++++++++++++network change+++++++++++++++++++++++++++");
         if (isConnectingToInternet()==true) {
-           // Toast.makeText(context, "network fluctuating", Toast.LENGTH_LONG).show();
             if (locationDBlist != null && locationDBlist.size() > 0) {
                 context.startService(new Intent(context, UpdateLoctionByNetworkChange.class));
             }

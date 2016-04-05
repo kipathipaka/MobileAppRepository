@@ -17,9 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-/**
- * Created by Kiran on 06-12-2015.
- */
+
 public class URLShortner {
     static InputStream is = null;
     static JSONObject jObj = null;
@@ -36,18 +34,16 @@ public class URLShortner {
         try {
            String address="https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyC2p7LAIkxVgj6962KN5Y01GcpH0LBxZ54";
            String longUrl="http://ec2-52-88-194-128.us-west-2.compute.amazonaws.com:2020/vehicletracking-spring/api/web/"+tripid;
-            System.out.println("longurl:::::::::::::::::::::::"+longUrl);
             // DefaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
            JSONObject inputJson = new JSONObject();
             inputJson.put("longUrl",longUrl);
             HttpPost httpPost = new HttpPost(address);
 
-            System.out.println("inputJson.toString():::::::::::::::::::::::"+inputJson.toString());
+
             httpPost.setEntity(new StringEntity(inputJson.toString()));
             httpPost.setHeader("Content-Type", "application/json");
             HttpResponse httpResponse = httpClient.execute(httpPost);
-            System.out.println("status code:::::::::::::::::::::::"+httpResponse.getStatusLine().getStatusCode());
             if(httpResponse.getStatusLine().getStatusCode()==200){
                 jObj = parseResponse(httpResponse);
             }

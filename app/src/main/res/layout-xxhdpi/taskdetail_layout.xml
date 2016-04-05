@@ -25,15 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-         <!--<ImageView
-             android:id="@+id/map_image"
-             android:layout_width="fill_parent"
-             android:layout_height="@dimen/one_twenty_px"
-             android:layout_marginLeft="10dp"
-             android:layout_marginRight="10dp"
-             android:layout_marginTop="10dp"
-             android:scaleType="fitXY"
-             android:src="@drawable/mapimage" />-->
+
          <com.google.android.gms.maps.MapView
              android:id="@+id/map_view"
              android:scaleType="fitXY"
@@ -52,13 +44,7 @@
              android:id="@+id/taskdetailbuttonlayout"
              android:orientation="vertical">
 
-             <!--  <ImageButton
-                   android:id="@+id/whatsup"
-                   android:layout_width="50dp"
-                   android:layout_height="50dp"
-                   android:paddingTop="20dp"
-                   android:layout_marginTop="10dp"
-                   android:background="@drawable/whatsapp"/>-->
+
              <Button
                  android:id="@+id/refreshbtn"
                  android:layout_width="wrap_content"
@@ -92,12 +78,7 @@
                  android:paddingTop="0dp"
                  android:background="@drawable/smsimage" />
 
-           <!--  <ProgressBar
-                 android:id="@+id/taskdetailprogresbar"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_alignParentTop="true"
-                 android:layout_centerHorizontal="true" />-->
+
 
 
          </RelativeLayout>
@@ -228,70 +209,7 @@
                  android:layout_height="wrap_content"
                  android:layout_marginLeft="0dp"
                  android:layout_marginTop="10dp">
-                    <!-- <TableRow android:id="@+id/last_locationrow"
-                         android:layout_width="0dp"
-                         android:layout_marginTop="6dp"
-                         android:layout_height="wrap_content"
-                         >
 
-                         <TextView
-                             android:id="@+id/lastlocation"
-                             android:layout_width="wrap_content"
-                             android:layout_height="30dp"
-                             android:layout_column="1"
-                             android:layout_marginLeft="10dp"
-                             android:layout_marginTop="0dp"
-                             android:text="@string/lastlocation"
-                             style="@style/codefont1" />
-
-
-
-                         <TextView
-                             android:id="@+id/lastlocationvalue"
-                             android:layout_width="150dp"
-                             android:layout_height="wrap_content"
-                             android:layout_column="2"
-                             android:layout_marginLeft="1dp"
-                             android:layout_marginTop="0dp"
-                             android:layout_marginRight="10dp"
-                             style="@style/codefont2" />
-
-
-                     </TableRow>
-
-
-                     <TableRow android:id="@+id/updatetextRow"
-                         android:layout_width="0dp"
-                         android:layout_marginTop="6dp"
-                         android:layout_height="wrap_content"
-                         android:layout_marginRight="10dp">
-
-                         <TextView
-                             android:id="@+id/updatetextview"
-                             android:layout_width="wrap_content"
-                             android:layout_height="30dp"
-                             android:layout_column="1"
-                             android:layout_marginLeft="10dp"
-                             android:layout_marginTop="0dp"
-                             android:text="@string/lastupdate"
-                             style="@style/codefont1" />
-
-
-
-                         <TextView
-                             android:id="@+id/updateval"
-                             android:layout_width="100dp"
-                             android:layout_height="wrap_content"
-                             android:layout_column="2"
-                             android:layout_marginLeft="1dp"
-                             android:layout_marginRight="10dp"
-                             android:layout_marginTop="0dp"
-                             style="@style/codefont2" />
-
-
-                     </TableRow>
-
--->
                      <TableRow android:id="@+id/to"
                          android:layout_width="0dp"
                          android:layout_marginTop="6dp"
@@ -424,9 +342,7 @@
 <TableRow  android:id="@+id/customer_name_tableRow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-
-    >
+                android:layout_marginTop="6dp">
 
                      <TextView
                          android:id="@+id/customername"
@@ -456,8 +372,7 @@
            <TableRow  android:id="@+id/coustomerphoneno_tableRow"
                      android:layout_width="0dp"
                      android:layout_height="wrap_content"
-                     android:layout_marginTop="6dp"
-              >
+                     android:layout_marginTop="6dp">
 
                      <TextView
                          android:id="@+id/customerphoneno"
@@ -491,87 +406,7 @@
          </LinearLayout>
 
                   
-                 <!--<LinearLayout
-                     android:id="@+id/buttn_ll"
-                     android:layout_width="match_parent"
-                     android:layout_height="50dp"
-                 android:layout_marginLeft="0dp"
-                     android:paddingBottom="1.5dp"
-                     android:paddingTop="1.5dp"
-                     android:layout_marginTop="0dp" >
-                 <Button
-                      android:id="@+id/startbtn"
-                      android:layout_width="match_parent"
-                      android:layout_height="50dp"
-                      android:background="@color/darkskyblue"
-                      android:paddingLeft="25dp"
-                     android:layout_marginLeft="@dimen/thirty_pt"
-                     android:layout_marginRight="@dimen/thirty_pt"
-                      android:paddingRight="25dp"
-                      android:text="@string/starttrip_btn"
-                      android:textColor="@color/white" />
-             
-               
-             </LinearLayout>-->
-      <!--   <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="20dp"
-             android:layout_marginBottom="10dp"
-             android:layout_gravity="center"
-             android:orientation="horizontal">
 
-             <Button
-                 android:id="@+id/refreshbtn"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:paddingLeft="25dp"
-                 android:paddingRight="25dp"
-                 android:layout_marginLeft="@dimen/thirty_pt"
-                 android:layout_marginRight="@dimen/thirty_pt"
-                 android:text="Refresh"
-                 style="@style/textbutton"
-                 />-->
-
-            <!-- <ImageButton
-                 android:id="@+id/refresh"
-                 android:layout_width="50dp"
-                 android:layout_height="50dp"
-                 android:paddingTop="20dp"
-                 android:layout_marginTop="10dp"
-                 android:background="@drawable/refresh_image"/>-->
-       <!--  </LinearLayout>-->
-         <!-- <LinearLayout
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="10dp"
-              android:layout_marginBottom="10dp"
-
-              android:layout_gravity="center"
-             android:orientation="horizontal">
-
-              <ImageButton
-                  android:id="@+id/whatsup"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:paddingTop="20dp"
-                  android:layout_marginTop="10dp"
-                  android:background="@drawable/whatsapp"/>
-
-
-              <ImageButton
-                  android:id="@+id/inbox"
-                  android:layout_width="55dp"
-                  android:layout_height="55dp"
-                  android:layout_marginLeft="5dp"
-                  android:layout_marginBottom="10dp"
-                  android:clickable="false"
-                  android:paddingTop="0dp"
-                  android:background="@drawable/smsimage" />
-
-
-          </LinearLayout>
--->
       </LinearLayout>
 
     </ScrollView>

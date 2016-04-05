@@ -1,15 +1,13 @@
 package com.bpatech.trucktracking.DTO;
 
-/**
- * Created by Anita on 9/10/2015.
- */
+
 public class User {
 
     int user_id;
     String companyName;
     String userName;
     String phone_no;
-   boolean userStaus;
+
 
     public User() {
     }

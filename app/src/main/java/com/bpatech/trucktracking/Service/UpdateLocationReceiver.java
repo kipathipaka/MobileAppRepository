@@ -2,46 +2,42 @@
         package com.bpatech.trucktracking.Service;
 
         import android.app.AlarmManager;
-        import android.app.PendingIntent;
-        import android.content.BroadcastReceiver;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-        import android.widget.Toast;
 
-        import com.bpatech.trucktracking.Util.SessionManager;
+import com.bpatech.trucktracking.Util.SessionManager;
 
-        import timber.log.Timber;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
-        /**
- * Created by Anita on 11/13/2015.
- */
+
 public class UpdateLocationReceiver extends BroadcastReceiver{
             SessionManager  session;
+            String updatedate;
     @Override
     public void onReceive(final Context context, Intent intent) {
-       // System.out.println("++++++++++++++++++++++++++++++++++UpdateLocationReceiver+++++++++++++++++++++++++++");
-         //Toast.makeText(context, "Reciverrrrrrrrrrr: ", Toast.LENGTH_SHORT).show();
-        Timber.i("UpdateLocationReceiver: Inside receiver **************************");
-
+        session = new SessionManager(context);
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             // Set the alarm here.
-           // System.out.println("++++++++++++++++++++++++++++++++++boot completed+++++++++++++++++++++++++++");
-            session = new SessionManager(context);
-            Timber.i("UpdateLocationReceiver: Inside receiver boot completed condition**************************");
-            Timber.i("UpdateLocationReceiver:Setting alarm on reboot**************************");
-           // Toast.makeText(context, "Reciverrrrrrrrrrr:setting alarm on reboot ", Toast.LENGTH_LONG).show();
+
             AlarmManager alarmManager=(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intentR = new Intent( context, UpdateLocationReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentR, 0);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20 * 60 * 1000,pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),20 * 60 * 1000,pendingIntent);
             session.setAlaramcount(1);
         }else {
-            //System.out.println("++++++++++++++++++++++++++else++++++++boot completed+++++++++++++++++++++++++++");
+            DateFormat updateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            updateTimeFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+            Date date1 = new Date();
+            updatedate=updateTimeFormat.format(date1).toString();
+
+            session.setKeyLastUpdatDate(updatedate);
             context.startService(new Intent(context, UpdateLocationService.class));
         }
 
-         //System.out.println("++++++++++++++++++++++++++++++++++Reciverrrrrrrrrrr+++++++++++++++++++++++++++");
-        // This method is called when this BroadcastReceiver receives an Intent broadcast.
-        //Toast.makeText(context, "Reciverrrrrrrrrrr: ", Toast.LENGTH_SHORT).show();
     }
 }

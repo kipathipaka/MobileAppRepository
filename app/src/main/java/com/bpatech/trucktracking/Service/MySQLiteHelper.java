@@ -1,29 +1,18 @@
 package com.bpatech.trucktracking.Service;
 
-/**
- * Created by Anita on 9/10/2015.
- */
+
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.bpatech.trucktracking.DTO.UpdateLocationDTO;
 import com.bpatech.trucktracking.DTO.User;
-import com.bpatech.trucktracking.Util.ServiceConstants;
-import com.bpatech.trucktracking.Util.SessionManager;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -35,12 +24,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // Contacts table name
     private static final String TABLE_USER = "userinfo";
     private static final String LOCATION_UPDATE = "tracklocationdetails";
-    Request request;
-    SessionManager session;
-    User user;
 
-    Context context;
-  String  responseStrng;
     // Contacts Table Columns names
     private static final String KEY_ID = "user_id";
     private static final String KEY_OTP_NO = "otp_no";
@@ -50,12 +34,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String KEY_DRIVER_NO = "driverphoneno";
     private static final String KEY_LATITUDE= "latitude";
     private static final String KEY_LONGITUDE= "longitude";
+    private static final String KEY_MOBILE_STATUS= "mobiledatastatus";
     private static final String KEY_LOCATION= "location";
     private static final String KEY_FULLADDRESS= "fulladdress";
     private static final String KEY_LAST_SYNC_TIME= "updatetime";
     private static final String KEY_UPDATE_ID = "location_id";
-    private SQLiteDatabase sqLiteDatabase=this.getWritableDatabase();
+
     public MySQLiteHelper(Context context) {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
     @Override
@@ -66,11 +52,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         String CREATE_LOCATION_TABLE = "CREATE TABLE IF NOT EXISTS  " + LOCATION_UPDATE + "("
                 + KEY_UPDATE_ID + " INTEGER PRIMARY KEY, " +  KEY_DRIVER_NO + " TEXT,"
                 + KEY_LATITUDE + " TEXT," +  KEY_LONGITUDE + " TEXT," + KEY_LOCATION + " TEXT,"
-                + KEY_FULLADDRESS + " TEXT," + KEY_LAST_SYNC_TIME + " TEXT" + ")";
+                + KEY_FULLADDRESS + " TEXT," +KEY_MOBILE_STATUS + " TEXT,"+ KEY_LAST_SYNC_TIME + " TEXT" + ")";
         db.execSQL(CREATE_LOCATION_TABLE);
         db.execSQL(CREATE_CONTACTS_TABLE);
-        System.out.println("++++++++++++++++After tabele: Table created "+CREATE_LOCATION_TABLE);
-        Timber.i("MySQLiteHelper After tabele: Table created**************************");
+
         Log.d("After tabele: ", "created ..");
         // TODO Auto-generated method stub
 
@@ -78,15 +63,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
-        //Log.d("After Insert: ", "deleted ..");
-        // Create tables again
-        Log.d("After tabele: ", "deleted ..");
 
+        Log.d("After tabele: ", "deleted ..");
+        // Create tables again
         onCreate(db);
         // TODO Auto-generated method stub
-        Timber.i(MySQLiteHelper.class.getName(), "Upgrading database from version " + oldVersion + " to "
-                + newVersion + ", which will destroy all old data");
+
         Log.w(MySQLiteHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
@@ -109,50 +91,46 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE_USER, null, values);
 
-        Timber.i("After Insert: ", "Inserted ..");
+
         Log.d("After Insert: ", "Inserted ..");
         db.close(); // Closing database connection
     }
 
     public void addUpdateLocationDetails(UpdateLocationDTO updatelocation) {
-
         SQLiteDatabase db = this.getWritableDatabase();
         // onUpgrade(db,0,0);
         onCreate(db);
         ContentValues values = new ContentValues();
         values.put(KEY_DRIVER_NO, updatelocation.getDriver_phone_no());
         values.put(KEY_LATITUDE,updatelocation.getLocation_latitude());
-        values.put(KEY_LONGITUDE,updatelocation.getLocation_longitude());
-       // values.put(KEY_LONGITUDE,"80.34455");
+        values.put(KEY_LONGITUDE, updatelocation.getLocation_longitude());
         values.put(KEY_LOCATION,updatelocation.getLocation());
         values.put(KEY_FULLADDRESS,updatelocation.getFulladdress());
+        values.put(KEY_MOBILE_STATUS,updatelocation.getMobildatastatus());
         values.put(KEY_LAST_SYNC_TIME,updatelocation.getUpdatetime());
         // Contact Phone
         // Inserting Row*/
         db.insert(LOCATION_UPDATE, null, values);
-        System.out.println("+++++++++++++++++Inserted 1+++");
-        Timber.i("After Insert: ", "Inserted ..");
+
         Log.d("After Insert: ", "Inserted ..");
         db.close(); // Closing database connection
     }
 
+    public void UpdateLocationDetails(UpdateLocationDTO updatelocation,int id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("UPDATE " + LOCATION_UPDATE + " SET " + KEY_LATITUDE + "= " + updatelocation.getLocation_latitude() + "," +
+                KEY_LONGITUDE + "= " + updatelocation.getLocation_longitude() + "," + KEY_MOBILE_STATUS +
+                "= '" + updatelocation.getMobildatastatus() + "' where " + KEY_UPDATE_ID + "= " + id + " ");
+
+    }
     public int getUserCount() {
         String countQuery = " SELECT  * FROM  " +  TABLE_USER;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
          int countval=cursor.getCount();
 
-        cursor.close();
-
-        return countval;
-    }
-    public int getUpdateLocationCount() {
-        String countQuery = " SELECT  * FROM  " +LOCATION_UPDATE;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-      //  System.out.println("++++++++++location+++++cursor++"+cursor);
-        int countval=cursor.getCount();
-      //  System.out.println("++++++++++location+++++count++"+countval);
         cursor.close();
 
         return countval;
@@ -175,6 +153,18 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
         return owener_list;
     }
+    public int getLastTracktripid() {
+      int update_id=0;
+        String countQuery = " SELECT  * FROM  " +  LOCATION_UPDATE;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        if (cursor.moveToLast()) {
+           do{
+               update_id=cursor.getInt(0);
+            } while(cursor.moveToNext());
+        }
+        return update_id;
+    }
     public ArrayList<UpdateLocationDTO> getTracktripDetails() {
         ArrayList<UpdateLocationDTO> track_trip_list = new ArrayList<UpdateLocationDTO>();
         String countQuery = "SELECT  * FROM " + LOCATION_UPDATE;
@@ -184,13 +174,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             do {
                 UpdateLocationDTO updateLocationDTO=new UpdateLocationDTO();
                 updateLocationDTO.setUpdate_id(cursor.getInt(0));
-                //System.out.println("++sql+++++++++phone no++++++++" + cursor.getString(1));
                 updateLocationDTO.setDriver_phone_no(cursor.getString(1));
                 updateLocationDTO.setLocation_latitude(cursor.getString(2));
                 updateLocationDTO.setLocation_longitude(cursor.getString(3));
                 updateLocationDTO.setLocation(cursor.getString(4));
                 updateLocationDTO.setFulladdress(cursor.getString(5));
-                updateLocationDTO.setUpdatetime(cursor.getString(6));
+                updateLocationDTO.setMobildatastatus(cursor.getString(6));
+                updateLocationDTO.setUpdatetime(cursor.getString(7));
                 track_trip_list.add(updateLocationDTO);
             } while (cursor.moveToNext());
         }
@@ -200,26 +190,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public void deleteLocation_byID(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from "+LOCATION_UPDATE+" where "+KEY_UPDATE_ID+"= "+id+" ");
-       // sqLiteDatabase.delete(LOCATION_UPDATE,KEY_UPDATE_ID+" = "+id, null);
     }
-  /*  public boolean checkPhonenumber(String phoneno) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        boolean exitphonenumber=false;
-        Cursor cursor = db.query(TABLE_USER, new String[]{KEY_ID, KEY_USER_NAME,KEY_COMPANY, KEY_PH_NO}, KEY_PH_NO + "=?", new String[]{String.valueOf(phoneno)}, null, null, null, null);
-        System.out.println("count cursor"+cursor.getCount());
-        //  Log.w("After count: ",cursor.getCount() );
-        if (cursor.getCount() > 0){
-            Log.d("After check: ", "checked..true");
-            exitphonenumber = true;
-        }else{
-            Log.d("After check: ", "checked.. false");
-            exitphonenumber = false;
-        }
-
-        Log.d("After check: ", "checked..");
-        return exitphonenumber;
-    }*/
-
+    public void updateStatus(String status,int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE "+LOCATION_UPDATE+" SET "+KEY_MOBILE_STATUS+"= '"+status+"' where "+KEY_UPDATE_ID+"= "+id+" ");
+    }
 
 
 }

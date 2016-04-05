@@ -12,9 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-/**
- * Created by Anita on 10/20/2015.
- */
+
 public class GetMytripListParsing {
 
     public List<AddTrip> getmytriplist(JSONArray commentsArray) {
@@ -44,16 +42,12 @@ public class GetMytripListParsing {
                 JSONObject driverarray = firstmytriparry
                         .getJSONObject("driver");
                 mytrip.setDriver_phone_no(driverarray.getString("phone_number"));
-                /*if (firstmytriparry.getString("travel_status").equalsIgnoreCase("STR")){
-                    mytrip.setLocation(firstmytriparry.getString("location"));
-                    mytrip.setLatitude(firstmytriparry.getString("latitude"));
-                    mytrip.setLongitude(firstmytriparry.getString("longitude"));
-                }else{*/
+
                 mytrip.setFullAddress(driverarray.getString("fullAddress"));
                 mytrip.setLocation(driverarray.getString("location"));
                 mytrip.setLatitude(driverarray.getString("latitude"));
                 mytrip.setLongitude(driverarray.getString("longitude"));
-                // }
+
                 if (driverarray.getString("is_active").equalsIgnoreCase("Y") && driverarray.getString("app_download_status").equalsIgnoreCase("Y")) {
                     mytrip.setStartstatus(true);
                 } else {
@@ -68,21 +62,19 @@ public class GetMytripListParsing {
                     DateFormat dateFormat = new SimpleDateFormat("MMM dd,h:mm a");
                     dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
                     Date date = new Date(Long.parseLong(firstmytriparry.getString("created_on").toString()));
-                   // mytrip.setLast_sync_time(dateFormat.format(date).toString());
+
                     mytrip.setLast_sync_time("Not Available");
                 }else {
                     DateFormat dateFormat1 = new SimpleDateFormat("MMM dd,h:mm a");
                     dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
-                    //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
+
                     Date date = new Date(Long.parseLong(driverarray.getString("last_sync_date_time").toString()));
                     mytrip.setLast_sync_time(dateFormat1.format(date).toString());
                     DateFormat dateFormat2 = new SimpleDateFormat("yyyy MMM dd,h:mm a");
                     dateFormat2.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
-                    //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
+
                     mytrip.setLast_ping_Datetime(dateFormat2.format(date).toString());
-                    //System.out.println("++++++++++++++++++++++++++++++mydate2++++++++++++++++++++" + mytrip.getLast_ping_Datetime());
-                    // System.out.println("++++++++++++++++++++++++++++++++++date+++++++++++++++++++++++++++"+mytrip.getLast_sync_time());
-                    // System.out.println("++++++++++++++++++++++++++++++++++date+++++++++++++++++++++++++++"+mytrip.getLast_sync_time());
+
                 }
                 mytriplist.add(mytrip);
             }
@@ -117,16 +109,12 @@ public class GetMytripListParsing {
                 JSONObject driverarray = tripobject
                         .getJSONObject("driver");
                 mytrip.setDriver_phone_no(driverarray.getString("phone_number"));
-                /*if (firstmytriparry.getString("travel_status").equalsIgnoreCase("STR")){
-                    mytrip.setLocation(firstmytriparry.getString("location"));
-                    mytrip.setLatitude(firstmytriparry.getString("latitude"));
-                    mytrip.setLongitude(firstmytriparry.getString("longitude"));
-                }else{*/
+
                 mytrip.setFullAddress(driverarray.getString("fullAddress"));
                 mytrip.setLocation(driverarray.getString("location"));
                 mytrip.setLatitude(driverarray.getString("latitude"));
                 mytrip.setLongitude(driverarray.getString("longitude"));
-                // }
+
                 if (driverarray.getString("is_active").equalsIgnoreCase("Y") && driverarray.getString("app_download_status").equalsIgnoreCase("Y")) {
                     mytrip.setStartstatus(true);
                 } else {
@@ -141,20 +129,19 @@ public class GetMytripListParsing {
                     DateFormat dateFormat = new SimpleDateFormat("MMM dd,h:mm a");
                     dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+17:30"));
                     Date date = new Date(Long.parseLong(tripobject.getString("created_on").toString()));
-                    // mytrip.setLast_sync_time(dateFormat.format(date).toString());
+
                     mytrip.setLast_sync_time("Not Available");
                 }else {
                     DateFormat dateFormat1 = new SimpleDateFormat("MMM dd,h:mm a");
                     dateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
-                    //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
                     Date date = new Date(Long.parseLong(driverarray.getString("last_sync_date_time").toString()));
                     mytrip.setLast_sync_time(dateFormat1.format(date).toString());
                     DateFormat dateFormat2 = new SimpleDateFormat("yyyy MMM dd,h:mm a");
                     dateFormat2.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));//GMT+5:30
-                    //System.out.println("++++++++++++++++++++++++++++++++++long value+++++++++++++++++++++++++++" + firstmytriparry.getString("last_sync_date_time").toString());
+
                     mytrip.setLast_ping_Datetime(dateFormat2.format(date).toString());
-                   // System.out.println("++++++++++++++++++++++++++++++mydate++++++++++++++++++++" + mytrip.getLast_ping_Datetime());
-                    // System.out.println("++++++++++++++++++++++++++++++++++date+++++++++++++++++++++++++++"+mytrip.getLast_sync_time());
+
+
                 }
                 mytriplist.add(mytrip);
 

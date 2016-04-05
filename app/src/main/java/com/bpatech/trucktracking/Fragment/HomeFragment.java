@@ -13,18 +13,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bpatech.trucktracking.DTO.AddTrip;
 import com.bpatech.trucktracking.DTO.User;
 import com.bpatech.trucktracking.R;
-import com.bpatech.trucktracking.Service.AddUserObjectParsing;
 import com.bpatech.trucktracking.Service.MySQLiteHelper;
 import com.bpatech.trucktracking.Service.Request;
 import com.bpatech.trucktracking.Util.ExceptionHandler;
@@ -32,9 +27,7 @@ import com.bpatech.trucktracking.Util.ServiceConstants;
 import com.bpatech.trucktracking.Util.SessionManager;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.json.JSONObject;
-import java.util.ArrayList;
 
 import timber.log.Timber;
 
@@ -46,21 +39,18 @@ public class HomeFragment extends Fragment {
 	Request request;
 	HttpResponse response;
 	String responseStrng = null;
-	public ArrayList<AddTrip> currenttriplist;
-	public ArrayList<AddTrip> currenttripdetails;
-	ImageButton imageButtonopen;
+
 	ImageView carlogo;
 	User user;
-	ProgressBar progressBar,progressBar1;
-	TextView destination, truck, phoneno, txt_contTitle, triplistsize_view;
-	LinearLayout listlayout_ll, triplist_ll,footer_addtrip_ll;
-	ListView listView;
+	ProgressBar progressBar;
+	TextView  txt_contTitle;
+
 	SessionManager session;
-	AddUserObjectParsing obj;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		///Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()))
+
 
 		View view = inflater.inflate(R.layout.activity_home, container, false);
 			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(getActivity()));
@@ -86,7 +76,7 @@ public class HomeFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
-			System.out.println("enter if main");
+
 			progressBar.setVisibility(View.VISIBLE);
 try {
 	InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
@@ -99,17 +89,10 @@ try {
 	}  else if(phoneNo.getText().toString().length()==10){
 		progressBar.setVisibility(View.VISIBLE);
 		String savephoneno = phoneNo.getText().toString();
-		System.out.println("phoneNo " + phoneNo);
+
 		Timber.tag(String.valueOf(phoneNo));
 		session.setPhoneno(savephoneno);
-		/*DetailFragment detailfrag = new DetailFragment();
 
-		FragmentManager fragmentmanager = getFragmentManager();
-		FragmentTransaction fragmenttransaction = fragmentmanager
-				.beginTransaction();
-		fragmenttransaction.replace(R.id.viewers, detailfrag, "BackCurrentTrip");
-		fragmenttransaction.addToBackStack(null);
-		fragmenttransaction.commit();*/
 		new CheckUserDetail().execute("", "", "");
 
 	}
@@ -141,16 +124,16 @@ try {
 
 			try {
 
-				//List<NameValuePair> createuserlist = new ArrayList<NameValuePair>();
-				//createuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),latitude.toString(),longitude.toString(),locationVal.toString(),fullAddress.toString(), "Y","Y", user.getUserName()));
+
+
 				String Getuser_url= ServiceConstants.GET_USER+session.getPhoneno();
 				response = request.requestGetType(Getuser_url,ServiceConstants.BASE_URL);
 				responseStrng = "" + response.getStatusLine().getStatusCode();
-				System.out.println("+++++++++++++++++++++Status+code++++++++++++++++++++++"+response.getStatusLine().getStatusCode());
+
 				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONObject responsejson = request.responseParsing(response);
 
-				//	updateuserlist.addAll(obj.userCreationObject(session.getPhoneno(),user.getCompanyName(),latitude.toString(),longitude.toString(),locationVal.toString(),fullAddress.toString(),"Y","Y",user.getUserName()));
+
 					if(responsejson!=null) {
 						if(responsejson.getString("is_active").equalsIgnoreCase("Y") && responsejson.getString("app_download_status").equalsIgnoreCase("Y")) {
 							user=new User();
@@ -210,7 +193,6 @@ try {
 
 		db=new MySQLiteHelper(getActivity().getApplicationContext());
 		db.addUser(user);
-		Timber.i("HomeFragment : Create Table: "+"Inserting ..");
 		Log.d("Insert: ", "Inserting ..");
 	}
 }

@@ -39,6 +39,8 @@ public class SessionManager {
     public static final String KEY_phoneno = "phoneno";
     public static final String KEY_ALARAM = "Alaramcount";
     public static final String KEY_Username = "username";
+    public static final String KEY_LAST_UPDAT_ID = "updateid";
+public static final  String KEY_LAST_UPDAT_DATE="lastupdatedate";
 
     // Email address (make variable public to access from outside)
 
@@ -58,28 +60,7 @@ public class SessionManager {
     
    
 	
-    /*public void createSession(String phoneval, int otp){
-        // Storing login value as TRUE
-      
-        // Storing name in pref
-        editor.putString(KEY_phoneno, phoneval);
-        
-        // Storing email in pref
-        editor.putInt(KEY_otpno, otp);
-        
-        // commit changes
-        editor.commit();
-    }  */
-   
-   /* public void removesession(){
-        
-        // Clearing all user data from Shared Preferences
-        editor.clear();
-        editor.commit();
-        
-        // After logout redirect user to Login Activity
-        
-    }*/
+
 
     public void setPhoneno(String phoneval) {
 
@@ -110,15 +91,17 @@ public class SessionManager {
 
         return pref.getString(KEY_VEHICLE_TRIP_ID, null);
     }
-    public void setOTPno(int otp) {
-        editor.putInt(KEY_otpno, otp);
+
+    public void setKeyLastUpdatDate(String updatetime) {
+
+        editor.putString(KEY_LAST_UPDAT_DATE, updatetime);
         editor.commit();
     }
+    public String getKeyLastUpdatDate() {
 
-    public int getOTPno() {
-
-        return pref.getInt(KEY_otpno, 0);
+        return pref.getString(KEY_LAST_UPDAT_DATE, null);
     }
+
     public void setAlaramcount(int Alaramcount) {
 
         editor.putInt(KEY_ALARAM, Alaramcount);
@@ -128,6 +111,16 @@ public class SessionManager {
 
         return pref.getInt(KEY_ALARAM, 0);
     }
+   public void setLastupdatid(int id) {
+
+        editor.putInt(KEY_LAST_UPDAT_ID, id);
+        editor.commit();
+    }
+    public int getLastupdatid() {
+
+        return pref.getInt(KEY_LAST_UPDAT_ID, 0);
+    }
+
 
     public static List<AddTrip> getAddtripdetails() {
         return addtripdetails;
@@ -135,9 +128,6 @@ public class SessionManager {
 
 
 
-	/*public static List<AddTrip> getCurrenttripdetails() {
-		return currenttripdetails;
-	}*/
 
     public void logoutUser() {
         // Clearing all data from Shared Preferences
@@ -160,8 +150,7 @@ public class SessionManager {
     public static void setAddtripdetails(List<AddTrip> addtripdetails) {
 
         SessionManager.addtripdetails=addtripdetails;
-        //currenttripdetails.addAll(addtripdetails);
-        //System.out.println("addtripdetailsaddtripdetails"+currenttripdetails.size());
+
     }
 
     public boolean isLoggedIn() {
